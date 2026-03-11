@@ -4,7 +4,7 @@ import { Quotes } from "./features/quotes/Quotes"
 import logo from "./logo.svg"
 
 export const App = () => (
-  <div className="App">
+  <div className="App border-amber-400 border-8">
     <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
       <Counter />
