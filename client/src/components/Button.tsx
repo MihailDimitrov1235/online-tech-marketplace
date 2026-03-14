@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "accent" | "ghost";
+type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 type ButtonProps = {
@@ -21,10 +21,10 @@ const sizes: Record<Size, string> = {
 };
  
 const variants: Record<Variant, string> = {
-    primary: "bg-zinc-900 text-white hover:bg-zinc-700 focus-visible:ring-zinc-900",
-    secondary: "bg-white text-zinc-900 border-1 border-zinc-900 focus-visible:ring-zinc-400",
-    ghost: "bg-transparent text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900",
-    accent: "bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white hover:brightness-110",
+    primary: "bg-gradient-to-br text-primary-contrast from-primary to-primary/50 hover:brightness-105",
+    secondary: "bg-neutral text-contrast hover:bg-neutral/80",
+    outline: "bg-white border-1 border-neutral",
+    ghost: "bg-transparent text-black hover:bg-neutral/10",
 };
 
 export const Button = ({

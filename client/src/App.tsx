@@ -6,10 +6,10 @@ import logo from "./logo.svg"
 
 export const App = () => (
   <div className="App border-amber-400 border-8">
-    <Button variant="primary" disabled>TEST</Button>
+    <Button variant="primary">TEST</Button>
     <Button variant="secondary">TEST</Button>
     <Button variant="ghost">TEST</Button>
-    <Button variant="accent" >TEST</Button>
+    <Button variant="outline" >TEST</Button>
     <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
       <Counter />
