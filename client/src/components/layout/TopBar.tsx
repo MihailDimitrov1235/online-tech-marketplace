@@ -1,3 +1,4 @@
+import { NavLink } from "react-router"
 import { Button } from "../Button"
 
 export const TopBar = () => {
@@ -8,7 +9,7 @@ export const TopBar = () => {
                 <Button variant="ghost">Listings</Button>
                 <Button variant="ghost">About us</Button>
             </div>
-            <Button>Login</Button>
+            <Button><NavLink to={"/login"}>Login</NavLink></Button>
         </div>
     )
 }

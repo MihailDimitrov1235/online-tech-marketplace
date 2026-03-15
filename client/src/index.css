@@ -5,6 +5,7 @@
   --color-primary-contrast: #FFFFFF;
   --color-neutral: #dbdbdb;
   --color-contrast: #000;
+  --color-error: #ba3f3f;
 }
 
 body {

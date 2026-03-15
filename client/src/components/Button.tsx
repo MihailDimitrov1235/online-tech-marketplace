@@ -9,6 +9,7 @@ type ButtonProps = {
   disabled?: boolean;
   children: ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 const base =
@@ -33,12 +34,14 @@ export const Button = ({
   disabled = false,
   children,
   className = "",
+  onClick,
   ...props
 }: ButtonProps) => {
   return (
     <button
       className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
       disabled={disabled}
+      onClick={onClick}
       {...props}
     >
       {children}

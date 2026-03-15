@@ -9,7 +9,7 @@ export default function Home() {
         <p className="mt-8 text-lg font-medium text-pretty text-contrast/60 sm:text-xl/8">Browse thousands of tools and hardware essentials with expert guidance and fast delivery straight to your door</p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button>Products</Button>
-            <Button variant="ghost">Learn more <span aria-hidden="true">→</span></Button>
+            <Button variant="ghost">Learn more →</Button>
         </div>
       </div>
     </div>
