@@ -9,7 +9,7 @@ export const TopBar = () => {
                 <Button variant="ghost">Listings</Button>
                 <Button variant="ghost">About us</Button>
             </div>
-            <Button><NavLink to={"/login"}>Login</NavLink></Button>
+            <NavLink to={"/login"}><Button>Login</Button></NavLink>
         </div>
     )
 }
