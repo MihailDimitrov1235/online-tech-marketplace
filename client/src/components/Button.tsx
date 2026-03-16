@@ -10,6 +10,7 @@ type ButtonProps = {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 }
 
 const base =
@@ -35,6 +36,7 @@ export const Button = ({
   children,
   className = "",
   onClick,
+  type = "button",
   ...props
 }: ButtonProps) => {
   return (
@@ -42,6 +44,7 @@ export const Button = ({
       className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
       disabled={disabled}
       onClick={onClick}
+      type={type}
       {...props}
     >
       {children}
