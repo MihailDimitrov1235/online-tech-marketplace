@@ -3,9 +3,11 @@ import { TopBar } from "./TopBar";
 
 export default function Layout() {
   return (
-    <div className="flex flex-col w-full h-fit">
+    <div className="flex flex-col w-full min-h-screen">
         <TopBar/>
-        <Outlet/>
+        <div className="flex-1 flex">
+          <Outlet/>
+        </div>
     </div>
   )
 }

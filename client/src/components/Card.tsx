@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 type CardVariant = "default" | "outlined";
 type CardSize = "sm" | "md" | "lg";
 
@@ -29,22 +31,20 @@ export const Card: React.FC<CardProps> = ({
   className = "",
   onClick,
 }) => {
-  const baseStyles = "relative flex w-fit";
+  const baseStyles = "relative flex";
   const interactiveStyles = onClick
     ? "cursor-pointer select-none active:scale-[0.98] transition-transform"
     : "";
 
   return (
     <div
-      className={[
+      className={twMerge(
         baseStyles,
         variantStyles[variant],
         sizeStyles[size],
         interactiveStyles,
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}

@@ -2,9 +2,11 @@ import { NavLink } from "react-router"
 import { Button } from "../Button"
 
 export const TopBar = () => {
-    return(
+    return (
         <div className="flex w-full h-fit justify-between px-3 py-2">
-            <Button variant="ghost">Logo</Button>
+            <NavLink to='/'>
+                <Button variant="ghost">Logo</Button>
+            </NavLink>
             <div>
                 <Button variant="ghost">Listings</Button>
                 <Button variant="ghost">About us</Button>

@@ -12,17 +12,30 @@ export default function Login() {
     console.log(username)
     console.log(password)
   }
-  return (  
-    <Card size="lg" className="flex flex-col gap-12 items-center mx-auto mt-32">
-        <div className="text-2xl">Login</div>
+
+  return (
+    <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-100">
+        <div className="text-2xl text-center">Login</div>
         
-        <div className="flex flex-col gap-2">
-          <TextField label="Username" value={username} onChange={(e) => {setUsername(e.target.value)}}/>
-          <TextField label="Password" type="password" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
+        <div className="flex flex-col gap-2 w-full">
+          <TextField
+            label="Username"
+            fullWidth
+            value={username}
+            onChange={(e) => {setUsername(e.target.value)}}
+          />
+          <TextField
+            label="Password"
+            fullWidth
+            type="password"
+            value={password}
+            onChange={(e) => {setPassword(e.target.value)}}
+          />
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <p>Don't have an account? </p>
-          <NavLink className={"text-primary hover:underline"} to={"/signup"}>Sign up</NavLink>
+
+        <div className="text-end">
+          <span>Don't have an account?</span>
+          <NavLink className="text-primary hover:underline ml-1" to={"/signup"}>Sign up</NavLink>
         </div>
         
         <Button className="ml-auto" onClick={handleSubmit}>Submit</Button>
