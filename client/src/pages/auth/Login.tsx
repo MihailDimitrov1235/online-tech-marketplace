@@ -1,5 +1,7 @@
 import { NavLink } from "react-router";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import { paths } from "@/router";
 
@@ -9,6 +11,11 @@ import { FormProvider, RHFTextField } from "@/components/form";
 
 type LoginForm = { username: string; password: string };
 
+const schema = yup.object({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+});
+
 export default function Login() {
   const defaultValues = {
     username: '',
@@ -16,7 +23,8 @@ export default function Login() {
   };
 
   const methods = useForm<LoginForm>({
-    defaultValues
+    defaultValues,
+    resolver: yupResolver(schema),
   });
 
   const {

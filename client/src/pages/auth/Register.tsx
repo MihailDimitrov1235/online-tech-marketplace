@@ -1,5 +1,7 @@
 import { NavLink } from "react-router";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import { paths } from "@/router";
 
@@ -8,6 +10,16 @@ import { Card } from "@/components/Card";
 import { FormProvider, RHFTextField } from "@/components/form";
 
 type RegisterForm = { username: string; firstName: string; lastName: string; password: string; confirmPassword: string };
+
+const schema = yup.object({
+  username: yup.string().min(3, "At least 3 characters").required("Username is required"),
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  password: yup.string().min(8, "At least 8 characters").required("Password is required"),
+  confirmPassword: yup.string()
+    .oneOf([yup.ref("password")], "Passwords do not match")
+    .required("Please confirm your password"),
+});
 
 export default function Register() {
   const defaultValues = {
@@ -19,7 +31,8 @@ export default function Register() {
   };
 
   const methods = useForm<RegisterForm>({
-    defaultValues
+    defaultValues,
+    resolver: yupResolver(schema),
   });
 
   const {
