@@ -18,7 +18,7 @@ export default function Login() {
   }
 
   return (
-    <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-100">
+    <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-125">
         <div className="text-2xl text-center">Login</div>
         
         <div className="flex flex-col gap-2 w-full">
