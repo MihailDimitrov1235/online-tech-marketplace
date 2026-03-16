@@ -1,6 +1,6 @@
 import { useFormContext, type FieldPath, type FieldValues } from "react-hook-form";
 
-import { TextField } from "../Textfield";
+import { TextField } from "../common/Textfield";
 import type { ComponentProps } from "react";
 
 type TextFieldProps = ComponentProps<typeof TextField>;

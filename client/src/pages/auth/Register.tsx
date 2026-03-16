@@ -5,8 +5,8 @@ import * as yup from "yup";
 
 import { paths } from "@/router";
 
-import { Button } from "@/components/Button";
-import { Card } from "@/components/Card";
+import { Button } from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
 import { FormProvider, RHFTextField } from "@/components/form";
 
 type RegisterForm = { username: string; firstName: string; lastName: string; password: string; confirmPassword: string };

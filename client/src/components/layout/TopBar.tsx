@@ -2,8 +2,8 @@ import { NavLink } from "react-router"
 
 import { paths } from "@/router";
 
-import { Button } from "../Button"
-import { Logo } from "../Logo";
+import { Button } from "../common/Button"
+import { Logo } from "../common/Logo";
 
 export const TopBar = () => {
   return (

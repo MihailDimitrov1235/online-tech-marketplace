@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 
 import { paths } from '@/router';
 
-import { Button } from "@/components/Button";
+import { Button } from "@/components/common/Button";
 
 export default function Page404() {
   return (
