@@ -1,8 +1,12 @@
-import { NavLink } from "react-router";
-import { Button } from "../components/Button";
-import { Card } from "../components/Card";
-import { TextField } from "../components/Textfield";
 import { useState } from "react";
+import { NavLink } from "react-router";
+
+import { paths } from "@/router";
+
+import { Button } from '@/components/Button';
+import { Card } from '@/components/Card';
+import { TextField } from '@/components/Textfield';
+
 
 export default function Login() {
 
@@ -35,7 +39,7 @@ export default function Login() {
 
         <div className="text-end">
           <span>Don't have an account?</span>
-          <NavLink className="text-primary hover:underline ml-1" to={"/signup"}>Sign up</NavLink>
+          <NavLink className="text-primary hover:underline ml-1" to={paths.auth.register}>Sign up</NavLink>
         </div>
         
         <Button className="ml-auto" onClick={handleSubmit}>Submit</Button>
