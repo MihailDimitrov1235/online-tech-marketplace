@@ -3,14 +3,15 @@ import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
 import { RouterProvider } from "react-router/dom";
 import { router } from "./router"
-import { store } from "./app/store"
+import { store } from "./store"
+import { setupInterceptors } from './api/interceptors';
 import "./index.css"
 
 const container = document.getElementById("root")
 
 if (container) {
   const root = createRoot(container)
-
+  setupInterceptors()
   root.render(
     <StrictMode>
       <Provider store={store}>

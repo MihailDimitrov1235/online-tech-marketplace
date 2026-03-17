@@ -43,5 +43,6 @@ export const paths = {
   auth: {
     login: '/auth/login',
     register: '/auth/register'
-  }
+  },
+  profile : '/profile',
 }

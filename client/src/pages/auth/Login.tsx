@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -8,6 +8,8 @@ import { paths } from "@/router";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { FormProvider, RHFTextField } from "@/components/form";
+import { useAppDispatch } from "@/store/hooks";
+import { loginUser } from "@/store/authSlice";
 
 type LoginForm = { username: string; password: string };
 
@@ -17,6 +19,8 @@ const schema = yup.object({
 });
 
 export default function Login() {
+  const navigate = useNavigate()
+
   const defaultValues = {
     username: '',
     password: ''
@@ -31,11 +35,19 @@ export default function Login() {
     handleSubmit
   } = methods;
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const dispatch = useAppDispatch();
+  const onSubmit = handleSubmit(async (data) => {
+    const result = await dispatch(loginUser(data));
+    if (loginUser.fulfilled.match(result)) {
+      // console.log(result.payload.token)
+      await navigate("/")
+    }else{
+      console.log(result)
+    }
   });
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <FormProvider methods={methods} onSubmit={onSubmit} className="flex flex-1">
       <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-125">
         <div className="text-2xl text-center">Login</div>

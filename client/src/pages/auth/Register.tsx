@@ -8,6 +8,9 @@ import { paths } from "@/router";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { FormProvider, RHFTextField } from "@/components/form";
+import { useAppDispatch } from "@/store/hooks";
+import { registerUser } from "@/store/authSlice";
+import { useNavigate } from "react-router";
 
 type RegisterForm = { username: string; firstName: string; lastName: string; password: string; confirmPassword: string };
 
@@ -22,6 +25,7 @@ const schema = yup.object({
 });
 
 export default function Register() {
+  const navigate = useNavigate();
   const defaultValues = {
     username: '',
     firstName: '',
@@ -39,12 +43,19 @@ export default function Register() {
     handleSubmit
   } = methods;
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const dispatch = useAppDispatch();
+  const onSubmit = handleSubmit(async (data) => {
+    const result = await dispatch(registerUser(data));
+    if (registerUser.fulfilled.match(result)) {
+      // console.log(result.payload.token)
+      await navigate("/")
+    }else{
+      console.log(result)
+    }
   });
 
-
   return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <FormProvider methods={methods} onSubmit={onSubmit} className="flex flex-1">
       <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-125">
         <div className="text-2xl text-center">Register</div>
