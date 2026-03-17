@@ -12,8 +12,8 @@ const router = express.Router();
 
 router.post("/register", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.create({ username, password });
+    const { username, password, firstName, lastName } = req.body;
+    const user = await User.create({ username, password, firstName, lastName });
     res.status(201).json({ token: signToken(user._id) });
   } catch (err) {
     res.status(400).json({ error: err.message });
