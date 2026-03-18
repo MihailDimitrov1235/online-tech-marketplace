@@ -8,6 +8,7 @@ import Register from "./pages/auth/Register"
 import Page404 from "@/pages/Page404"
 import Listings from "./pages/Listings"
 import Dashboard from "./pages/Dashboard"
+import MyListings from "./pages/MyListings"
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,15 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Listings />,
+          },
+        ],
+      },
+      {
+        path: "my-listings",
+        children: [
+          {
+            index: true,
+            element: <MyListings />,
           },
         ],
       },
@@ -67,4 +77,5 @@ export const paths = {
   profile: "/profile",
   listings: "/listings",
   dashboard: "/dashboard",
+  myListings: "/my-listings",
 }
