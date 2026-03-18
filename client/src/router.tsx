@@ -7,6 +7,7 @@ import Login from "@/pages/auth/Login"
 import Register from "./pages/auth/Register"
 import Page404 from "@/pages/Page404"
 import Listings from "./pages/Listings"
+import Dashboard from "./pages/Dashboard"
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,15 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Listings />,
+          },
+        ],
+      },
+      {
+        path: "dashboard",
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
           },
         ],
       },
@@ -55,4 +65,6 @@ export const paths = {
     register: "/auth/register",
   },
   profile: "/profile",
+  listings: "/listings",
+  dashboard: "/dashboard",
 }

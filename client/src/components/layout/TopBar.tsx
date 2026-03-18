@@ -19,14 +19,16 @@ export const TopBar = () => {
       <Logo />
 
       <nav className="flex items-center gap-1">
-        <NavLink to={"/listings"}>
+        <NavLink to={paths.listings}>
           <Button variant="ghost" size="sm">
             Listings
           </Button>
         </NavLink>
-        <Button variant="ghost" size="sm">
-          About us
-        </Button>
+        <NavLink to={paths.dashboard}>
+          <Button variant="ghost" size="sm">
+            Dashboard
+          </Button>
+        </NavLink>
       </nav>
 
       <div>
@@ -41,7 +43,7 @@ export const TopBar = () => {
               menuItems={[
                 {
                   label: "Profile",
-                  link: "/profile",
+                  link: paths.profile,
                 },
                 {
                   label: "logout",
