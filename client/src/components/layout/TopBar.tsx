@@ -27,7 +27,7 @@ export const TopBar = () => {
       <div>
         { token? 
           <div>
-            <Dropdown variant="outline" size="icon" open={open} setOpen={setOpen} menuItems={[
+            <Dropdown align="bottom-left" variant="outline" size="icon" open={open} setOpen={setOpen} menuItems={[
               {
                 label:"Profile",
                 link:"/profile"
