@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
 
-type ButtonProps = {
+export type ButtonProps = {
   variant?: Variant;
   size?: Size;
   disabled?: boolean;
