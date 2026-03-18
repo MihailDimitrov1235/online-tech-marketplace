@@ -9,6 +9,7 @@ import Page404 from "@/pages/Page404"
 import Listings from "./pages/Listings"
 import Dashboard from "./pages/Dashboard"
 import MyListings from "./pages/MyListings"
+import Profile from "./pages/Profile"
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,15 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Dashboard />,
+          },
+        ],
+      },
+      {
+        path: "profile",
+        children: [
+          {
+            index: true,
+            element: <Profile />,
           },
         ],
       },
