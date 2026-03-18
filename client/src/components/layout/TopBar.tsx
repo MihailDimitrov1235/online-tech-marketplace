@@ -8,6 +8,7 @@ import { Logo } from "../common/Logo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/authSlice";
 import { useState } from "react";
+import { User } from "lucide-react";
 
 export const TopBar = () => {
   
@@ -26,7 +27,7 @@ export const TopBar = () => {
       <div>
         { token? 
           <div>
-            <Dropdown variant="ghost" size="sm" open={open} setOpen={setOpen} menuItems={[
+            <Dropdown variant="outline" size="icon" open={open} setOpen={setOpen} menuItems={[
               {
                 label:"Profile",
                 link:"/profile"
@@ -36,7 +37,7 @@ export const TopBar = () => {
                 onClick: () => {dispatch(logout())}
               }
             ]}>
-              User
+              <User size={20}/>
             </Dropdown>
           </div>
         : 

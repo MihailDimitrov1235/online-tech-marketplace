@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 type Variant = "primary" | "secondary" | "outline" | "ghost";
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "icon";
 
 export type ButtonProps = {
   variant?: Variant;
@@ -20,6 +21,7 @@ const sizes: Record<Size, string> = {
   sm: "px-4 py-1.5 text-xs rounded-lg",
   md: "px-6 py-2.5 text-sm rounded-xl",
   lg: "px-8 py-3.5 text-base rounded-2xl",
+  icon: "p-2 text-base rounded-full"
 };
  
 const variants: Record<Variant, string> = {
@@ -41,7 +43,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
+      className={twMerge(base, sizes[size], variants[variant], className)}
       disabled={disabled}
       onClick={onClick}
       type={type}

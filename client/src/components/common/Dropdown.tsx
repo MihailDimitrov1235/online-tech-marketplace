@@ -34,7 +34,6 @@ export const Dropdown = ({ open, setOpen, menuItems, ...buttonProps }: DropdownP
       <Button
         {...buttonProps}
         onClick={() => {setOpen(!open)}}
-        className="inline-flex cursor-pointer"
       />
 
       {open && (
