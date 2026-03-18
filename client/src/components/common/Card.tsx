@@ -18,9 +18,9 @@ const variantStyles: Record<CardVariant, string> = {
 }
 
 const sizeStyles: Record<CardSize, string> = {
-  sm: "p-4 rounded-lg",
-  md: "p-6 rounded-xl",
-  lg: "px-16 py-8 rounded-2xl",
+  sm: "p-4 rounded-md",
+  md: "p-6 rounded-lg",
+  lg: "px-16 py-8 rounded-xl",
 }
 
 export const Card: React.FC<CardProps> = ({

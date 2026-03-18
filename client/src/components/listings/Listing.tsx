@@ -23,13 +23,13 @@ export default function listing({
   }
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-md">
+    <div className="rounded-lg overflow-hidden shadow-md flex flex-col">
       <NavLink to={url}>
         <img src={imageUrl} />
       </NavLink>
 
-      <div className="mt-2 flex justify-between p-4">
-        <div className="flex flex-col gap-4">
+      <div className="mt-2 flex justify-between p-4 flex-1">
+        <div className="flex flex-col gap-4 h-full justify-between">
           <NavLink
             to={url}
             className="text-sm text-contrast hover:text-primary"
