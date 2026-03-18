@@ -37,7 +37,7 @@ export const TopBar = () => {
                 onClick: () => {dispatch(logout())}
               }
             ]}>
-              <User size={20}/>
+              <User size={14}/>
             </Dropdown>
           </div>
         : 
