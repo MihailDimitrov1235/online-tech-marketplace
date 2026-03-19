@@ -5,8 +5,8 @@ export default function AuthLayout() {
   return (
     <div className=" flex w-full min-h-screen flex-1">
       {/* Left panel */}
-      <div className="hidden md:flex flex-col justify-between w-1/2 bg-zinc-900 p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,#581c87_0%,#18181b_60%)]" />
+      <div className="hidden md:flex flex-col justify-between w-1/2 bg-contrast p-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,var(--color-primary)_0%,#18181b_60%)]" />
 
         <div className="relative z-10 text-white text-xl font-semibold tracking-tight">
           <Logo />
