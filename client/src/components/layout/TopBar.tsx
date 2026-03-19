@@ -12,8 +12,9 @@ import { User } from "lucide-react"
 
 export const TopBar = () => {
   const dispatch = useAppDispatch()
-  const { token } = useAppSelector(state => state.auth)
+  const { user } = useAppSelector(state => state.auth)
   const [open, setOpen] = useState(false)
+
   return (
     <div className="flex w-full items-center justify-between px-6 py-3 border-b border-neutral/40 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
       <Logo />
@@ -37,7 +38,7 @@ export const TopBar = () => {
       </nav>
 
       <div>
-        {token ? (
+        {user ? (
           <div>
             <Dropdown
               align="bottom-left"

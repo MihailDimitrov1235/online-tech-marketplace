@@ -1,7 +1,14 @@
-// src/store/authSlice.ts
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api/axiosInstance';
-import type { AuthState, UserData, AuthResponse, LoginPayload } from '../types/auth';
+import type { AuthState, UserData, AuthResponse, LoginPayload, User } from '../types/auth';
+
+export const fetchMe = createAsyncThunk<User>(
+  'auth/me',
+  async () => {
+    const response = await api.get<{ user: User }>('/auth/me');
+    return response.data.user;
+  }
+);
 
 export const registerUser = createAsyncThunk<AuthResponse, UserData>(
   'auth/register',
@@ -20,7 +27,7 @@ export const loginUser = createAsyncThunk<AuthResponse, LoginPayload>(
 );
 
 const initialState: AuthState = {
-  token: localStorage.getItem('token'),
+  user: null,
 };
 
 const authSlice = createSlice({
@@ -28,20 +35,23 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout(state) {
-      state.token = null;
+      state.user = null;
       localStorage.removeItem('token');
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchMe.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.token = action.payload.token;
+        state.user = action.payload.user;
         localStorage.setItem('token', action.payload.token);
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.token = action.payload.token;
+        state.user = action.payload.user;
         localStorage.setItem('token', action.payload.token);
-      })
+      });
   },
 });
 

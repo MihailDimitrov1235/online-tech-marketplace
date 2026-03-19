@@ -10,12 +10,18 @@ export type LoginPayload = {
   password: string;
 }
 
+export type User = {
+  _id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+}
+
 export type AuthResponse = {
+  user: User;
   token: string;
 }
 
 export type AuthState = {
-  token: string | null;
-  // loading: boolean;
-  // error: string | null;
+  user: User | null;
 }

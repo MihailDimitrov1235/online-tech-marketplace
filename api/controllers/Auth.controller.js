@@ -3,7 +3,7 @@ import UserModel from "../models/User.model.js";
 
 function signToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXP_TIME | "7d",
+    expiresIn: process.env.JWT_EXP_TIME ?? "7d",
   });
 }
 
@@ -16,6 +16,10 @@ export async function authRegister(req, res, next) {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
+}
+
+export async function authMe(req, res) {
+  res.json({ user: req.user });
 }
 
 export async function authLogin(req, res) {

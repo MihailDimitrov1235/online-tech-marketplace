@@ -5,6 +5,7 @@ import { RouterProvider } from "react-router/dom";
 import { router } from "./router"
 import { store } from "./store"
 import { setupInterceptors } from './api/interceptors';
+import { fetchMe } from './store/authSlice';
 import "./index.css"
 
 const container = document.getElementById("root")
@@ -12,6 +13,9 @@ const container = document.getElementById("root")
 if (container) {
   const root = createRoot(container)
   setupInterceptors()
+  if (localStorage.getItem('token')) {
+    store.dispatch(fetchMe());
+  }
   root.render(
     <StrictMode>
       <Provider store={store}>
