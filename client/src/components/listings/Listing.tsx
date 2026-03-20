@@ -1,5 +1,6 @@
 import { NavLink } from "react-router"
 import { Button } from "../common"
+import { paths } from "@/router"
 
 export type ListingParams = {
   _id: string
@@ -16,7 +17,7 @@ export default function listing({
   condition,
   price,
 }: ListingParams) {
-  const url = `/listings/${_id}`
+  const url = `${paths.listings}/${_id}`
 
   const handleQualityClick = () => {
     console.log("TODO: add quality filter on click")
@@ -24,8 +25,8 @@ export default function listing({
 
   return (
     <div className="rounded-lg overflow-hidden shadow-md flex flex-col">
-      <NavLink to={url}>
-        <img src={images[0]} />
+      <NavLink to={url} className="aspect-square">
+        <img className=" object-cover h-full w-full" src={images[0]} />
       </NavLink>
 
       <div className="mt-2 flex justify-between p-4 flex-1">

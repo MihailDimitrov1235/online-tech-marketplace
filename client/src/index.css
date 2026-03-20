@@ -2,10 +2,23 @@
 
 @theme {
   --color-primary: #741fde;
-  --color-primary-contrast: #FFFFFF;
+  --color-primary-contrast: #ffffff;
   --color-neutral: #dbdbdb;
   --color-contrast: #000;
   --color-error: #ba3f3f;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade {
+  animation: fade 0.3s ease-in-out;
 }
 
 body {

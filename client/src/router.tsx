@@ -10,6 +10,7 @@ import Listings from "./pages/Listings"
 import Dashboard from "./pages/Dashboard"
 import MyListings from "./pages/MyListings"
 import Profile from "./pages/Profile"
+import Detail from "./pages/Detail"
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Listings />,
+          },
+          {
+            path: ":id",
+            element: <Detail />,
           },
         ],
       },

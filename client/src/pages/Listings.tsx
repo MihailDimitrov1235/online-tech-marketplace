@@ -13,7 +13,6 @@ export default function Listings() {
       }>("/products")
       .then(res => {
         setProducts(res.data.products)
-        console.log(res.data.products)
       })
       .catch((err: unknown) => {
         console.log(err)
