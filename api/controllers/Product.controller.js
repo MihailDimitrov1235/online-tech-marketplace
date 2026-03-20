@@ -1,6 +1,5 @@
 import ProductModel from "../models/Product.model.js";
 
-// GET /products
 export async function getProducts(req, res) {
   try {
     const {
@@ -49,7 +48,6 @@ export async function getProducts(req, res) {
   }
 }
 
-// GET /products/:id
 export async function getProduct(req, res) {
   try {
     const product = await ProductModel.findById(req.params.id).populate(
@@ -65,7 +63,6 @@ export async function getProduct(req, res) {
   }
 }
 
-// POST /products
 export async function createProduct(req, res) {
   try {
     const {
@@ -101,14 +98,12 @@ export async function createProduct(req, res) {
   }
 }
 
-// PATCH /products/:id
 export async function updateProduct(req, res) {
   try {
     const product = await ProductModel.findById(req.params.id);
 
     if (!product) return res.status(404).json({ error: "Product not found" });
 
-    // only the seller who created it can update it
     if (product.seller.toString() !== req.user._id.toString()) {
       return res
         .status(403)
@@ -136,7 +131,6 @@ export async function updateProduct(req, res) {
   }
 }
 
-// DELETE /products/:id
 export async function deleteProduct(req, res) {
   try {
     const product = await ProductModel.findById(req.params.id);

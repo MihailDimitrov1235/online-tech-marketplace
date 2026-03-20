@@ -2,21 +2,21 @@ import { NavLink } from "react-router"
 import { Button } from "../common"
 
 export type ListingParams = {
-  id: string
-  imageUrl: string
-  title: string
-  quality: string
+  _id: string
+  images: string[]
+  name: string
+  condition: string
   price: number
 }
 
 export default function listing({
-  id,
-  imageUrl,
-  title,
-  quality,
+  _id,
+  images,
+  name,
+  condition,
   price,
 }: ListingParams) {
-  const url = `/listings/${id}`
+  const url = `/listings/${_id}`
 
   const handleQualityClick = () => {
     console.log("TODO: add quality filter on click")
@@ -25,7 +25,7 @@ export default function listing({
   return (
     <div className="rounded-lg overflow-hidden shadow-md flex flex-col">
       <NavLink to={url}>
-        <img src={imageUrl} />
+        <img src={images[0]} />
       </NavLink>
 
       <div className="mt-2 flex justify-between p-4 flex-1">
@@ -34,10 +34,10 @@ export default function listing({
             to={url}
             className="text-sm text-contrast hover:text-primary"
           >
-            {title}
+            {name}
           </NavLink>
           <Button onClick={handleQualityClick} size={"xs"} className=" w-fit">
-            {quality}
+            {condition}
           </Button>
           <p className="text-md font-medium text-contrast">{price}€</p>
         </div>
