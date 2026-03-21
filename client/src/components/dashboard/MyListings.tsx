@@ -27,6 +27,11 @@ export default function MyListings() {
         console.log(err)
       })
   }, [user])
+
+  const handleDelete = (id: string) => {
+    console.log("TODO: delete listing by id")
+    console.log(id)
+  }
   return (
     <div className="flex flex-col w-full gap-8">
       <Card className="justify-between items-center">
@@ -39,6 +44,9 @@ export default function MyListings() {
         </NavLink>
       </Card>
       <Card className="flex flex-col w-full gap-4">
+        {products.length == 0 && (
+          <div className="w-full text-center text-lg">No listings</div>
+        )}
         {products.map((prod, idx) => (
           <div
             key={idx}
@@ -61,7 +69,13 @@ export default function MyListings() {
                   <Pencil size={12} />
                 </Button>
               </NavLink>
-              <Button className="bg-error h-fit" size="icon">
+              <Button
+                onClick={() => {
+                  handleDelete(prod._id)
+                }}
+                className="bg-error h-fit"
+                size="icon"
+              >
                 <X size={12} />
               </Button>
             </div>

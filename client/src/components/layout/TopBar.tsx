@@ -25,11 +25,6 @@ export const TopBar = () => {
             Listings
           </Button>
         </NavLink>
-        <NavLink to={paths.myListings}>
-          <Button variant="ghost" size="sm">
-            My Listings
-          </Button>
-        </NavLink>
         <NavLink to={paths.dashboard}>
           <Button variant="ghost" size="sm">
             Dashboard
