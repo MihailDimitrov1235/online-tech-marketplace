@@ -9,6 +9,7 @@ export async function getProducts(req, res) {
       minPrice,
       maxPrice,
       search,
+      seller,
       page = 1,
       limit = 20,
     } = req.query;
@@ -24,6 +25,7 @@ export async function getProducts(req, res) {
       if (maxPrice) filter["price"].$lte = Number(maxPrice);
     }
     if (search) filter.$text = { $search: search };
+    if (seller) filter.seller = seller;
 
     const skip = (Number(page) - 1) * Number(limit);
 
