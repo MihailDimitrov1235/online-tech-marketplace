@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router"
+import { createBrowserRouter, Navigate, Outlet } from "react-router"
 
 import { MainLayout, AuthLayout } from "@/layouts"
 
@@ -9,8 +9,13 @@ import Page404 from "@/pages/Page404"
 import Listings from "./pages/Listings"
 import Dashboard from "./pages/Dashboard"
 import MyListings from "./pages/MyListings"
-import Profile from "./pages/Profile"
 import Detail from "./pages/Detail"
+import Settings from "./pages/Settings"
+
+function ProtectedRoute() {
+  const token = localStorage.getItem("token")
+  return token ? <Outlet /> : <Navigate to={paths.auth.login} replace />
+}
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +41,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "my-listings",
+        element: <ProtectedRoute />,
         children: [
           {
             index: true,
@@ -45,6 +51,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "dashboard",
+        element: <ProtectedRoute />,
         children: [
           {
             index: true,
@@ -53,11 +60,12 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "profile",
+        path: "settings",
+        element: <ProtectedRoute />,
         children: [
           {
             index: true,
-            element: <Profile />,
+            element: <Settings />,
           },
         ],
       },
@@ -89,7 +97,7 @@ export const paths = {
     login: "/auth/login",
     register: "/auth/register",
   },
-  profile: "/profile",
+  settings: "/settings",
   listings: "/listings",
   dashboard: "/dashboard",
   myListings: "/my-listings",

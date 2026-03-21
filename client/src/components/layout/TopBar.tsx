@@ -48,8 +48,8 @@ export const TopBar = () => {
               setOpen={setOpen}
               menuItems={[
                 {
-                  label: "Profile",
-                  link: paths.profile,
+                  label: "Settings",
+                  link: paths.settings,
                 },
                 {
                   label: "logout",
