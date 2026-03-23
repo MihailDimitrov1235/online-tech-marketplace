@@ -21,9 +21,9 @@ const variantStyles: Record<
 > = {
   default: {
     wrapper:
-      "bg-transparent border-1 border-contrast/20 rounded-xl hover:border-contrast/50 transition-colors duration-200",
+      "bg-white/50 backdrop-blur-sm border border-zinc-200/80 rounded-xl hover:bg-white/70 hover:border-violet-300 transition-all duration-200",
     input: "bg-transparent",
-    focused: "ring-0 border-contrast/80",
+    focused: "ring-0 bg-white/80 border-violet-400",
     error: "border-red-400 hover:border-red-500",
   },
   underline: {
@@ -100,15 +100,15 @@ export const TextField: React.FC<TextFieldProps> = ({
       {label && (
         <label
           htmlFor={id}
-          className={`${s.label} ${
-            hasError ? "text-error" : "text-contrast"
+          className={`${s.label} font-medium ${
+            hasError ? "text-red-500" : "text-contrast/70"
           }`}
         >
           {label}
         </label>
       )}
 
-      <div className={wrapperClasses}>
+      <label htmlFor={id} className={wrapperClasses}>
         {leadingIcon && (
           <span className="text-contrast/50 shrink-0">{leadingIcon}</span>
         )}
@@ -116,14 +116,14 @@ export const TextField: React.FC<TextFieldProps> = ({
           id={id}
           disabled={disabled}
           className={inputClasses}
-          onFocus={() => {setFocused(true)}}
-          onBlur={() => {setFocused(false)}}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           {...inputProps}
         />
         {trailingIcon && (
           <span className="text-contrast/50 shrink-0">{trailingIcon}</span>
         )}
-      </div>
+      </label>
 
       {(helperText ?? errorText) && (
         <p

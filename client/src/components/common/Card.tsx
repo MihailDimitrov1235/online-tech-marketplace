@@ -30,7 +30,7 @@ export const Card: React.FC<CardProps> = ({
   className = "",
   onClick,
 }) => {
-  const baseStyles = "relative flex overflow-hidden"
+  const baseStyles = "relative flex"
   const interactiveStyles = onClick
     ? "cursor-pointer select-none active:scale-[0.98] transition-transform"
     : ""

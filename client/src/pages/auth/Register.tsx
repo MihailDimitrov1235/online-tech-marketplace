@@ -6,7 +6,7 @@ import * as yup from "yup"
 import { paths } from "@/router"
 
 import { Button } from "@/components/common/Button"
-import { Card } from "@/components/common/Card"
+
 import { FormProvider, RHFTextField } from "@/components/form"
 import { useAppDispatch } from "@/store/hooks"
 import { registerUser } from "@/store/authSlice"
@@ -68,47 +68,31 @@ export default function Register() {
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <FormProvider methods={methods} onSubmit={onSubmit} className="flex flex-1">
-      <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-125">
-        <div className="text-2xl text-center">Register</div>
+      <div className="m-auto w-md flex flex-col gap-8 px-10 py-10 rounded-3xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-xl shadow-violet-200/50">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Create an account</h1>
+          <p className="text-sm text-zinc-500">Join thousands of tech buyers and sellers</p>
+        </div>
 
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-4 w-full">
           <RHFTextField name="username" label="Username" fullWidth />
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <RHFTextField name="firstName" label="First name" fullWidth />
-
             <RHFTextField name="lastName" label="Last name" fullWidth />
           </div>
-
-          <RHFTextField
-            name="password"
-            label="Password"
-            fullWidth
-            type="password"
-          />
-
-          <RHFTextField
-            name="confirmPassword"
-            label="Confirm password"
-            fullWidth
-            type="password"
-          />
+          <RHFTextField name="password" label="Password" fullWidth type="password" />
+          <RHFTextField name="confirmPassword" label="Confirm password" fullWidth type="password" />
         </div>
 
-        <div className="text-end">
-          <span>Already have an account?</span>
-          <NavLink
-            className="text-primary hover:underline ml-1"
-            to={paths.auth.login}
-          >
+        <Button type="submit" className="w-full" size="lg">Create account</Button>
+
+        <p className="text-sm text-center text-zinc-500">
+          Already have an account?{" "}
+          <NavLink to={paths.auth.login} className="text-primary font-medium hover:underline">
             Sign in
           </NavLink>
-        </div>
-
-        <Button className="ml-auto" type="submit">
-          Submit
-        </Button>
-      </Card>
+        </p>
+      </div>
     </FormProvider>
   )
 }

@@ -6,7 +6,6 @@ import * as yup from "yup";
 import { paths } from "@/router";
 
 import { Button } from "@/components/common/Button";
-import { Card } from "@/components/common/Card";
 import { FormProvider, RHFTextField } from "@/components/form";
 import { useAppDispatch } from "@/store/hooks";
 import { loginUser } from "@/store/authSlice";
@@ -49,30 +48,26 @@ export default function Login() {
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <FormProvider methods={methods} onSubmit={onSubmit} className="flex flex-1">
-      <Card size="lg" className="flex flex-col gap-6 m-auto px-6 w-125">
-        <div className="text-2xl text-center">Login</div>
-
-        <div className="flex flex-col gap-2 w-full">
-          <RHFTextField
-            name="username"
-            label="Username"
-            fullWidth
-          />
-          <RHFTextField
-            name="password"
-            label="Password"
-            fullWidth
-            type="password"
-          />
+      <div className="m-auto w-md flex flex-col gap-8 px-10 py-10 rounded-3xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-xl shadow-violet-200/50">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Welcome back</h1>
+          <p className="text-sm text-zinc-400">Sign in to your TechMarket account</p>
         </div>
 
-        <div className="text-end">
-          <span>Don't have an account?</span>
-          <NavLink className="text-primary hover:underline ml-1" to={paths.auth.register}>Sign up</NavLink>
+        <div className="flex flex-col gap-4 w-full">
+          <RHFTextField name="username" label="Username" fullWidth />
+          <RHFTextField name="password" label="Password" fullWidth type="password" />
         </div>
 
-        <Button className="ml-auto" type="submit">Submit</Button>
-      </Card>
+        <Button type="submit" className="w-full" size="lg">Sign in</Button>
+
+        <p className="text-sm text-center text-zinc-400">
+          Don't have an account?{" "}
+          <NavLink to={paths.auth.register} className="text-primary font-medium hover:underline">
+            Create one
+          </NavLink>
+        </p>
+      </div>
     </FormProvider>
   )
 }
