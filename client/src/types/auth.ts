@@ -24,4 +24,5 @@ export type AuthResponse = {
 
 export type AuthState = {
   user: User | null;
+  status: 'idle' | 'loading' | 'resolved';
 }

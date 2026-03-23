@@ -28,6 +28,7 @@ export const loginUser = createAsyncThunk<AuthResponse, LoginPayload>(
 
 const initialState: AuthState = {
   user: null,
+  status: 'idle',
 };
 
 const authSlice = createSlice({
@@ -41,8 +42,15 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchMe.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(fetchMe.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.status = 'resolved';
+      })
+      .addCase(fetchMe.rejected, (state) => {
+        state.status = 'resolved';
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload.user;

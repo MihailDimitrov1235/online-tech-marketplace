@@ -1,6 +1,7 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router"
+import { createBrowserRouter, Outlet } from "react-router"
 
 import { MainLayout, AuthLayout } from "@/layouts"
+import { GuestGuard, AuthGuard } from "@/guards"
 
 import Home from "@/pages/Home"
 import Login from "@/pages/auth/Login"
@@ -12,11 +13,6 @@ import Detail from "./pages/listings/Detail"
 import Settings from "./pages/Settings"
 import NewListing from "./pages/listings/NewListing"
 import EditListing from "./pages/listings/EditListing"
-
-function ProtectedRoute() {
-  const token = localStorage.getItem("token")
-  return token ? <Outlet /> : <Navigate to={paths.auth.login} replace />
-}
 
 export const router = createBrowserRouter([
   {
@@ -30,58 +26,27 @@ export const router = createBrowserRouter([
       {
         path: "listings",
         children: [
-          {
-            index: true,
-            element: <Listings />,
-          },
-          {
-            path: "new",
-            element: <NewListing />,
-          },
-          {
-            path: "edit/:id",
-            element: <EditListing />,
-          },
-          {
-            path: ":id",
-            element: <Detail />,
-          },
+          { index: true, element: <Listings /> },
+          { path: "new", element: <NewListing /> },
+          { path: "edit/:id", element: <EditListing /> },
+          { path: ":id", element: <Detail /> },
         ],
       },
       {
-        path: "dashboard",
-        element: <ProtectedRoute />,
+        element: <AuthGuard><Outlet /></AuthGuard>,
         children: [
-          {
-            index: true,
-            element: <Dashboard />,
-          },
-        ],
-      },
-      {
-        path: "settings",
-        element: <ProtectedRoute />,
-        children: [
-          {
-            index: true,
-            element: <Settings />,
-          },
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "settings", element: <Settings /> },
         ],
       },
     ],
   },
   {
     path: "auth",
-    element: <AuthLayout />,
+    element: <GuestGuard><AuthLayout /></GuestGuard>,
     children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
     ],
   },
   {

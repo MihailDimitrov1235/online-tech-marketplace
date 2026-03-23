@@ -13,9 +13,7 @@ const container = document.getElementById("root")
 if (container) {
   const root = createRoot(container)
   setupInterceptors()
-  if (localStorage.getItem('token')) {
-    store.dispatch(fetchMe());
-  }
+  store.dispatch(fetchMe());
   root.render(
     <StrictMode>
       <Provider store={store}>
