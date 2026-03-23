@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import { twMerge } from "tailwind-merge"
 
-type Variant = "primary" | "secondary" | "outline" | "ghost"
+type Variant = "primary" | "secondary" | "outline" | "ghost" | "glass"
 type Size = "xs" | "sm" | "md" | "lg" | "icon"
 
 export type ButtonProps = {
@@ -15,7 +15,7 @@ export type ButtonProps = {
 }
 
 const base =
-  "relative inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-[0.97] cursor-pointer disabled:opacity-40 disabled:pointer-events-none select-none"
+  "relative inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-[0.97] cursor-pointer disabled:opacity-40 disabled:pointer-events-none select-none overflow-hidden"
 
 const sizes: Record<Size, string> = {
   xs: "px-3 py-1 text-xs rounded-lg",
@@ -34,6 +34,8 @@ const variants: Record<Variant, string> = {
     "bg-transparent text-contrast border border-zinc-200 hover:bg-zinc-50 shadow-sm",
   ghost:
     "bg-transparent text-white/80 hover:bg-white/10 hover:text-white",
+  glass:
+    "bg-violet-600/25 backdrop-blur-md text-violet-800 border border-violet-200/50 shadow-[0_4px_24px_rgba(139,92,246,0.15),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:bg-violet-600/30 hover:shadow-[0_4px_32px_rgba(139,92,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.7)]",
 }
 
 export const Button = ({
@@ -54,7 +56,11 @@ export const Button = ({
       type={type}
       {...props}
     >
-      {children}
+      {/* Specular highlight — top sheen simulating light on glass */}
+      {variant === "glass" && (
+        <span className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/40 to-transparent rounded-[inherit]" />
+      )}
+      <span className="relative z-10">{children}</span>
     </button>
   )
 }

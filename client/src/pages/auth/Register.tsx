@@ -84,7 +84,7 @@ export default function Register() {
           <RHFTextField name="confirmPassword" label="Confirm password" fullWidth type="password" />
         </div>
 
-        <Button type="submit" className="w-full" size="lg">Create account</Button>
+        <Button type="submit" variant="glass" className="w-full" size="lg">Create account</Button>
 
         <p className="text-sm text-center text-zinc-500">
           Already have an account?{" "}

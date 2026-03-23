@@ -59,7 +59,7 @@ export default function Login() {
           <RHFTextField name="password" label="Password" fullWidth type="password" />
         </div>
 
-        <Button type="submit" className="w-full" size="lg">Sign in</Button>
+        <Button type="submit" variant="glass" className="w-full" size="lg">Sign in</Button>
 
         <p className="text-sm text-center text-zinc-400">
           Don't have an account?{" "}
