@@ -57,7 +57,18 @@ export const Dropdown: React.FC<DropdownProps> = ({
           setSearch(e.target.value)
         }}
         placeholder={placeholder}
-        trailingIcon={open ? <ChevronDown /> : <ChevronUp />}
+        trailingIcon={
+          <div
+            onClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+              setOpen(!open)
+            }}
+            className="cursor-pointer"
+          >
+            {open ? <ChevronDown /> : <ChevronUp />}
+          </div>
+        }
       />
 
       {open && (
