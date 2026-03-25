@@ -1,42 +1,35 @@
-import { useEffect, useRef, useState } from "react"
-import {
-  TextField,
-  type TextFieldSize,
-  type TextFieldVariant,
-} from "./TextField"
+import { type ComponentProps, useEffect, useRef, useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import { TextField } from "./TextField"
 
-type DropdownProps = Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  "size" | "value" | "onChange"
-> & {
+type TextFieldProps = ComponentProps<typeof TextField>
+
+type DropdownProps = TextFieldProps & {
   options: { label: string; value: string }[] | string[]
-  value?: string
-  onChange: (value: string) => void
-  label?: string
-  helperText?: string
-  errorText?: string
-  variant?: TextFieldVariant
-  size?: TextFieldSize
-  fullWidth?: boolean
-  className?: string
   placeholder?: string
+  value: string
+  onChange: (value: string) => void
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
   options,
+  placeholder,
   value,
   onChange,
-  placeholder,
   ...textFieldProps
 }) => {
+  const [search, setSearch] = useState("")
+  const [open, setOpen] = useState(false)
+
   const normalized = options.map(o =>
     typeof o === "string" ? { label: o, value: o } : o,
   )
+
+  const selected = normalized.find(o => o.value === value)
+
   const filtered = normalized.filter(o =>
-    o.label.toLowerCase().includes(value?.toLowerCase() ?? ""),
+    o.label.toLowerCase().includes(search.toLowerCase()),
   )
-  const [open, setOpen] = useState(false)
 
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -56,16 +49,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       <TextField
         {...textFieldProps}
-        value={value}
+        value={open ? search : (selected?.label ?? "")}
         onFocus={() => {
           setOpen(true)
         }}
-        onChange={data => {
-          onChange(data.target.value)
+        onChange={e => {
+          setSearch(e.target.value)
         }}
         placeholder={placeholder}
         trailingIcon={open ? <ChevronDown /> : <ChevronUp />}
-        className="cursor-pointer"
       />
 
       {open && (
@@ -73,11 +65,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
           {filtered.map(opt => (
             <li
               key={opt.value}
+              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-contrast hover:bg-white`}
               onClick={() => {
                 onChange(opt.value)
                 setOpen(false)
+                setSearch("")
               }}
-              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-contrast hover:bg-white`}
             >
               {opt.label}
             </li>

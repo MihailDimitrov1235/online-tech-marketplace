@@ -3,27 +3,21 @@ import { type Resolver, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { FormProvider, RHFTextField } from "@/components/form"
-import { Dropdown } from "@/components/common/Dropdown"
-import { useState } from "react"
+import { RHFDropdown } from "@/components/form/RHFDropdown"
 
-// "type": "smartphone",
-// 		"category": "mobile",
-// 		"name": "Cocaine",
-// 		"brand": "Samsung",
-// 		"price": 67.67,
-// 		"stock": 69,
-// 		"condition": "used",
-// 		"images": [
-// 			"https://thumbs.dreamstime.com/b/idyllic-summer-landscape-clear-mountain-lake-alps-45054687.jpg",
-// 			"https://pbs.twimg.com/media/G20nX3rW4AAOnhu.jpg"
-// 		],
 const types = ["smartphone", "server"]
 const categories = ["mobile", "idk"]
 const conditions = ["used", "new"]
 
 const schema = yup.object({
-  type: yup.string().oneOf(types).required("Type is required"),
-  category: yup.string().oneOf(categories).optional(),
+  type: yup
+    .string()
+    .oneOf(types, "Select a valid type")
+    .required("Type is required"),
+  category: yup
+    .string()
+    .oneOf(categories, "Select a valid category")
+    .optional(),
   name: yup.string().required("Name is required"),
   brand: yup.string().optional(),
   price: yup.number().positive().required("Price is required"),
@@ -63,10 +57,12 @@ export default function NewListing() {
     console.log(data)
   })
 
-  const [val, setval] = useState(types[0])
-
   return (
-    <div className="flex flex-col w-full gap-8">
+    <FormProvider
+      methods={methods}
+      onSubmit={onSubmit}
+      className="flex flex-col w-full gap-8"
+    >
       <Card className="items-center">
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
           Add a listing
@@ -76,13 +72,9 @@ export default function NewListing() {
         </Button>
       </Card>
 
-      <FormProvider
-        methods={methods}
-        onSubmit={onSubmit}
-        className="flex flex-1 gap-8"
-      >
+      <div className="flex flex-1 gap-8">
         <Card className="w-full h-fit flex-col flex-1">
-          <RHFTextField name="username" label="Username" fullWidth />
+          <RHFTextField name="name" label="Name" fullWidth />
           <RHFTextField
             name="password"
             label="Password"
@@ -95,10 +87,10 @@ export default function NewListing() {
             fullWidth
             type="password"
           />
-          <Dropdown fullWidth options={types} value={val} onChange={setval} />
+          <RHFDropdown name="type" label="Types" fullWidth options={types} />
         </Card>
         <Card className="h-fit flex-1">pepe</Card>
-      </FormProvider>
-    </div>
+      </div>
+    </FormProvider>
   )
 }

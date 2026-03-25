@@ -1,26 +1,31 @@
+import type { PathValue } from "react-hook-form"
 import {
   useFormContext,
   type FieldPath,
   type FieldValues,
 } from "react-hook-form"
-
-import { TextField } from "../common/TextField"
+import { Dropdown } from "../common/Dropdown"
 import type { ComponentProps } from "react"
 
-type TextFieldProps = ComponentProps<typeof TextField>
-
-type RHFTextFieldProps<T extends FieldValues> = Omit<TextFieldProps, "name"> & {
+type DropdownProps = ComponentProps<typeof Dropdown>
+type RHFDropdownProps<T extends FieldValues> = Omit<
+  DropdownProps,
+  "name" | "value" | "onChange"
+> & {
   name: FieldPath<T>
 }
 
-export const RHFTextField = <T extends FieldValues>({
+export const RHFDropdown = <T extends FieldValues>({
   name,
   ...props
-}: RHFTextFieldProps<T>) => {
+}: RHFDropdownProps<T>) => {
   const {
-    register,
+    setValue,
+    watch,
     formState: { errors },
   } = useFormContext<T>()
+
+  const value = watch(name) ?? ""
 
   const error = name.split(".").reduce<unknown>((acc, key) => {
     if (acc && typeof acc === "object" && key in acc) {
@@ -34,5 +39,14 @@ export const RHFTextField = <T extends FieldValues>({
       ? String((error as { message: unknown }).message)
       : undefined
 
-  return <TextField {...props} errorText={errorMessage} {...register(name)} />
+  return (
+    <Dropdown
+      {...props}
+      value={value}
+      onChange={val => {
+        setValue(name, val as PathValue<T, FieldPath<T>>)
+      }}
+      errorText={errorMessage}
+    />
+  )
 }
