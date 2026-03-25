@@ -1,19 +1,22 @@
-import { useState, useId } from "react";
+import { useState, useId } from "react"
 
-type TextFieldVariant = "default" | "underline";
-type TextFieldSize = "sm" | "md" | "lg";
+export type TextFieldVariant = "default" | "underline"
+export type TextFieldSize = "sm" | "md" | "lg"
 
-type TextFieldProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> & {
-  label?: string;
-  helperText?: string;
-  errorText?: string;
-  leadingIcon?: React.ReactNode;
-  trailingIcon?: React.ReactNode;
-  variant?: TextFieldVariant;
-  size?: TextFieldSize;
-  fullWidth?: boolean;
-  className?: string;
-};
+type TextFieldProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size"
+> & {
+  label?: string
+  helperText?: string
+  errorText?: string
+  leadingIcon?: React.ReactNode
+  trailingIcon?: React.ReactNode
+  variant?: TextFieldVariant
+  size?: TextFieldSize
+  fullWidth?: boolean
+  className?: string
+}
 
 const variantStyles: Record<
   TextFieldVariant,
@@ -33,9 +36,12 @@ const variantStyles: Record<
     focused: "ring-0 border-contrast/80",
     error: "border-red-400 hover:border-red-500",
   },
-};
+}
 
-const sizeStyles: Record<TextFieldSize, { wrapper: string; input: string; label: string }> = {
+const sizeStyles: Record<
+  TextFieldSize,
+  { wrapper: string; input: string; label: string }
+> = {
   sm: {
     wrapper: "px-3 py-1.5",
     input: "text-sm",
@@ -51,7 +57,7 @@ const sizeStyles: Record<TextFieldSize, { wrapper: string; input: string; label:
     input: "text-base",
     label: "text-sm",
   },
-};
+}
 
 export const TextField: React.FC<TextFieldProps> = ({
   label,
@@ -66,13 +72,13 @@ export const TextField: React.FC<TextFieldProps> = ({
   disabled = false,
   ...inputProps
 }) => {
-  const [focused, setFocused] = useState(false);
-  const generatedId = useId();
-  const id = inputProps.id ?? generatedId;
+  const [focused, setFocused] = useState(false)
+  const generatedId = useId()
+  const id = inputProps.id ?? generatedId
 
-  const hasError = Boolean(errorText);
-  const v = variantStyles[variant];
-  const s = sizeStyles[size];
+  const hasError = Boolean(errorText)
+  const v = variantStyles[variant]
+  const s = sizeStyles[size]
 
   const wrapperClasses = [
     "flex items-center gap-2",
@@ -84,7 +90,7 @@ export const TextField: React.FC<TextFieldProps> = ({
     className,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(" ")
 
   const inputClasses = [
     "flex-1 outline-none text-contrast placeholder-gray-400",
@@ -93,7 +99,7 @@ export const TextField: React.FC<TextFieldProps> = ({
     disabled ? "cursor-not-allowed" : "",
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(" ")
 
   return (
     <div className={`flex flex-col gap-1 ${fullWidth ? "w-full" : "w-fit"}`}>
@@ -116,8 +122,12 @@ export const TextField: React.FC<TextFieldProps> = ({
           id={id}
           disabled={disabled}
           className={inputClasses}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={() => {
+            setFocused(true)
+          }}
+          onBlur={() => {
+            setFocused(false)
+          }}
           {...inputProps}
         />
         {trailingIcon && (
@@ -135,5 +145,5 @@ export const TextField: React.FC<TextFieldProps> = ({
         </p>
       )}
     </div>
-  );
-};
+  )
+}
