@@ -21,9 +21,9 @@ const variantStyles: Record<
 > = {
   default: {
     wrapper:
-      "bg-white/50 backdrop-blur-sm border border-zinc-200/80 rounded-xl hover:bg-white/70 hover:border-violet-300 transition-all duration-200",
+      "bg-white/50 backdrop-blur-sm border border-zinc-200/80 rounded-xl hover:bg-white/70 hover:border-violet-300 transition-all duration-200 dark:bg-zinc-800/50 dark:border-zinc-700/80 dark:hover:bg-zinc-800/70 dark:hover:border-violet-500",
     input: "bg-transparent",
-    focused: "ring-0 bg-white/80 border-violet-400",
+    focused: "ring-0 bg-white/80 border-violet-400 dark:bg-zinc-800/90 dark:border-violet-500",
     error: "border-red-400 hover:border-red-500",
   },
   underline: {

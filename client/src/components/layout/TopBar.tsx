@@ -1,5 +1,6 @@
 import { NavLink } from "react-router"
 import { twMerge } from "tailwind-merge"
+import { Moon, Sun, User } from "lucide-react"
 
 import { paths } from "@/router"
 import { Button } from "../common/Button"
@@ -7,8 +8,8 @@ import { Dropdown } from "../common/Dropdown"
 import { Logo } from "../common/Logo"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { logout } from "@/store/authSlice"
+import { useTheme } from "@/hooks/useTheme"
 import { useState } from "react"
-import { User } from "lucide-react"
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   twMerge(
@@ -21,6 +22,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export const TopBar = () => {
   const dispatch = useAppDispatch()
   const { user } = useAppSelector(state => state.auth)
+  const { theme, toggle } = useTheme()
   const [open, setOpen] = useState(false)
 
   const initials = user
@@ -44,7 +46,14 @@ export const TopBar = () => {
           </NavLink>
         </nav>
 
-        <div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggle}
+            className="p-2 rounded-xl cursor-pointer text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/80 transition-all duration-200"
+          >
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
           {user ? (
             <Dropdown
               align="bottom-left"

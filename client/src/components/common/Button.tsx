@@ -35,7 +35,7 @@ const variants: Record<Variant, string> = {
   ghost:
     "bg-transparent text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-900",
   glass:
-    "bg-violet-600/25 backdrop-blur-md text-violet-800 border border-violet-200/50 shadow-[0_4px_24px_rgba(139,92,246,0.15),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:bg-violet-600/30 hover:shadow-[0_4px_32px_rgba(139,92,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.7)]",
+    "bg-violet-600/25 backdrop-blur-md text-violet-800 border border-violet-200/50 shadow-[0_4px_24px_rgba(139,92,246,0.15),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:bg-violet-600/30 hover:shadow-[0_4px_32px_rgba(139,92,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.7)] dark:text-violet-200 hover:bg-violet-800/30",
 }
 
 export const Button = ({

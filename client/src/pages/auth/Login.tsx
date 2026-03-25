@@ -48,9 +48,9 @@ export default function Login() {
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <FormProvider methods={methods} onSubmit={onSubmit} className="flex flex-1">
-      <div className="m-auto w-md flex flex-col gap-8 px-10 py-10 rounded-3xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-xl shadow-violet-200/50">
+      <div className="m-auto w-md flex flex-col gap-8 px-10 py-10 rounded-3xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-xl shadow-violet-200/50 dark:bg-zinc-900/60 dark:border-white/10 dark:shadow-violet-900/20">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Welcome back</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">Welcome back</h1>
           <p className="text-sm text-zinc-400">Sign in to your TechMarket account</p>
         </div>
 
