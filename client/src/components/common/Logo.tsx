@@ -5,7 +5,7 @@ import { paths } from "@/router";
 export const Logo = () => {
   return (
     <NavLink to={paths.home}>
-      <div className="relative z-10 text-white text-xl font-semibold tracking-tight">
+      <div className="text-xl font-semibold tracking-tight bg-linear-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">
         TechMarket
       </div>
     </NavLink>

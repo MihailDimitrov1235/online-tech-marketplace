@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #741fde;
   --color-primary-contrast: #ffffff;
@@ -19,6 +21,11 @@
 
 .animate-fade {
   animation: fade 0.3s ease-in-out;
+}
+
+.dark {
+  --color-contrast: #f4f4f5;
+  --color-neutral: #3f3f46;
 }
 
 body {
