@@ -20,7 +20,7 @@ export default function Listings() {
   }, [])
 
   return (
-    <div className="flex flex-col w-full gap-8">
+    <div className="flex flex-col w-full gap-8 px-14 py-8">
       <Card className="w-full">info</Card>
       <div className="flex gap-8 w-full">
         <Card>

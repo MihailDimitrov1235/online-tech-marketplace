@@ -60,7 +60,7 @@ export const Button = ({
       {variant === "glass" && (
         <span className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/40 to-transparent rounded-[inherit]" />
       )}
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 inline-flex items-center">{children}</span>
     </button>
   )
 }

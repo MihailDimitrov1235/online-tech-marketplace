@@ -9,7 +9,7 @@ export default function Settings() {
   const [tab, setTab] = useState(tabs[0])
 
   return (
-    <div className="flex gap-8 w-full">
+    <div className="flex gap-8 w-full px-14 py-8">
       <Card className="flex flex-col h-fit min-h-120 gap-4">
         {tabs.map((t, idx) => (
           <Button

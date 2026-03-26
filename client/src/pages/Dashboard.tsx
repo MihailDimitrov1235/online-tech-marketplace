@@ -12,7 +12,7 @@ const tabs = [
 export default function Dashboard() {
   const [tab, setTab] = useState(tabs[0])
   return (
-    <div className="w-full flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-8 px-14 py-8">
       <div className="mx-auto h-fit shadow-md rounded-xl overflow-hidden">
         {tabs.map((t, idx) => (
           <Button
