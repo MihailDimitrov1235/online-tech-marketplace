@@ -30,7 +30,7 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/60 dark:border-zinc-800/60 bg-white/75 dark:bg-zinc-950/75 backdrop-blur-xl">
-      <div className="flex items-center justify-between px-8 h-14">
+      <div className="flex items-center justify-between px-14 h-14">
         <Logo />
 
         <nav className="flex items-center gap-1">

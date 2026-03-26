@@ -1,7 +1,8 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import { RouterProvider } from "react-router/dom";
+import { RouterProvider } from "react-router/dom"
+import { ThemeProvider } from "./theme/ThemeProvider";
 import { router } from "./router"
 import { store } from "./store"
 import { setupInterceptors } from './api/interceptors';
@@ -16,9 +17,11 @@ if (container) {
   store.dispatch(fetchMe());
   root.render(
     <StrictMode>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      <ThemeProvider>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ThemeProvider>
     </StrictMode>
   )
 } else {

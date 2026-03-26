@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import { Logo } from "../components/common/Logo";
 import { useTheme } from "@/theme/useTheme";
+import { ThemeToggle } from "@/theme/ThemeToggle";
 
 const lightBg = `
   radial-gradient(ellipse 60% 60% at 0% 0%, rgba(167,139,250,0.35) 0%, transparent 60%),
@@ -30,8 +31,9 @@ export default function AuthLayout() {
       className="relative flex flex-col w-full min-h-screen"
       style={{ background: theme === "dark" ? darkBg : lightBg }}
     >
-      <div className="flex items-center px-10 py-7">
+      <div className="flex items-center justify-between px-14 py-7">
         <Logo />
+        <ThemeToggle />
       </div>
 
       <div className="flex-1 flex items-center justify-center p-8">
