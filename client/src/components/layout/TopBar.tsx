@@ -5,7 +5,7 @@ import { User } from "lucide-react"
 
 import { paths } from "@/router"
 import { Button } from "../common/Button"
-import { Dropdown } from "../common/Dropdown"
+import { Dropdown } from "../common/Menu"
 import { Logo } from "../common/Logo"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { logout } from "@/store/authSlice"
