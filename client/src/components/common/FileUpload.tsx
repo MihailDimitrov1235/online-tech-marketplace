@@ -25,15 +25,18 @@ export const FileUpload = ({
   files,
   setFiles,
 }: FileUploadProps) => {
-  const onDrop = useCallback((accepted: File[]) => {
-    const newFiles: UploadedFile[] = [
-      ...accepted.map(file => {
-        const id = `${file.name}-${Date.now().toString()}-${Math.random().toString()}`
-        return { id, file }
-      }),
-    ]
-    setFiles(p => [...p, ...newFiles]) // TODO: fix ability to upload more than limit number of files
-  }, [])
+  const onDrop = useCallback(
+    (accepted: File[]) => {
+      const newFiles: UploadedFile[] = [
+        ...accepted.map(file => {
+          const id = `${file.name}-${Date.now().toString()}-${Math.random().toString()}`
+          return { id, file }
+        }),
+      ]
+      setFiles(p => [...p, ...newFiles]) // TODO: fix ability to upload more than limit number of files
+    },
+    [setFiles],
+  )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

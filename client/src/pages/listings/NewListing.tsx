@@ -5,9 +5,8 @@ import * as yup from "yup"
 import { FormProvider, RHFTextField } from "@/components/form"
 import { RHFDropdown } from "@/components/form/RHFDropdown"
 import { Euro } from "lucide-react"
-import type { UploadedFile } from "@/components/common/FileUpload"
-import { FileUpload } from "@/components/common/FileUpload"
-import { useState } from "react"
+import { RHFFileUpload } from "@/components/form/RHFFileUpload"
+import { type UploadedFile } from "@/components/common/FileUpload"
 
 const types = ["smartphone", "server"]
 const categories = ["mobile", "idk"]
@@ -27,6 +26,11 @@ const schema = yup.object({
   price: yup.number().positive().required("Price is required"),
   stock: yup.number().positive().integer().required("Stock is required"),
   condition: yup.string().oneOf(conditions).required("Condition is required"),
+  images: yup
+    .array()
+    .of(yup.mixed<UploadedFile>().required())
+    .min(1, "Upload at least one image")
+    .required(),
 })
 
 type FormSchema = {
@@ -37,6 +41,7 @@ type FormSchema = {
   condition: string
   category?: string
   brand?: string
+  images: UploadedFile[]
 }
 
 export default function NewListing() {
@@ -48,6 +53,7 @@ export default function NewListing() {
     price: 1,
     stock: 1,
     condition: "",
+    images: [],
   }
 
   const methods = useForm<FormSchema>({
@@ -60,8 +66,6 @@ export default function NewListing() {
   const onSubmit = handleSubmit(data => {
     console.log(data)
   })
-
-  const [files, setFiles] = useState<UploadedFile[]>([])
 
   return (
     <FormProvider
@@ -97,9 +101,9 @@ export default function NewListing() {
             type="password"
           />
           <RHFDropdown name="type" label="Types" fullWidth options={types} />
-          <FileUpload
-            files={files}
-            setFiles={setFiles}
+
+          <RHFFileUpload
+            name="images"
             accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
           />
         </Card>
