@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { FormProvider, RHFTextField } from "@/components/form"
 import { RHFDropdown } from "@/components/form/RHFDropdown"
+import { Euro } from "lucide-react"
 
 const types = ["smartphone", "server"]
 const categories = ["mobile", "idk"]
@@ -76,10 +77,12 @@ export default function NewListing() {
         <Card className="w-full h-fit flex-col flex-1">
           <RHFTextField name="name" label="Name" fullWidth />
           <RHFTextField
-            name="password"
-            label="Password"
+            name="price"
+            label="Price"
             fullWidth
-            type="password"
+            numeric
+            decimalPlaces={2}
+            trailingIcon={<Euro size={20} />}
           />
           <RHFTextField
             name="confirmPassword"

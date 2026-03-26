@@ -66,7 +66,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             }}
             className="cursor-pointer"
           >
-            {open ? <ChevronDown /> : <ChevronUp />}
+            {open ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
           </div>
         }
       />

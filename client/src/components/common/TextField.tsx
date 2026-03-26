@@ -1,4 +1,5 @@
 import { useState, useId } from "react"
+import { twMerge } from "tailwind-merge"
 
 type TextFieldVariant = "default" | "underline"
 type TextFieldSize = "sm" | "md" | "lg"
@@ -16,6 +17,8 @@ type TextFieldProps = Omit<
   size?: TextFieldSize
   fullWidth?: boolean
   className?: string
+  numeric?: boolean
+  decimalPlaces?: number
 }
 
 const variantStyles: Record<
@@ -41,21 +44,24 @@ const variantStyles: Record<
 
 const sizeStyles: Record<
   TextFieldSize,
-  { wrapper: string; input: string; label: string }
+  { wrapper: string; input: string; icons: string; label: string }
 > = {
   sm: {
-    wrapper: "px-3 py-1.5",
-    input: "text-sm",
+    wrapper: "",
+    input: "mx-3 my-1.5 text-sm",
+    icons: "p-1.5",
     label: "text-xs",
   },
   md: {
-    wrapper: "px-4 py-2.5",
-    input: "text-sm",
+    wrapper: "",
+    input: "mx-4 my-2.5 text-sm",
+    icons: "p-2.5",
     label: "text-sm",
   },
   lg: {
-    wrapper: "px-4 py-3.5",
-    input: "text-base",
+    wrapper: "",
+    input: "mx-4 my-3.5 text-base",
+    icons: "p-3.5",
     label: "text-sm",
   },
 }
@@ -71,6 +77,8 @@ export const TextField: React.FC<TextFieldProps> = ({
   fullWidth = false,
   className = "",
   disabled = false,
+  numeric = false,
+  decimalPlaces = 2,
   ...inputProps
 }) => {
   const [focused, setFocused] = useState(false)
@@ -82,7 +90,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   const s = sizeStyles[size]
 
   const wrapperClasses = [
-    "flex items-center gap-2",
+    "flex items-center gap-2 overflow-hidden",
     v.wrapper,
     s.wrapper,
     focused ? v.focused : "",
@@ -102,6 +110,65 @@ export const TextField: React.FC<TextFieldProps> = ({
     .filter(Boolean)
     .join(" ")
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!numeric) {
+      return inputProps.onKeyDown?.(e)
+    }
+    const allowed = [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "Tab",
+      "Enter",
+      "Home",
+      "End",
+    ]
+    if (allowed.includes(e.key)) {
+      return
+    }
+
+    if (e.key === "-") {
+      const { selectionStart, value } = e.currentTarget
+      if (selectionStart === 0 && !value.includes("-")) {
+        return
+      }
+      e.preventDefault()
+      return
+    }
+    if (e.key === ".") {
+      if (decimalPlaces > 0 && !e.currentTarget.value.includes(".")) {
+        return
+      }
+      e.preventDefault()
+      return
+    }
+
+    if (/[0-9]/.test(e.key)) {
+      const { value, selectionStart, selectionEnd } = e.currentTarget
+      const dotIndex = value.indexOf(".")
+      if (
+        decimalPlaces > 0 &&
+        dotIndex !== -1 &&
+        selectionStart !== null &&
+        selectionEnd !== null &&
+        selectionStart > dotIndex &&
+        selectionStart === selectionEnd &&
+        value.length - dotIndex - 1 >= decimalPlaces
+      ) {
+        e.preventDefault()
+      }
+      return
+    }
+    e.preventDefault()
+    inputProps.onKeyDown?.(e)
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFocused(false)
+    inputProps.onBlur?.(e)
+  }
+
   return (
     <div className={`flex flex-col gap-1 ${fullWidth ? "w-full" : "w-fit"}`}>
       {label && (
@@ -117,7 +184,14 @@ export const TextField: React.FC<TextFieldProps> = ({
 
       <label htmlFor={id} className={wrapperClasses}>
         {leadingIcon && (
-          <span className="text-contrast/50 shrink-0">{leadingIcon}</span>
+          <span
+            className={twMerge(
+              "text-contrast/80 shrink-0 bg-neutral/50",
+              s.icons,
+            )}
+          >
+            {leadingIcon}
+          </span>
         )}
         <input
           id={id}
@@ -126,13 +200,20 @@ export const TextField: React.FC<TextFieldProps> = ({
           onFocus={() => {
             setFocused(true)
           }}
-          onBlur={() => {
-            setFocused(false)
-          }}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           {...inputProps}
         />
+
         {trailingIcon && (
-          <span className="text-contrast/50 shrink-0">{trailingIcon}</span>
+          <span
+            className={twMerge(
+              "text-contrast/80 shrink-0 bg-neutral/50",
+              s.icons,
+            )}
+          >
+            {trailingIcon}
+          </span>
         )}
       </label>
 
