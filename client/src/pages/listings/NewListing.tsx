@@ -5,6 +5,9 @@ import * as yup from "yup"
 import { FormProvider, RHFTextField } from "@/components/form"
 import { RHFDropdown } from "@/components/form/RHFDropdown"
 import { Euro } from "lucide-react"
+import type { UploadedFile } from "@/components/common/FileUpload"
+import { FileUpload } from "@/components/common/FileUpload"
+import { useState } from "react"
 
 const types = ["smartphone", "server"]
 const categories = ["mobile", "idk"]
@@ -58,9 +61,12 @@ export default function NewListing() {
     console.log(data)
   })
 
+  const [files, setFiles] = useState<UploadedFile[]>([])
+
   return (
     <FormProvider
       methods={methods}
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onSubmit={onSubmit}
       className="flex flex-col w-full gap-8"
     >
@@ -73,8 +79,8 @@ export default function NewListing() {
         </Button>
       </Card>
 
-      <div className="flex flex-1 gap-8">
-        <Card className="w-full h-fit flex-col flex-1">
+      <div className="flex flex-1 gap-8 ">
+        <Card className="w-full h-fit flex-col flex-1 gap-4 min-w-0 overflow-hidden">
           <RHFTextField name="name" label="Name" fullWidth />
           <RHFTextField
             name="price"
@@ -91,6 +97,11 @@ export default function NewListing() {
             type="password"
           />
           <RHFDropdown name="type" label="Types" fullWidth options={types} />
+          <FileUpload
+            files={files}
+            setFiles={setFiles}
+            accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+          />
         </Card>
         <Card className="h-fit flex-1">pepe</Card>
       </div>
