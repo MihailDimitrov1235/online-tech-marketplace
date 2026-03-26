@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { Logo } from "../components/common/Logo";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/theme/useTheme";
 
 const lightBg = `
   radial-gradient(ellipse 60% 60% at 0% 0%, rgba(167,139,250,0.35) 0%, transparent 60%),
