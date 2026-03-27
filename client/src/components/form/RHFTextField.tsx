@@ -15,6 +15,7 @@ type RHFTextFieldProps<T extends FieldValues> = Omit<TextFieldProps, "name"> & {
 
 export const RHFTextField = <T extends FieldValues>({
   name,
+  numeric,
   ...props
 }: RHFTextFieldProps<T>) => {
   const {
@@ -34,5 +35,19 @@ export const RHFTextField = <T extends FieldValues>({
       ? String((error as { message: unknown }).message)
       : undefined
 
-  return <TextField {...props} errorText={errorMessage} {...register(name)} />
+  return (
+    <TextField
+      numeric={numeric}
+      {...props}
+      errorText={errorMessage}
+      {...register(name, {
+        setValueAs: (v: string) => {
+          if (numeric) {
+            return v === "" ? undefined : Number(v)
+          }
+          return v === "" ? undefined : v
+        },
+      })}
+    />
+  )
 }
