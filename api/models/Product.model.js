@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema(
     images: [{ type: String }],
 
     specs: {
-      type: mongoose.Schema.Types.Mixed, // flexible — shape depends on `type`
+      type: mongoose.Schema.Types.Mixed, // shape depends on type
       required: true,
     },
 
