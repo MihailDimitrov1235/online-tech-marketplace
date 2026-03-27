@@ -7,10 +7,40 @@ import { RHFDropdown } from "@/components/form/RHFDropdown"
 import { Euro } from "lucide-react"
 import { RHFFileUpload } from "@/components/form/RHFFileUpload"
 import { type UploadedFile } from "@/components/common/FileUpload"
+import type { SpecValue } from "@/types/product"
 
 const types = ["smartphone", "server"]
 const categories = ["mobile", "idk"]
 const conditions = ["used", "new"]
+
+const specsByType: Record<
+  string,
+  yup.ObjectSchema<Record<string, SpecValue>>
+> = {
+  smartphone: yup.object({
+    ram: yup.string().required("RAM is required"),
+    storage: yup.string().required("Storage is required"),
+    processor: yup.string().required("Processor is required"),
+  }),
+  server: yup.object({
+    screenSize: yup.string().required("Screen size is required"),
+    battery: yup.string().required("Battery is required"),
+  }),
+}
+
+type SpecField = { name: string; label: string }
+
+const specFieldsByType: Record<string, SpecField[]> = {
+  smartphone: [
+    { name: "ram", label: "RAM" },
+    { name: "storage", label: "Storage" },
+    { name: "processor", label: "Processor" },
+  ],
+  server: [
+    { name: "screenSize", label: "Screen Size" },
+    { name: "battery", label: "Battery" },
+  ],
+}
 
 const schema = yup.object({
   type: yup
@@ -31,6 +61,11 @@ const schema = yup.object({
     .of(yup.mixed<UploadedFile>().required())
     .min(1, "Upload at least one image")
     .required(),
+  specs: yup.lazy((_, options) => {
+    const type = (options.parent as { type?: string }).type
+    if (!type || !(type in specsByType)) return yup.object()
+    return specsByType[type] as yup.ObjectSchema<yup.AnyObject>
+  }),
 })
 
 type FormSchema = {
@@ -42,6 +77,7 @@ type FormSchema = {
   category?: string
   brand?: string
   images: UploadedFile[]
+  specs: object
 }
 
 export default function NewListing() {
@@ -54,6 +90,7 @@ export default function NewListing() {
     stock: 1,
     condition: "",
     images: [],
+    specs: {},
   }
 
   const methods = useForm<FormSchema>({
@@ -61,7 +98,9 @@ export default function NewListing() {
     resolver: yupResolver(schema) as Resolver<FormSchema>,
   })
 
-  const { handleSubmit } = methods
+  const { handleSubmit, watch } = methods
+  const type = watch("type")
+  const specFields = type ? specFieldsByType[type] : []
 
   const onSubmit = handleSubmit(data => {
     console.log(data)
@@ -85,6 +124,7 @@ export default function NewListing() {
 
       <div className="flex flex-1 gap-8 ">
         <Card className="w-full h-fit flex-col flex-1 gap-4 min-w-0 overflow-hidden">
+          <h2 className="text-lg font-semibold">Main fields</h2>
           <RHFTextField name="name" label="Name" fullWidth />
           <RHFTextField
             name="price"
@@ -94,12 +134,6 @@ export default function NewListing() {
             decimalPlaces={2}
             trailingIcon={<Euro size={20} />}
           />
-          <RHFTextField
-            name="confirmPassword"
-            label="Confirm password"
-            fullWidth
-            type="password"
-          />
           <RHFDropdown name="type" label="Types" fullWidth options={types} />
 
           <RHFFileUpload
@@ -107,7 +141,17 @@ export default function NewListing() {
             accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
           />
         </Card>
-        <Card className="h-fit flex-1">pepe</Card>
+        <Card className="h-fit flex-1 flex-col gap-4 min-w-0 overflow-hidden">
+          <h2 className="text-lg font-semibold">Specifications</h2>
+          {specFields.map(el => (
+            <RHFTextField
+              key={el.name}
+              name={`specs.${el.name}`}
+              label={el.label}
+              fullWidth
+            />
+          ))}
+        </Card>
       </div>
     </FormProvider>
   )
