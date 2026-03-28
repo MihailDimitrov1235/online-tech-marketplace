@@ -78,7 +78,7 @@ function ItemComponent({
     <Button
       variant="ghost"
       size="sm"
-      className="hover:bg-violet-200/50 rounded-none w-full"
+      className="hover:bg-primary-tint-hover rounded-none w-full"
       onClick={onClick}
     >
       {label}

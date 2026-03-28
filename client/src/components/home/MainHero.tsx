@@ -23,7 +23,7 @@ export default function MainHero() {
       <div className="relative z-10 flex flex-col items-center text-center max-w-3xl gap-6">
 
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-tint border border-violet-200/60 dark:border-violet-500/30 text-primary-on text-sm font-medium">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-tint border border-primary-tint-border text-primary-on text-sm font-medium">
           <Sparkles size={13} />
           The smarter way to buy and sell tech
         </div>

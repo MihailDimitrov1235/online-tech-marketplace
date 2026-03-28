@@ -67,7 +67,7 @@ export const FileUpload = ({
             ? "cursor-not-allowed border-zinc-200 opacity-50 "
             : isDragActive
               ? "cursor-copy border-primary/50 bg-primary/5 "
-              : "cursor-pointer border-zinc-300 hover:border-violet-300 hover:bg-zinc-50",
+              : "cursor-pointer border-zinc-300 hover:border-primary-tint-border hover:bg-zinc-50",
         ].join(" ")}
       >
         <input {...getInputProps()} />
