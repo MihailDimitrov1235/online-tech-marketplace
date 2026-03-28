@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import { NavLink } from "react-router"
 import type { ButtonProps } from "./Button"
 import { Button } from "./Button"
@@ -93,9 +94,18 @@ export const Dropdown = ({
   ...buttonProps
 }: DropdownProps) => {
   const { menu, arrow } = alignStyles[align]
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [setOpen])
 
   return (
-    <div className="relative inline-block">
+    <div ref={ref} className="relative inline-block">
       <Button
         {...buttonProps}
         onClick={() => {
