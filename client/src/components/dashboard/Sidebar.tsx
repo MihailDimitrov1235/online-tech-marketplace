@@ -1,13 +1,14 @@
 import { NavLink } from "react-router"
 import { twMerge } from "tailwind-merge"
-import { ChartColumnIncreasing, Truck, Home } from "lucide-react"
+import { ChartColumnIncreasing, Truck, Home, PackageCheck } from "lucide-react"
 import { Logo } from "../common"
 import { paths } from "@/router"
 
 const dashboardRoutes = [
   { path: "/dashboard", label: "Dashboard", icon: <ChartColumnIncreasing size={18} /> },
+  { path: "/dashboard/my-listings", label: "My Listings", icon: <PackageCheck size={18} /> },
   { path: "/dashboard/deliveries", label: "Deliveries", icon: <Truck size={18} /> },
-]
+];
 
 export default function Sidebar() {
   return (

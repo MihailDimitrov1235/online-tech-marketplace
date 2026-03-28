@@ -1,6 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router"
 
-import { MainLayout, AuthLayout } from "@/layouts"
+import { MainLayout, AuthLayout, DashboardLayout } from "@/layouts"
 import { GuestGuard, AuthGuard } from "@/guards"
 
 import Home from "@/pages/Home"
@@ -13,7 +13,9 @@ import Detail from "./pages/listings/Detail"
 import Settings from "./pages/Settings"
 import NewListing from "./pages/listings/NewListing"
 import EditListing from "./pages/listings/EditListing"
-import DashboardLayout from "./layouts/DashboardLayout"
+
+import MyListings from "./pages/dashboard/MyListings"
+import Deliveries from "./pages/dashboard/Deliveries"
 
 export const router = createBrowserRouter([
   {
@@ -45,7 +47,9 @@ export const router = createBrowserRouter([
     path: "dashboard",
     element: <AuthGuard><DashboardLayout /></AuthGuard>,
     children: [
-      { index: true, element: <Dashboard /> }
+      { index: true, element: <Dashboard /> },
+      { path: "my-listings", element: <MyListings /> },
+      { path: "deliveries", element: <Deliveries /> }
     ]
   },
   {
