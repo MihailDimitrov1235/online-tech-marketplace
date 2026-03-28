@@ -14,6 +14,7 @@ import {
   smartphoneSchema,
 } from "@/components/listings/Smartphone"
 import { SpecFormRenderer } from "@/components/listings/SpecFormRenderer"
+import api from "@/api/axiosInstance"
 
 const types = ["smartphone", "server"]
 const categories = ["mobile", "idk"]
@@ -107,7 +108,32 @@ export default function NewListing() {
   const specFields = type ? specFieldsByType[type] : []
 
   const onSubmit = handleSubmit(data => {
-    console.log(data)
+    const formData = new FormData()
+
+    formData.append("name", data.name)
+    formData.append("price", String(data.price))
+    formData.append("stock", String(data.stock))
+    formData.append("type", data.type)
+    formData.append("condition", data.condition)
+    if (data.brand) formData.append("brand", data.brand)
+    if (data.category) formData.append("category", data.category)
+
+    formData.append("specs", JSON.stringify(data.specs))
+
+    data.images.forEach(file => {
+      formData.append("images", file.file)
+    })
+
+    api
+      .post("/products", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
   })
 
   return (

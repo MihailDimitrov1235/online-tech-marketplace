@@ -42,7 +42,7 @@ export async function getProducts(req, res) {
     );
 
     res.status(200).json({
-      productsWithImages,
+      products: productsWithImages,
       pagination: {
         total,
         page: Number(page),
@@ -73,9 +73,10 @@ export async function createProduct(req, res) {
   try {
     const imageKeys = await uploadFiles(req.files, "products");
     const product = await ProductModel.create({
-      images: imageKeys,
-      seller: req.user._id,
       ...req.body,
+      images: imageKeys,
+      specs: JSON.parse(req.body.specs),
+      seller: req.user._id,
     });
 
     res.status(201).json({ product });
