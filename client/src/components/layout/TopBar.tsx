@@ -32,7 +32,7 @@ export const TopBar = () => {
           <NavLink to={paths.listings} className={navLinkClass}>
             Listings
           </NavLink>
-          <NavLink to={paths.dashboard} className={navLinkClass}>
+          <NavLink to={paths.dashboard.root} className={navLinkClass}>
             Dashboard
           </NavLink>
         </nav>

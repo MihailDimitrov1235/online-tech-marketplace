@@ -1,20 +1,21 @@
 import { NavLink } from "react-router"
 import { twMerge } from "tailwind-merge"
-import { ChartColumnIncreasing, Truck, Home, PackageCheck } from "lucide-react"
+import { ChartColumnIncreasing, Truck, Home, Package, ClipboardList } from "lucide-react"
 import { Logo } from "../common"
 import { paths } from "@/router"
 
-const dashboardRoutes = [
-  { path: "/dashboard", label: "Dashboard", icon: <ChartColumnIncreasing size={18} /> },
-  { path: "/dashboard/my-listings", label: "My Listings", icon: <PackageCheck size={18} /> },
-  { path: "/dashboard/deliveries", label: "Deliveries", icon: <Truck size={18} /> },
-];
-
 export default function Sidebar() {
+  const dashboardRoutes = [
+    { path: paths.dashboard.root, label: "Dashboard", icon: <ChartColumnIncreasing size={18} /> },
+    { path: paths.dashboard.myListings.root, label: "My Listings", icon: <Package size={18} /> },
+    { path: paths.dashboard.orders.root, label: "Orders", icon: <ClipboardList size={18} /> },
+    { path: paths.dashboard.deliveries.root, label: "Deliveries", icon: <Truck size={18} /> },
+  ];
+
   return (
     <div className="h-full min-w-75 px-4 py-6 border-r border-border flex flex-col gap-6">
       <div className="px-4">
-        <Logo navigateTo={paths.dashboard} />
+        <Logo navigateTo={paths.dashboard.root} />
       </div>
 
       <nav className="flex flex-col gap-1">
