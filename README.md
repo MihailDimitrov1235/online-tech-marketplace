@@ -14,6 +14,7 @@ A full-stack marketplace application built with the MERN stack — MongoDB, Expr
 ### 1. Start the client
 ```bash
 cd ./client
+npm i
 npm run dev
 ```
 
@@ -21,6 +22,7 @@ npm run dev
 ```bash
 cd ./api
 cp .env.example .env
+npm i
 npm start
 ```
 
