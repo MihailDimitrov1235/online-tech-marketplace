@@ -13,6 +13,7 @@ import Detail from "./pages/listings/Detail"
 import Settings from "./pages/Settings"
 import NewListing from "./pages/listings/NewListing"
 import EditListing from "./pages/listings/EditListing"
+import DashboardLayout from "./layouts/DashboardLayout"
 
 export const router = createBrowserRouter([
   {
@@ -35,11 +36,17 @@ export const router = createBrowserRouter([
       {
         element: <AuthGuard><Outlet /></AuthGuard>,
         children: [
-          { path: "dashboard", element: <Dashboard /> },
           { path: "settings", element: <Settings /> },
         ],
       },
     ],
+  },
+  {
+    path: "dashboard",
+    element: <AuthGuard><DashboardLayout /></AuthGuard>,
+    children: [
+      { index: true, element: <Dashboard /> }
+    ]
   },
   {
     path: "auth",
