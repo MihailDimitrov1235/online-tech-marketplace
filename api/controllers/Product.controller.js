@@ -1,4 +1,5 @@
 import ProductModel from "../models/Product.model.js";
+import { signProduct, signProducts, uploadFiles, deleteFiles } from "../s3.js";
 
 export async function getProducts(req, res) {
   try {
@@ -36,9 +37,12 @@ export async function getProducts(req, res) {
         .populate("seller", "username firstName lastName"),
       ProductModel.countDocuments(filter),
     ]);
+    const productsWithImages = await signProducts(
+      products.map((p) => p.toObject()),
+    );
 
     res.status(200).json({
-      products,
+      productsWithImages,
       pagination: {
         total,
         page: Number(page),
@@ -59,7 +63,7 @@ export async function getProduct(req, res) {
 
     if (!product) return res.status(404).json({ error: "Product not found" });
 
-    res.status(200).json({ product });
+    res.status(200).json({ product: await signProduct(product.toObject()) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -67,31 +71,11 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
   try {
-    const {
-      type,
-      category,
-      name,
-      brand,
-      price,
-      stock,
-      condition,
-      images,
-      tags,
-      specs,
-    } = req.body;
-
+    const imageKeys = await uploadFiles(req.files, "products");
     const product = await ProductModel.create({
-      type,
-      category,
-      name,
-      brand,
-      price,
-      stock,
-      condition,
-      images,
-      tags,
-      specs,
+      images: imageKeys,
       seller: req.user._id,
+      ...req.body,
     });
 
     res.status(201).json({ product });
@@ -99,34 +83,27 @@ export async function createProduct(req, res) {
     res.status(400).json({ error: err.message });
   }
 }
-
 export async function updateProduct(req, res) {
   try {
     const product = await ProductModel.findById(req.params.id);
-
     if (!product) return res.status(404).json({ error: "Product not found" });
-
     if (product.seller.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ error: "Not authorized to update this product" });
     }
 
-    const allowed = [
-      "name",
-      "price",
-      "stock",
-      "condition",
-      "images",
-      "tags",
-      "specs",
-    ];
+    if (req.files?.length) {
+      await deleteFiles(product.images);
+      product.images = await uploadFiles(req.files, "products");
+    }
+
+    const allowed = ["name", "price", "stock", "condition", "tags", "specs"];
     allowed.forEach((field) => {
       if (req.body[field] !== undefined) product[field] = req.body[field];
     });
 
     await product.save();
-
     res.status(200).json({ product });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -136,17 +113,15 @@ export async function updateProduct(req, res) {
 export async function deleteProduct(req, res) {
   try {
     const product = await ProductModel.findById(req.params.id);
-
     if (!product) return res.status(404).json({ error: "Product not found" });
-
     if (product.seller.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ error: "Not authorized to delete this product" });
     }
 
+    await deleteFiles(product.images);
     await product.deleteOne();
-
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });

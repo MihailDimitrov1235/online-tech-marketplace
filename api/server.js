@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import "./loadEnvironments.js";
 
+import "./loadEnvironments.js";
 import usersRouter from "./routes/User.routes.js";
 import authRoutes from "./routes/Auth.routes.js";
 import productRoutes from "./routes/Product.routes.js";
@@ -45,5 +45,9 @@ process.on("SIGINT", async () => {
   console.log("MongoDB connection closed.");
   process.exit(0);
 });
+
+if (!process.env.B2_BUCKET_NAME) throw new Error("B2_BUCKET_NAME is not set");
+if (!process.env.B2_KEY_ID) throw new Error("B2_KEY_ID is not set");
+if (!process.env.B2_APP_KEY) throw new Error("B2_APP_KEY is not set");
 
 startServer();

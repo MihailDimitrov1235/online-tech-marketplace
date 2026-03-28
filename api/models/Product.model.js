@@ -14,21 +14,21 @@ const CONDITIONS = ["new", "refurbished", "used"];
 
 const productSchema = new mongoose.Schema(
   {
-    type: { type: String, enum: PRODUCT_TYPES, required: true },
-    category: { type: String, required: true },
+    type: { type: String, enum: PRODUCT_TYPES, required: false },
+    category: { type: String, required: false },
 
     name: { type: String, required: true, trim: true },
-    brand: { type: String, required: true, trim: true },
+    brand: { type: String, required: false, trim: true },
 
-    price: { type: Number, required: true },
-    stock: { type: Number, required: true },
-    condition: { type: String, enum: CONDITIONS, required: true },
+    price: { type: Number, required: false },
+    stock: { type: Number, required: false },
+    condition: { type: String, enum: CONDITIONS, required: false },
 
     images: [{ type: String }],
 
     specs: {
       type: mongoose.Schema.Types.Mixed, // shape depends on type
-      required: true,
+      required: false,
     },
 
     seller: {
