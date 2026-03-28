@@ -15,8 +15,8 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   twMerge(
     "px-4 py-1.5 text-sm font-medium rounded-xl transition-all duration-200",
     isActive
-      ? "bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400"
-      : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/80 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/80"
+      ? "bg-primary-tint text-primary-on"
+      : "nav-inactive"
   )
 
 export const TopBar = () => {

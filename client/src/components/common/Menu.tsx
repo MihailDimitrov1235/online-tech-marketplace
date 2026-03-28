@@ -116,11 +116,11 @@ export const Dropdown = ({
       {open && (
         <Card
           className={twMerge(
-            "absolute z-50 p-0 flex flex-col min-w-25 border border-neutral",
+            "absolute z-50 p-0 flex flex-col min-w-25 border-border",
             menu,
           )}
         >
-          <span className={twMerge("bg-white border-neutral", arrow)} />
+          <span className={twMerge("bg-surface border-neutral", arrow)} />
           {menuItems.map(el =>
             el.link ? (
               <NavLink

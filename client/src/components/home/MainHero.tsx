@@ -11,7 +11,7 @@ const stats = [
 
 export default function MainHero() {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-56px)] overflow-hidden px-6 bg-white dark:bg-zinc-950">
+    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-56px)] overflow-hidden px-6 bg-background">
 
       {/* Background blobs */}
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -23,7 +23,7 @@ export default function MainHero() {
       <div className="relative z-10 flex flex-col items-center text-center max-w-3xl gap-6">
 
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 dark:bg-violet-500/15 border border-violet-200/60 dark:border-violet-500/30 text-violet-700 dark:text-violet-400 text-sm font-medium">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-tint border border-violet-200/60 dark:border-violet-500/30 text-primary-on text-sm font-medium">
           <Sparkles size={13} />
           The smarter way to buy and sell tech
         </div>
@@ -38,7 +38,7 @@ export default function MainHero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg text-zinc-500 dark:text-zinc-400 text-pretty max-w-xl leading-relaxed">
+        <p className="text-lg text-muted text-pretty max-w-xl leading-relaxed">
           Browse thousands of curated tech products from trusted sellers.
           Fast delivery, verified listings, and a seamless experience from search to doorstep.
         </p>
@@ -59,7 +59,7 @@ export default function MainHero() {
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-8 mt-6 pt-6 border-t border-zinc-200/60 dark:border-zinc-800/60 w-full justify-center">
+        <div className="flex items-center gap-8 mt-6 pt-6 border-t border-border/60 w-full justify-center">
           {stats.map(({ label, value }) => (
             <div key={label} className="flex flex-col items-center gap-0.5">
               <span className="text-2xl font-semibold text-zinc-900 dark:text-white">{value}</span>

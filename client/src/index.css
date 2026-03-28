@@ -3,10 +3,21 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Brand */
   --color-primary: #741fde;
   --color-primary-contrast: #ffffff;
-  --color-neutral: #dbdbdb;
+  --color-primary-tint: #f5f3ff;
+  --color-primary-on: #6d28d9;
+
+  /* Semantic */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
   --color-contrast: #0d0d0d;
+  --color-muted: #71717a;
+
+  /* Status */
+  --color-neutral: #dbdbdb;
   --color-info: #109be6;
   --color-warning: #f7bf3b;
   --color-error: #ba3f3f;
@@ -32,23 +43,29 @@
   animation: fade 0.3s ease-in-out;
 }
 
+@utility nav-inactive {
+  @apply text-muted hover:text-contrast hover:bg-zinc-100/80 dark:hover:bg-zinc-800/80;
+}
+
 .dark {
+  --color-background: #09090b;
+  --color-surface: #18181b;
+  --color-border: #27272a;
   --color-contrast: #f4f4f5;
+  --color-muted: #a1a1aa;
   --color-neutral: #3f3f46;
+  --color-primary-tint: rgba(139, 92, 246, 0.15);
+  --color-primary-on: #a78bfa;
 }
 
 body {
   margin: 0;
-  background-color: white;
+  background-color: var(--color-background);
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.dark body {
-  background-color: #09090b;
 }
 
 code {
