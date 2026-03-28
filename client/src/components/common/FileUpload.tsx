@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { UploadIcon, XIcon } from "lucide-react"
 import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
@@ -134,7 +132,7 @@ const FileRow = ({ entry, onRemove, formatSize }: FileRowProps) => {
 
       <Button
         onClick={onRemove}
-        className="rounded-full p-1 text-contrast/40 hover:text-red-500 transition-colors"
+        className="rounded-full p-1 text-contrast/40 hover:text-error transition-colors"
         variant="ghost"
         size="icon"
       >

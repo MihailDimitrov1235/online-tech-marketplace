@@ -32,14 +32,14 @@ const variantStyles: Record<
     input: "bg-transparent",
     focused:
       "ring-0 bg-white/80 border-violet-400 dark:bg-zinc-800/90 dark:border-violet-500",
-    error: "border-red-400 hover:border-red-500",
+    error: "border-error hover:border-error/90",
   },
   underline: {
     wrapper:
       "bg-transparent border-0 border-b-2 border-contrast/20 rounded-none hover:border-contrast/50 transition-colors duration-200",
     input: "bg-transparent",
     focused: "ring-0 border-contrast/80",
-    error: "border-red-400 hover:border-red-500",
+    error: "border-error hover:border-error/90",
   },
 }
 
@@ -178,7 +178,7 @@ export const TextField: React.FC<TextFieldProps> = ({
         <label
           htmlFor={id}
           className={`${s.label} font-medium ${
-            hasError ? "text-red-500" : "text-contrast/70"
+            hasError ? "text-error" : "text-contrast/70"
           }`}
         >
           {label}
@@ -222,9 +222,7 @@ export const TextField: React.FC<TextFieldProps> = ({
 
       {(helperText ?? errorText) && (
         <p
-          className={`text-xs ${
-            hasError ? "text-red-500" : "text-contrast/50"
-          }`}
+          className={`text-xs ${hasError ? "text-error" : "text-contrast/50"}`}
         >
           {errorText ?? helperText}
         </p>

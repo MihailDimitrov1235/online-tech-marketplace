@@ -52,12 +52,12 @@ export const RHFFileUpload = <T extends FieldValues>({
   return (
     <div className="flex flex-col gap-1">
       <label
-        className={`font-medium text-sm capitalize ${errorMessage ? "text-red-500" : "text-contrast/70"}`}
+        className={`font-medium text-sm capitalize ${errorMessage ? "text-error" : "text-contrast/70"}`}
       >
         {name}
       </label>
       <FileUpload {...props} files={files} setFiles={setFiles} />
-      {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
+      {errorMessage && <p className="text-xs text-error">{errorMessage}</p>}
     </div>
   )
 }
