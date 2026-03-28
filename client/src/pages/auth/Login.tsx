@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -18,7 +18,9 @@ const schema = yup.object({
 });
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const location = useLocation();
 
   const defaultValues = {
     username: '',
@@ -38,8 +40,9 @@ export default function Login() {
   const onSubmit = handleSubmit(async (data) => {
     const result = await dispatch(loginUser(data));
     if (loginUser.fulfilled.match(result)) {
-      // console.log(result.payload.token)
-      await navigate("/")
+      const returnTo = location.state?.returnTo;
+
+      await navigate(returnTo || paths.home);
     }else{
       console.log(result)
     }
