@@ -99,7 +99,7 @@ export async function updateProduct(req, res) {
       product.images = await uploadFiles(req.files, "products");
     }
 
-    const allowed = ["name", "price", "stock", "condition", "tags", "specs"];
+    const allowed = ["name", "price", "stock", "condition", "specs"];
     allowed.forEach((field) => {
       if (req.body[field] !== undefined) product[field] = req.body[field];
     });

@@ -15,10 +15,8 @@ const CONDITIONS = ["new", "refurbished", "used"];
 const productSchema = new mongoose.Schema(
   {
     type: { type: String, enum: PRODUCT_TYPES, required: false },
-    category: { type: String, required: false },
 
     name: { type: String, required: true, trim: true },
-    brand: { type: String, required: false, trim: true },
 
     price: { type: Number, required: false },
     stock: { type: Number, required: false },

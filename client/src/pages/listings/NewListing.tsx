@@ -15,10 +15,11 @@ import {
 } from "@/components/listings/Smartphone"
 import { SpecFormRenderer } from "@/components/listings/SpecFormRenderer"
 import api from "@/api/axiosInstance"
+import { useNavigate } from "react-router"
+import { paths } from "@/router"
 
 const types = ["smartphone", "server"]
-const categories = ["mobile", "idk"]
-const conditions = ["used", "new"]
+const conditions = ["used", "refurbished", "new"]
 
 type TextfieldProps = ComponentProps<typeof RHFTextField>
 export type SpecField = Omit<TextfieldProps, "children" | "name" | "label"> & {
@@ -52,12 +53,7 @@ const schema = yup.object({
     .string()
     .oneOf(types, "Select a valid type")
     .required("Type is required"),
-  category: yup
-    .string()
-    .oneOf(categories, "Select a valid category")
-    .optional(),
   name: yup.string().required("Name is required"),
-  brand: yup.string().optional(),
   price: yup.number().positive().required("Price is required"),
   stock: yup.number().positive().integer().required("Stock is required"),
   condition: yup.string().oneOf(conditions).required("Condition is required"),
@@ -79,18 +75,15 @@ type FormSchema = {
   price: number
   stock: number
   condition: string
-  category?: string
-  brand?: string
   images: UploadedFile[]
   specs: object
 }
 
 export default function NewListing() {
+  const navigate = useNavigate()
   const defaultValues = {
     type: "",
-    category: "",
     name: "",
-    brand: "",
     price: 0,
     stock: 1,
     condition: "",
@@ -115,8 +108,6 @@ export default function NewListing() {
     formData.append("stock", String(data.stock))
     formData.append("type", data.type)
     formData.append("condition", data.condition)
-    if (data.brand) formData.append("brand", data.brand)
-    if (data.category) formData.append("category", data.category)
 
     formData.append("specs", JSON.stringify(data.specs))
 
@@ -128,8 +119,9 @@ export default function NewListing() {
       .post("/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
-      .then(res => {
+      .then(async res => {
         console.log(res)
+        await navigate(paths.listings)
       })
       .catch((err: unknown) => {
         console.log(err)
@@ -156,7 +148,6 @@ export default function NewListing() {
         <Card className="w-full h-fit flex-col flex-1 gap-4 min-w-0 overflow-hidden">
           <h2 className="text-lg font-semibold">Main fields</h2>
           <RHFTextField name="name" label="Name" fullWidth />
-          <RHFTextField name="brand" label="Brand" fullWidth />
           <RHFTextField
             name="price"
             label="Price"
@@ -172,18 +163,19 @@ export default function NewListing() {
             numeric
             decimalPlaces={0}
           />
-          <RHFDropdown
-            name="category"
-            label="Category"
-            fullWidth
-            options={categories}
-          />
 
-          <RHFDropdown name="type" label="Types" fullWidth options={types} />
+          <RHFDropdown
+            name="type"
+            label="Types"
+            fullWidth
+            options={types}
+            capitalze
+          />
           <RHFDropdown
             name="condition"
             label="Condition"
             fullWidth
+            capitalze
             options={conditions}
           />
 

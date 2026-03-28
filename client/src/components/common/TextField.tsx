@@ -19,6 +19,7 @@ type TextFieldProps = Omit<
   className?: string
   numeric?: boolean
   decimalPlaces?: number
+  capitalze?: boolean
 }
 
 const variantStyles: Record<
@@ -79,6 +80,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   disabled = false,
   numeric = false,
   decimalPlaces = 2,
+  capitalze = false,
   ...inputProps
 }) => {
   const [focused, setFocused] = useState(false)
@@ -106,6 +108,7 @@ export const TextField: React.FC<TextFieldProps> = ({
     s.input,
     v.input,
     disabled ? "cursor-not-allowed" : "",
+    capitalze ? "capitalize" : "",
   ]
     .filter(Boolean)
     .join(" ")

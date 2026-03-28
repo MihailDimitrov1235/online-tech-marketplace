@@ -76,7 +76,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           {filtered.map(opt => (
             <li
               key={opt.value}
-              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-contrast hover:bg-white`}
+              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-contrast hover:bg-white ${textFieldProps.capitalze ? "capitalize" : ""}`}
               onClick={() => {
                 onChange(opt.value)
                 setOpen(false)

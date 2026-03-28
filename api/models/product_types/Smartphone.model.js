@@ -15,14 +15,7 @@ export default new mongoose.Schema(
       ram: Number, // GB
       storage: Number, // GB
     },
-    camera: {
-      main: Number, // MP
-      front: Number, // MP
-    },
-    battery: {
-      capacity: Number, // mAh
-    },
-    connectivity: [String], // ["5G", "Wi-Fi 7", "NFC"]
+    battery: Number, // mAh
     os: String,
   },
   { _id: false },
