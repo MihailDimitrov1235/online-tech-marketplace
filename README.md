@@ -12,6 +12,7 @@ A full-stack marketplace application built with the MERN stack — MongoDB, Expr
 ## Getting Started
 
 ### 1. Start the client
+
 ```bash
 cd ./client
 npm i
@@ -19,6 +20,7 @@ npm run dev
 ```
 
 ### 2. Start the API server
+
 ```bash
 cd ./api
 cp .env.example .env
@@ -32,14 +34,15 @@ npm start
 
 Before running the API, fill in the required fields in your `.env` file:
 
-| Variable | Description |
-|---|---|
-| `DB_URI` | Your MongoDB connection string |
-| `JWT_SECRET` | Secret key used to sign and verify JSON Web Tokens |
-| `B2_KEY_ID` | Backblaze application key ID |
-| `B2_APP_KEY` | Backblaze application key |
-| `B2_BUCKET_NAME` | Backblaze bucket name |
-| `S3_ENDPOINT` | Backblaze B2 endpoint URL |
+| Variable         | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| `DB_URI`         | Your MongoDB connection string                     |
+| `JWT_SECRET`     | Secret key used to sign and verify JSON Web Tokens |
+| `B2_KEY_ID`      | Backblaze application key ID                       |
+| `B2_APP_KEY`     | Backblaze application key                          |
+| `B2_BUCKET_NAME` | Backblaze bucket name                              |
+| `B2_ENDPOINT`    | Backblaze B2 endpoint URL                          |
+| `B2_REGION`      | Backblaze B2 bucket region                         |
 
 ---
 
