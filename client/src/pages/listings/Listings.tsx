@@ -21,10 +21,10 @@ export default function Listings() {
 
   return (
     <div className="flex flex-col w-full gap-8 px-14 py-8">
-      <Card className="w-full">info</Card>
+      <Card className="w-full text-contrast">info</Card>
       <div className="flex gap-8 w-full">
         <Card>
-          <div className="text-lg mx-auto">Filters</div>
+          <div className="text-lg mx-auto text-contrast">Filters</div>
         </Card>
         <div className="flex-1 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-8">
           {products.map(el => (

@@ -79,19 +79,21 @@ export default function Detail() {
         <div className="flex flex-2 flex-col gap-4">
           <Card className="flex flex-col gap-4">
             <div className="flex justify-between w-full">
-              <h2 className="text-2xl font-bold">{product?.name}</h2>
-              <div className="text-xl">{product?.price}€</div>
+              <h2 className="text-2xl font-bold text-contrast">
+                {product?.name}
+              </h2>
+              <div className="text-xl text-contrast">{product?.price}€</div>
             </div>
             <div className="flex justify-between items-center">
-              <div className="bg-primary w-fit h-fit rounded-full text-primary-contrast px-1 uppercase text-xs">
+              <div className="bg-primary w-fit h-fit rounded-full text-primary-contrast px-1 uppercase text-xs ">
                 {product?.condition}
               </div>
-              <div>Stock: {product?.stock}</div>
+              <div className="text-contrast">Stock: {product?.stock}</div>
             </div>
 
             <div>
               <div className="flex items-center">
-                <span className="text-constrast">{rating}</span>
+                <span className="text-contrast">{rating}</span>
                 {Array.from({ length: 5 }, (_, idx) => (
                   <div className="relative flex justify-center items-center">
                     {rating >= idx + 1 ? (
@@ -130,7 +132,7 @@ export default function Detail() {
             </div>
             <Button className="text-xl">Add to cart</Button>
           </Card>
-          <Card className="flex flex-col gap-4">
+          <Card className="flex flex-col gap-4 text-contrast">
             <h2>Seller</h2>
 
             <div className="flex">
@@ -158,11 +160,11 @@ export default function Detail() {
       </div>
       <div className="w-full flex gap-4">
         <Card className="flex-col gap-4 flex-1 ">
-          <h1 className="text-2xl font-bold">Specifications</h1>
+          <h1 className="text-2xl font-bold text-contrast">Specifications</h1>
           {product && SpecRenderer(product.specs)}
         </Card>
         <Card className="flex-1">
-          <h1 className="text-2xl font-bold">Reviews</h1>
+          <h1 className="text-2xl font-bold text-contrast">Reviews</h1>
         </Card>
       </div>
     </div>

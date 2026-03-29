@@ -42,7 +42,7 @@ export default function MyListings() {
   return (
     <div className="flex flex-col w-full gap-8">
       <Card className="justify-between items-center">
-        <div className="text-xl font-semibold">My listings</div>
+        <div className="text-xl font-semibold text-contrast">My listings</div>
         <NavLink to={`${paths.listings}/new`}>
           <Button className="gap-2 items-center">
             <div>Add new</div>
@@ -65,7 +65,7 @@ export default function MyListings() {
               </NavLink>
               <NavLink
                 to={`${paths.listings}/${prod._id}`}
-                className="hover:text-primary cursor-pointer"
+                className="hover:text-primary text-contrast cursor-pointer"
               >
                 {prod.name}
               </NavLink>
