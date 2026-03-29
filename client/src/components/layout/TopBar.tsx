@@ -8,13 +8,12 @@ import { Account } from "../common/Account"
 
 import { useAppSelector } from "@/store/hooks"
 import { ThemeToggle } from "@/theme/ThemeToggle"
+import { ShoppingCart } from "lucide-react"
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   twMerge(
     "px-4 py-1.5 text-sm font-medium rounded-xl transition-all duration-200",
-    isActive
-      ? "bg-primary-tint text-primary-on"
-      : "nav-inactive"
+    isActive ? "bg-primary-tint text-primary-on" : "nav-inactive",
   )
 
 export const TopBar = () => {
@@ -38,13 +37,20 @@ export const TopBar = () => {
         </nav>
 
         <div className="flex items-center gap-2">
+          <NavLink to={paths.cart}>
+            <Button size="icon" variant="outline">
+              <ShoppingCart size={16} />
+            </Button>
+          </NavLink>
           <ThemeToggle />
 
           {user ? (
             <Account />
           ) : (
             <NavLink to={paths.auth.login}>
-              <Button size="sm" variant="primary">Login</Button>
+              <Button size="sm" variant="primary">
+                Login
+              </Button>
             </NavLink>
           )}
         </div>

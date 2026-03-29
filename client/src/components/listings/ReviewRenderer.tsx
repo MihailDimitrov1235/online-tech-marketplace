@@ -77,6 +77,7 @@ export default function ReviewRenderer({
       .catch((err: unknown) => {
         console.log(err)
       })
+    // TODO: update rating and pagination (probably make a new request)
   }
 
   const onSubmit = handleSubmit(data => {
@@ -95,6 +96,7 @@ export default function ReviewRenderer({
       .catch((err: unknown) => {
         console.log(err)
       })
+    // TODO: update rating and pagination (probably make a new request)
   })
   return (
     <FormProvider

@@ -101,7 +101,9 @@ export const Dropdown = ({
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
     }
     document.addEventListener("mousedown", handler)
-    return () => document.removeEventListener("mousedown", handler)
+    return () => {
+      document.removeEventListener("mousedown", handler)
+    }
   }, [setOpen])
 
   return (
@@ -115,34 +117,33 @@ export const Dropdown = ({
 
       {open && (
         <Card
-          className={twMerge(
-            "absolute z-50 p-0 flex flex-col min-w-25 border-border",
-            menu,
-          )}
+          className={twMerge("absolute z-50 p-0  min-w-25 border-border", menu)}
         >
           <span className={twMerge("bg-surface border-neutral", arrow)} />
-          {menuItems.map(el =>
-            el.link ? (
-              <NavLink
-                key={el.label}
-                to={el.link}
-                onClick={() => {
-                  setOpen(false)
-                }}
-              >
-                <ItemComponent label={el.label} />
-              </NavLink>
-            ) : (
-              <ItemComponent
-                key={el.label}
-                label={el.label}
-                onClick={() => {
-                  el.onClick?.()
-                  setOpen(false)
-                }}
-              />
-            ),
-          )}
+          <div className="flex flex-col w-full overflow-hidden rounded-lg">
+            {menuItems.map(el =>
+              el.link ? (
+                <NavLink
+                  key={el.label}
+                  to={el.link}
+                  onClick={() => {
+                    setOpen(false)
+                  }}
+                >
+                  <ItemComponent label={el.label} />
+                </NavLink>
+              ) : (
+                <ItemComponent
+                  key={el.label}
+                  label={el.label}
+                  onClick={() => {
+                    el.onClick?.()
+                    setOpen(false)
+                  }}
+                />
+              ),
+            )}
+          </div>
         </Card>
       )}
     </div>

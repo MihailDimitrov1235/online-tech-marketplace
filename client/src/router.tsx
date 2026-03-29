@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard"
 import MyListings from "./pages/dashboard/MyListings"
 import Orders from "./pages/dashboard/Orders"
 import Deliveries from "./pages/dashboard/Deliveries"
+import Cart from "./pages/Cart"
 
 export const router = createBrowserRouter([
   {
@@ -37,26 +38,39 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        element: <AuthGuard><Outlet /></AuthGuard>,
+        element: (
+          <AuthGuard>
+            <Outlet />
+          </AuthGuard>
+        ),
         children: [
           { path: "settings", element: <Settings /> },
+          { path: "cart", element: <Cart /> },
         ],
       },
     ],
   },
   {
     path: "dashboard",
-    element: <AuthGuard><DashboardLayout /></AuthGuard>,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       { index: true, element: <Dashboard /> },
       { path: "my-listings", element: <MyListings /> },
       { path: "orders", element: <Orders /> },
-      { path: "deliveries", element: <Deliveries /> }
-    ]
+      { path: "deliveries", element: <Deliveries /> },
+    ],
   },
   {
     path: "auth",
-    element: <GuestGuard><AuthLayout /></GuestGuard>,
+    element: (
+      <GuestGuard>
+        <AuthLayout />
+      </GuestGuard>
+    ),
     children: [
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
@@ -76,16 +90,17 @@ export const paths = {
   },
   settings: "/settings",
   listings: "/listings",
+  cart: "/cart",
   dashboard: {
     root: "/dashboard",
     myListings: {
-      root: "/dashboard/my-listings"
+      root: "/dashboard/my-listings",
     },
     orders: {
-      root: "/dashboard/orders"
+      root: "/dashboard/orders",
     },
     deliveries: {
-      root: "/dashboard/deliveries"
-    }
-  }
+      root: "/dashboard/deliveries",
+    },
+  },
 }

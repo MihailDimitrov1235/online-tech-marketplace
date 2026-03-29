@@ -76,6 +76,7 @@ export default function Detail() {
       .catch((err: unknown) => {
         console.log(err)
       })
+    // TODO: update rating and pagination (probably make a new request)
   })
 
   return (
@@ -221,6 +222,7 @@ export default function Detail() {
                 productId={id ?? ""}
               />
             ))}
+            {/* TODO: add pagination */}
           </div>
         </Card>
       </div>
