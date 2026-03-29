@@ -8,6 +8,7 @@ export async function getProductReviews(req, res) {
 
     const [reviews, total] = await Promise.all([
       ReviewModel.find(filter)
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(Number(limit))
         .populate("author", "username firstName lastName"),
@@ -32,6 +33,7 @@ export async function createProductReview(req, res) {
       ...req.body,
       author: req.user._id,
     });
+    await review.populate("author", "username firstName lastName");
 
     res.status(201).json({ review });
   } catch (err) {
@@ -53,6 +55,7 @@ export async function updateProductReview(req, res) {
       }
     });
     await review.save();
+    await review.populate("author", "username firstName lastName");
     res.status(200).json({ review });
   } catch (err) {
     res.status(400).json({ error: err.message });

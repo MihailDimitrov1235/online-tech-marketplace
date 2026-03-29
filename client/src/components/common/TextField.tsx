@@ -2,7 +2,7 @@ import { useState, useId } from "react"
 import { twMerge } from "tailwind-merge"
 
 type TextFieldVariant = "default" | "underline"
-type TextFieldSize = "sm" | "md" | "lg"
+type TextFieldSize = "xs" | "sm" | "md" | "lg"
 
 type TextFieldProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -30,8 +30,7 @@ const variantStyles: Record<
     wrapper:
       "bg-white/50 backdrop-blur-sm border border-zinc-200/80 rounded-xl hover:bg-white/70 hover:border-primary-tint-border transition-all duration-200 dark:bg-zinc-800/50 dark:border-zinc-700/80 dark:hover:bg-zinc-800/70 dark:hover:border-primary-ring",
     input: "bg-transparent",
-    focused:
-      "ring-0 bg-white/80 border-primary-ring dark:bg-zinc-800/90",
+    focused: "ring-0 bg-white/80 border-primary-ring dark:bg-zinc-800/90",
     error: "border-error hover:border-error/90",
   },
   underline: {
@@ -47,6 +46,12 @@ const sizeStyles: Record<
   TextFieldSize,
   { wrapper: string; input: string; icons: string; label: string }
 > = {
+  xs: {
+    wrapper: "",
+    input: "mx-2 my-0.5 text-xs",
+    icons: "py-0.5 px-1.5",
+    label: "text-[8px]",
+  },
   sm: {
     wrapper: "",
     input: "mx-3 my-1.5 text-sm",
@@ -211,7 +216,7 @@ export const TextField: React.FC<TextFieldProps> = ({
         {trailingIcon && (
           <span
             className={twMerge(
-              "text-contrast/80 shrink-0 bg-neutral/50",
+              "text-contrast/80 shrink-0 bg-neutral/50 flex items-center",
               s.icons,
             )}
           >

@@ -2,22 +2,28 @@ import api from "@/api/axiosInstance"
 import { Button, Card } from "@/components/common"
 import { useState, useEffect } from "react"
 import { useParams } from "react-router"
-import {
-  ArrowBigLeft,
-  ArrowBigRight,
-  ArrowRight,
-  Star,
-  StarHalf,
-} from "lucide-react"
+import { ArrowBigLeft, ArrowBigRight, ArrowRight } from "lucide-react"
 import { SpecRenderer } from "@/components/listings/SpecRenderer"
-import type { detailedProduct } from "@/types/product"
+import type { detailedProduct, reviewValue } from "@/types/product"
+import RatingVisualizer from "@/components/listings/RatingVisualizer"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { FormProvider, RHFTextField } from "@/components/form"
+import type { ReviewForm } from "@/components/listings/ReviewRenderer"
+import ReviewRenderer, { schema } from "@/components/listings/ReviewRenderer"
+import type { pagination } from "@/types/pagination"
 
 export default function Detail() {
   const { id } = useParams<{ id: string }>()
   const [product, setProduct] = useState<detailedProduct>()
+  const [reviews, setReviews] = useState<reviewValue[]>([])
+  const [rating, setRating] = useState<number>(0)
+  const [pagination, setPagination] = useState<pagination>({
+    total: 0,
+    page: 0,
+    pages: 0,
+  })
   const [imageIdx, setImageIdx] = useState<number>(0)
-  const rating = 3.5
-  const numberOfReviews = 32
   useEffect(() => {
     if (!id) {
       return
@@ -25,15 +31,53 @@ export default function Detail() {
     api
       .get<{
         product: detailedProduct
+        reviews: reviewValue[]
+        pagination: pagination
+        rating: number
       }>(`/products/${id}`)
       .then(res => {
         setProduct(res.data.product)
-        console.log(res.data.product)
+        setReviews(res.data.reviews)
+        setRating(res.data.rating)
+        setPagination(res.data.pagination)
+        console.log(res.data)
       })
       .catch((err: unknown) => {
         console.log(err)
       })
   }, [id])
+
+  const defaultValues = {
+    rating: undefined,
+    comment: "",
+  }
+
+  const methods = useForm<ReviewForm>({
+    defaultValues,
+    resolver: yupResolver(schema),
+  })
+
+  const { handleSubmit, watch, reset } = methods
+
+  const newComment = watch("comment")
+  const newRating = watch("rating")
+
+  const onSubmit = handleSubmit(data => {
+    api
+      .post<{ review: reviewValue }>(`/reviews`, {
+        product: id,
+        ...data,
+      })
+      .then(res => {
+        setReviews(p => [res.data.review, ...p])
+        reset()
+        console.log(res.data)
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  })
+
   return (
     <div className="w-full flex flex-col gap-8">
       <div className="w-full flex gap-8">
@@ -93,42 +137,14 @@ export default function Detail() {
 
             <div>
               <div className="flex items-center">
-                <span className="text-contrast">{rating}</span>
-                {Array.from({ length: 5 }, (_, idx) => (
-                  <div className="relative flex justify-center items-center">
-                    {rating >= idx + 1 ? (
-                      <Star
-                        size={16}
-                        className="absolute z-10"
-                        fill="#e5e85f"
-                        strokeWidth={0}
-                      />
-                    ) : (
-                      rating >= idx + 0.5 && (
-                        <StarHalf
-                          size={16}
-                          className="absolute z-10"
-                          fill="#e5e85f"
-                          strokeWidth={0}
-                        />
-                      )
-                    )}
-
-                    <Star
-                      size={16}
-                      className="relative z-0"
-                      fill="#dbdbdb"
-                      strokeWidth={0}
-                    />
-                  </div>
-                ))}
+                <RatingVisualizer rating={rating} />
               </div>
               <button
                 onClick={() => {
                   console.log("TODO: move to reviews section")
                 }}
                 className="text-primary cursor-pointer w-fit"
-              >{`See all ${numberOfReviews.toString()} reviews`}</button>
+              >{`See all ${pagination.total.toString()} reviews`}</button>
             </div>
             <Button className="text-xl">Add to cart</Button>
           </Card>
@@ -163,8 +179,49 @@ export default function Detail() {
           <h1 className="text-2xl font-bold text-contrast">Specifications</h1>
           {product && SpecRenderer(product.specs)}
         </Card>
-        <Card className="flex-1">
+        <Card className="flex-1 flex-col gap-6">
           <h1 className="text-2xl font-bold text-contrast">Reviews</h1>
+          <FormProvider
+            methods={methods}
+            onSubmit={onSubmit}
+            className="flex flex-col gap-4"
+          >
+            <div className="flex gap-4">
+              <RHFTextField
+                placeholder="Write a review..."
+                fullWidth
+                name={"comment"}
+              />
+              <RHFTextField
+                numeric
+                placeholder="Leave a rating..."
+                name={"rating"}
+                trailingIcon={<span>/5</span>}
+              />
+            </div>
+            {(newComment || newRating) && (
+              <div className="flex justify-end gap-4">
+                <Button
+                  onClick={() => {
+                    reset()
+                  }}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Publish</Button>
+              </div>
+            )}
+          </FormProvider>
+          <div className="flex flex-col gap-8">
+            {reviews.map(r => (
+              <ReviewRenderer
+                review={r}
+                setReviews={setReviews}
+                productId={id ?? ""}
+              />
+            ))}
+          </div>
         </Card>
       </div>
     </div>

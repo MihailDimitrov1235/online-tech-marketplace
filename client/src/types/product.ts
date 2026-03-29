@@ -7,6 +7,14 @@ export type SpecValue =
   | SpecValue[]
   | { [key: string]: SpecValue }
 
+export type reviewValue = {
+  _id: string
+  comment: string
+  rating: number
+  author: User
+  createdAt: Date
+}
+
 export type detailedProduct = {
   _id: string
   images: string[]
