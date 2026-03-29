@@ -7,8 +7,8 @@ import { RHFDropdown } from "@/components/form/RHFDropdown"
 import { Euro } from "lucide-react"
 import { RHFFileUpload } from "@/components/form/RHFFileUpload"
 import { type UploadedFile } from "@/components/common/FileUpload"
-import type { SpecValue } from "@/types/product"
-import type { ComponentProps } from "react"
+import type { detailedProduct, SpecValue } from "@/types/product"
+import { useEffect, type ComponentProps } from "react"
 import {
   smartphoneFields,
   smartphoneSchema,
@@ -79,7 +79,7 @@ type FormSchema = {
   specs: object
 }
 
-export default function NewListing() {
+export default function NewListing({ productId }: { productId?: string }) {
   const navigate = useNavigate()
   const defaultValues = {
     type: "",
@@ -95,8 +95,38 @@ export default function NewListing() {
     defaultValues,
     resolver: yupResolver(schema) as Resolver<FormSchema>,
   })
+  const { handleSubmit, watch, reset } = methods
 
-  const { handleSubmit, watch } = methods
+  useEffect(() => {
+    if (!productId) return
+
+    api
+      .get<{ product: detailedProduct }>(`/products/${productId}`)
+      .then(res => {
+        const {
+          name,
+          price,
+          stock,
+          type,
+          condition,
+          specs,
+          images,
+          imageKeys,
+        } = res.data.product
+        reset({
+          name,
+          price,
+          stock,
+          type,
+          condition,
+          specs,
+          images: images.map((url, idx) => ({ id: imageKeys[idx], url })),
+        })
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }, [productId, reset])
   const type = watch("type")
   const specFields = type ? specFieldsByType[type] : []
 
@@ -111,14 +141,22 @@ export default function NewListing() {
 
     formData.append("specs", JSON.stringify(data.specs))
 
-    data.images.forEach(file => {
-      formData.append("images", file.file)
+    const existingImages = data.images.flatMap(img => (img.url ? [img.id] : []))
+    const newImages = data.images.filter(img => img.file instanceof File)
+    formData.append("existingImages", JSON.stringify(existingImages))
+    newImages.forEach(img => {
+      if (img.file) formData.append("images", img.file)
     })
 
-    api
-      .post("/products", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
+    const request = productId
+      ? api.patch(`/products/${productId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+      : api.post("/products", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+
+    request
       .then(async res => {
         console.log(res)
         await navigate(paths.listings)
@@ -137,10 +175,10 @@ export default function NewListing() {
     >
       <Card className="items-center">
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-          Add a listing
+          {productId ? "Change a listing" : "Add a listing"}
         </h1>
         <Button type="submit" variant="primary" className="ml-auto" size="lg">
-          Create Listing
+          {productId ? "Edit listing" : "Create Listing"}
         </Button>
       </Card>
 
@@ -166,8 +204,9 @@ export default function NewListing() {
 
           <RHFDropdown
             name="type"
-            label="Types"
+            label="Type"
             fullWidth
+            disabled={productId != undefined}
             options={types}
             capitalze
           />

@@ -65,18 +65,23 @@ export default function MyListings() {
             </div>
             <div className="flex gap-2">
               <NavLink to={`${paths.listings}/edit/${prod._id}`}>
-                <Button className="bg-blue-400" size="icon">
-                  <Pencil size={12} />
+                <Button
+                  variant="outline"
+                  className="hover:text-info"
+                  size="icon"
+                >
+                  <Pencil size={16} />
                 </Button>
               </NavLink>
               <Button
                 onClick={() => {
                   handleDelete(prod._id)
                 }}
-                className="bg-error h-fit"
+                variant="outline"
+                className="hover:bg-error hover:text-white h-fit"
                 size="icon"
               >
-                <X size={12} />
+                <X size={16} />
               </Button>
             </div>
           </div>

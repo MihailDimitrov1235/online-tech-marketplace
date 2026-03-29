@@ -60,11 +60,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
         trailingIcon={
           <div
             onClick={e => {
-              e.stopPropagation()
+              if (!textFieldProps.disabled) e.stopPropagation()
               e.preventDefault()
               setOpen(!open)
             }}
-            className="cursor-pointer"
+            className={textFieldProps.disabled ? "" : "cursor-pointer"}
           >
             {open ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
           </div>

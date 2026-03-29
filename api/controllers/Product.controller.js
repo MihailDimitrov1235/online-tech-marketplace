@@ -89,19 +89,34 @@ export async function updateProduct(req, res) {
     const product = await ProductModel.findById(req.params.id);
     if (!product) return res.status(404).json({ error: "Product not found" });
     if (product.seller.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ error: "Not authorized to update this product" });
+      return res.status(403).json({ error: "Not authorized" });
     }
 
-    if (req.files?.length) {
-      await deleteFiles(product.images);
-      product.images = await uploadFiles(req.files, "products");
-    }
+    const existingUrls = JSON.parse(req.body.existingImages ?? "[]");
+    const removedKeys = product.images.filter(
+      (key) => !existingUrls.some((url) => url.includes(key)),
+    );
 
-    const allowed = ["name", "price", "stock", "condition", "specs"];
+    if (removedKeys.length) await deleteFiles(removedKeys);
+
+    const newKeys = req.files?.length
+      ? await uploadFiles(req.files, "products")
+      : [];
+
+    const keptKeys = product.images.filter((key) =>
+      existingUrls.some((url) => url.includes(key)),
+    );
+    product.images = [...keptKeys, ...newKeys];
+
+    const allowed = ["name", "price", "stock", "condition", "tags", "specs"];
     allowed.forEach((field) => {
-      if (req.body[field] !== undefined) product[field] = req.body[field];
+      if (req.body[field] !== undefined) {
+        if (field == "specs") {
+          product[field] = JSON.parse(req.body[field]);
+        } else {
+          product[field] = req.body[field];
+        }
+      }
     });
 
     await product.save();

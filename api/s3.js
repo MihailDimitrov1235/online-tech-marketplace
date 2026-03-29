@@ -34,6 +34,7 @@ export const signFiles = async (keys) => {
 
 export const signProduct = async (product) => ({
   ...product,
+  imageKeys: product.images,
   images: await signFiles(product.images),
 });
 

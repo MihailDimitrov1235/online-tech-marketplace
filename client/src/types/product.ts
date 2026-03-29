@@ -10,7 +10,9 @@ export type SpecValue =
 export type detailedProduct = {
   _id: string
   images: string[]
+  imageKeys: string[]
   name: string
+  type: string
   condition: string
   price: number
   stock: number

@@ -5,7 +5,8 @@ import { Button } from "."
 
 export type UploadedFile = {
   id: string
-  file: File
+  url?: string
+  file?: File
 }
 
 type FileUploadProps = {
@@ -109,24 +110,33 @@ type FileRowProps = {
 }
 
 const FileRow = ({ entry, onRemove, formatSize }: FileRowProps) => {
-  const { file } = entry
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? ""
+  const { url, file } = entry
+  const ext =
+    file?.name.split(".").pop()?.toLowerCase() ??
+    url?.split(".").pop()?.toLowerCase() ??
+    ""
 
   return (
     <li className="flex items-center gap-3 rounded-lg border border-neutral/80 bg-white/60 px-3 py-2.5 text-sm overflow-hidden">
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[10px] font-bold uppercase bg-blue-100 text-blue-600 dark:bg-blue-900/70 dark:text-blue-200`}
       >
-        {ext ? ext.slice(0, 4) : "?"}
+        {url ? (
+          <img className="aspect-square object-cover" src={url} />
+        ) : ext ? (
+          ext.slice(0, 4)
+        ) : (
+          "?"
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-1 min-w-0">
         <span className="truncate font-medium text-contrast text-xs">
-          {file.name}
+          {file?.name}
         </span>
 
         <span className="text-xs text-contrast/40">
-          {formatSize(file.size)}
+          {formatSize(file?.size ?? 0)}
         </span>
       </div>
 
