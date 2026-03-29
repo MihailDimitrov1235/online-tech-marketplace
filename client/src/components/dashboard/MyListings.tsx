@@ -29,8 +29,15 @@ export default function MyListings() {
   }, [user])
 
   const handleDelete = (id: string) => {
-    console.log("TODO: delete listing by id")
-    console.log(id)
+    api
+      .delete(`/products/${id}`)
+      .then(res => {
+        console.log(res)
+        setProducts(p => p.filter(el => el._id != id))
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
   }
   return (
     <div className="flex flex-col w-full gap-8">
