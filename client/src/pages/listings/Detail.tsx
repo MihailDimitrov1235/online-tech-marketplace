@@ -135,11 +135,11 @@ export default function Detail() {
           <Card className="flex flex-col gap-4 text-contrast">
             <h2>Seller</h2>
 
-            <div className="flex">
-              <img
-                className="object-cover h-24 aspect-square"
-                src="https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png"
-              />
+            <div className="flex gap-4">
+              <div className="w-16 h-16 rounded-full bg-primary-tint text-primary-on border-primary-tint-border hover:bg-primary-tint-hover text-2xl font-bold uppercase flex justify-center items-center select-none">
+                {product?.seller.firstName[0]}
+                {product?.seller.lastName[0]}
+              </div>
               <div>
                 <div className="text-lg font-semibold">
                   {product?.seller.firstName} {product?.seller.lastName}
