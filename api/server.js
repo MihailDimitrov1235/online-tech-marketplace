@@ -6,6 +6,7 @@ import "./loadEnvironments.js";
 import usersRouter from "./routes/User.routes.js";
 import authRoutes from "./routes/Auth.routes.js";
 import productRoutes from "./routes/Product.routes.js";
+import reviewRoutes from "./routes/Review.routes.js";
 
 const PORT = process.env.PORT || 8000;
 const URI = process.env.DB_URI;
@@ -25,6 +26,8 @@ app.use("/users", usersRouter);
 app.use("/auth", authRoutes);
 
 app.use("/products", productRoutes);
+
+app.use("/reviews", reviewRoutes);
 
 async function startServer() {
   try {

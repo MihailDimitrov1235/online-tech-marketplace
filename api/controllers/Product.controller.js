@@ -1,4 +1,6 @@
 import ProductModel from "../models/Product.model.js";
+import ReviewModel from "../models/Review.model.js";
+
 import { signProduct, signProducts, uploadFiles, deleteFiles } from "../s3.js";
 
 export async function getProducts(req, res) {
@@ -56,19 +58,35 @@ export async function getProducts(req, res) {
 
 export async function getProduct(req, res) {
   try {
-    const product = await ProductModel.findById(req.params.id).populate(
-      "seller",
-      "username firstName lastName",
-    );
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+    const [product, reviews, total] = await Promise.all([
+      ProductModel.findById(req.params.id).populate(
+        "seller",
+        "username firstName lastName",
+      ),
+      ReviewModel.find({ product: req.params.id })
+        .populate("author", "username firstName lastName")
+        .skip(skip)
+        .limit(Number(limit)),
+      ReviewModel.countDocuments({ product: req.params.id }),
+    ]);
 
     if (!product) return res.status(404).json({ error: "Product not found" });
 
-    res.status(200).json({ product: await signProduct(product.toObject()) });
+    res.status(200).json({
+      product: await signProduct(product.toObject()),
+      reviews,
+      pagination: {
+        total,
+        page: Number(page),
+        pages: Math.ceil(total / Number(limit)),
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
-
 export async function createProduct(req, res) {
   try {
     const imageKeys = await uploadFiles(req.files, "products");
