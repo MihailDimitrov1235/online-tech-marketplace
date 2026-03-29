@@ -40,7 +40,7 @@ export default function AuthLayout() {
         <Outlet />
       </div>
 
-      <p className="text-center text-zinc-400 text-xs pb-6">
+      <p className="text-center text-muted text-xs pb-6">
         &copy; {new Date().getFullYear()} TechMarket. All rights reserved.
       </p>
     </div>

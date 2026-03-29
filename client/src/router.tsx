@@ -1,6 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router"
 
-import { MainLayout, AuthLayout } from "@/layouts"
+import { MainLayout, AuthLayout, DashboardLayout } from "@/layouts"
 import { GuestGuard, AuthGuard } from "@/guards"
 
 import Home from "@/pages/Home"
@@ -8,11 +8,15 @@ import Login from "@/pages/auth/Login"
 import Register from "./pages/auth/Register"
 import Page404 from "@/pages/Page404"
 import Listings from "./pages/listings/Listings"
-import Dashboard from "./pages/Dashboard"
 import Detail from "./pages/listings/Detail"
 import Settings from "./pages/Settings"
 import NewListing from "./pages/listings/NewListing"
 import EditListing from "./pages/listings/EditListing"
+
+import Dashboard from "./pages/Dashboard"
+import MyListings from "./pages/dashboard/MyListings"
+import Orders from "./pages/dashboard/Orders"
+import Deliveries from "./pages/dashboard/Deliveries"
 
 export const router = createBrowserRouter([
   {
@@ -35,11 +39,20 @@ export const router = createBrowserRouter([
       {
         element: <AuthGuard><Outlet /></AuthGuard>,
         children: [
-          { path: "dashboard", element: <Dashboard /> },
           { path: "settings", element: <Settings /> },
         ],
       },
     ],
+  },
+  {
+    path: "dashboard",
+    element: <AuthGuard><DashboardLayout /></AuthGuard>,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "my-listings", element: <MyListings /> },
+      { path: "orders", element: <Orders /> },
+      { path: "deliveries", element: <Deliveries /> }
+    ]
   },
   {
     path: "auth",
@@ -63,5 +76,16 @@ export const paths = {
   },
   settings: "/settings",
   listings: "/listings",
-  dashboard: "/dashboard",
+  dashboard: {
+    root: "/dashboard",
+    myListings: {
+      root: "/dashboard/my-listings"
+    },
+    orders: {
+      root: "/dashboard/orders"
+    },
+    deliveries: {
+      root: "/dashboard/deliveries"
+    }
+  }
 }

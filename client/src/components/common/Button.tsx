@@ -31,9 +31,9 @@ const variants: Record<Variant, string> = {
   secondary:
     "bg-zinc-100 text-zinc-800 hover:bg-zinc-200 shadow-sm",
   outline:
-    "bg-transparent text-contrast border border-zinc-200 hover:bg-zinc-50 shadow-sm",
+    "bg-transparent text-contrast border border-border hover:bg-zinc-50 dark:hover:bg-zinc-800/50 shadow-sm",
   ghost:
-    "bg-transparent text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-900",
+    "bg-transparent text-muted hover:bg-zinc-100/80 hover:text-contrast dark:hover:bg-zinc-800/80",
   glass:
     "bg-violet-600/25 backdrop-blur-md text-violet-800 border border-violet-200/50 shadow-[0_4px_24px_rgba(139,92,246,0.15),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:bg-violet-600/30 hover:shadow-[0_4px_32px_rgba(139,92,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.7)] dark:text-violet-200 hover:bg-violet-800/30",
 }

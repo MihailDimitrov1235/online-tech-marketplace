@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import { NavLink } from "react-router"
 import type { ButtonProps } from "./Button"
 import { Button } from "./Button"
@@ -77,7 +78,7 @@ function ItemComponent({
     <Button
       variant="ghost"
       size="sm"
-      className="hover:bg-violet-200/50 rounded-none w-full"
+      className="hover:bg-primary-tint-hover rounded-none w-full"
       onClick={onClick}
     >
       {label}
@@ -93,9 +94,18 @@ export const Dropdown = ({
   ...buttonProps
 }: DropdownProps) => {
   const { menu, arrow } = alignStyles[align]
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [setOpen])
 
   return (
-    <div className="relative inline-block">
+    <div ref={ref} className="relative inline-block">
       <Button
         {...buttonProps}
         onClick={() => {
@@ -106,11 +116,11 @@ export const Dropdown = ({
       {open && (
         <Card
           className={twMerge(
-            "absolute z-50 p-0 flex flex-col min-w-25 border border-neutral",
+            "absolute z-50 p-0 flex flex-col min-w-25 border-border",
             menu,
           )}
         >
-          <span className={twMerge("bg-white border-neutral", arrow)} />
+          <span className={twMerge("bg-surface border-neutral", arrow)} />
           {menuItems.map(el =>
             el.link ? (
               <NavLink

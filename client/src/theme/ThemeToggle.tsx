@@ -20,7 +20,7 @@ export const ThemeToggle = () => {
           className={`
             absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full shadow-sm transition-all duration-300
             ${isDark
-              ? "translate-x-3.5 bg-violet-400"
+              ? "translate-x-3.5 bg-primary-on"
               : "translate-x-0.5 bg-white"
             }
           `}
@@ -29,7 +29,7 @@ export const ThemeToggle = () => {
 
       <Moon
         size={16}
-        className={isDark ? "text-violet-400" : "text-zinc-400"}
+        className={isDark ? "text-primary-on" : "text-zinc-400"}
       />
     </button>
   )
