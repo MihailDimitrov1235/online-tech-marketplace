@@ -17,7 +17,7 @@ export const SpecFormRenderer = ({
       if (children) {
         return (
           <div key={name}>
-            <p className="text-sm font-medium text-zinc-700 capitalize">
+            <p className="text-sm font-medium text-contrast/60 capitalize">
               {label}
             </p>
             <div className="flex flex-col gap-4 pl-4 mt-2">

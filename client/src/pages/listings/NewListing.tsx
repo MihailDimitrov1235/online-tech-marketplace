@@ -174,7 +174,7 @@ export default function NewListing({ productId }: { productId?: string }) {
       className="flex flex-col w-full gap-8 px-14 pt-8"
     >
       <Card className="items-center">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-contrast">
           {productId ? "Change a listing" : "Add a listing"}
         </h1>
         <Button type="submit" variant="primary" className="ml-auto" size="lg">
@@ -184,7 +184,7 @@ export default function NewListing({ productId }: { productId?: string }) {
 
       <div className="flex flex-1 gap-8 ">
         <Card className="w-full h-fit flex-col flex-1 gap-4 min-w-0 overflow-hidden">
-          <h2 className="text-lg font-semibold">Main fields</h2>
+          <h2 className="text-lg font-semibold text-contrast">Main fields</h2>
           <RHFTextField name="name" label="Name" fullWidth />
           <RHFTextField
             name="price"
@@ -224,7 +224,9 @@ export default function NewListing({ productId }: { productId?: string }) {
           />
         </Card>
         <Card className="h-fit flex-1 flex-col gap-4 min-w-0 ">
-          <h2 className="text-lg font-semibold">Specifications</h2>
+          <h2 className="text-lg font-semibold text-contrast">
+            Specifications
+          </h2>
           <SpecFormRenderer fields={specFields} prefix="specs" />
         </Card>
       </div>

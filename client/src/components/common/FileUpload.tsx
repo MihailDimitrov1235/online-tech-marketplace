@@ -65,14 +65,14 @@ export const FileUpload = ({
         className={[
           "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-10 text-center transition-all duration-200 select-none ",
           atLimit
-            ? "cursor-not-allowed border-zinc-200 opacity-50 "
+            ? "cursor-not-allowed opacity-50 "
             : isDragActive
               ? "cursor-copy border-primary/50 bg-primary/5 "
-              : "cursor-pointer border-zinc-300 hover:border-primary-tint-border hover:bg-zinc-50",
+              : "cursor-pointer border-border hover:border-primary-tint-border hover:bg-primary-tint-hover",
         ].join(" ")}
       >
         <input {...getInputProps()} />
-        <UploadIcon />
+        <UploadIcon className="text-contrast" />
         <div>
           <p className="text-sm font-medium text-contrast">
             {isDragActive
@@ -117,7 +117,7 @@ const FileRow = ({ entry, onRemove, formatSize }: FileRowProps) => {
     ""
 
   return (
-    <li className="flex items-center gap-3 rounded-lg border border-neutral/80 bg-white/60 px-3 py-2.5 text-sm overflow-hidden">
+    <li className="flex items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm overflow-hidden">
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[10px] font-bold uppercase bg-blue-100 text-blue-600 dark:bg-blue-900/70 dark:text-blue-200`}
       >
