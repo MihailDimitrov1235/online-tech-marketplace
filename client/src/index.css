@@ -13,7 +13,7 @@
   --color-primary-ring: #a78bfa;       /* violet-400 — focus/hover borders */
 
   /* Semantic */
-  --color-background: #ffffff;         /* white */
+  --color-background: #f5f5f7;         /* apple gray */
   --color-surface: #ffffff;            /* white */
   --color-border: #e4e4e7;             /* zinc-200 */
   --color-contrast: #0d0d0d;           /* zinc-950 */
@@ -39,7 +39,9 @@
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease,
-    color 0.15s ease;
+    color 0.15s ease,
+    scale 0.3s ease-out,
+    box-shadow 0.3s ease;
 }
 
 .animate-fade {
