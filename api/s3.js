@@ -8,6 +8,8 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "crypto";
 
+import sharp from "sharp";
+
 const s3 = new S3Client({
   endpoint: process.env.B2_ENDPOINT,
   region: process.env.B2_REGION,
@@ -42,21 +44,29 @@ export const signProducts = async (products) => {
   return Promise.all(products.map(signProduct));
 };
 
-export const uploadFiles = async (files, folder = "products") => {
+export const uploadFiles = async (files, folder = "uploads") => {
   return Promise.all(
     files.map(async (file) => {
       const key = `${folder}/${randomUUID()}-${file.originalname}`;
 
+      const isImage = file.mimetype.startsWith("image/");
+      const buffer = isImage
+        ? await sharp(file.buffer)
+            .resize({ width: 1920, withoutEnlargement: true })
+            .webp({ quality: 80 })
+            .toBuffer()
+        : file.buffer;
+
       await s3.send(
         new PutObjectCommand({
           Bucket: process.env.B2_BUCKET_NAME,
-          Key: key,
-          Body: file.buffer,
-          ContentType: file.mimetype,
+          Key: isImage ? key.replace(/\.[^.]+$/, ".webp") : key,
+          Body: buffer,
+          ContentType: isImage ? "image/webp" : file.mimetype,
         }),
       );
 
-      return key;
+      return isImage ? key.replace(/\.[^.]+$/, ".webp") : key;
     }),
   );
 };
