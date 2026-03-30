@@ -72,11 +72,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
       />
 
       {open && (
-        <ul className="absolute z-50 mt-1 w-full bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
+        <ul className="absolute z-50 mt-1 w-full bg-neutral/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
           {filtered.map(opt => (
             <li
               key={opt.value}
-              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-contrast hover:bg-white ${textFieldProps.capitalze ? "capitalize" : ""}`}
+              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-contrast hover:bg-neutral ${textFieldProps.capitalze ? "capitalize" : ""}`}
               onClick={() => {
                 onChange(opt.value)
                 setOpen(false)
