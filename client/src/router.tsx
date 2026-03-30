@@ -59,7 +59,16 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "my-listings", element: <MyListings /> },
+      {
+        path: "my-listings",
+        element: <Outlet />,
+        children: [
+          { index: true, element: <MyListings /> },
+          { path: "new", element: <NewListing /> },
+          { path: "edit/:id", element: <EditListing /> },
+          { path: ":id", element: <Detail /> },
+        ]
+      },
       { path: "orders", element: <Orders /> },
       { path: "deliveries", element: <Deliveries /> },
     ],
@@ -95,6 +104,9 @@ export const paths = {
     root: "/dashboard",
     myListings: {
       root: "/dashboard/my-listings",
+      new: "/dashboard/my-listings/new",
+      details: (id: string) => `/dashboard/my-listings/${id}`,
+      edit: (id: string) => `/dashboard/my-listings/edit/${id}`
     },
     orders: {
       root: "/dashboard/orders",

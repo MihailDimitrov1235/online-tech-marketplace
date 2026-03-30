@@ -1,7 +1,7 @@
 import api from "@/api/axiosInstance"
 import { Button, Card } from "@/components/common"
 import { useState, useEffect } from "react"
-import { useParams, NavLink } from "react-router"
+import { useParams, useNavigate } from "react-router"
 import {
   ArrowBigLeft,
   ArrowBigRight,
@@ -17,10 +17,10 @@ import { FormProvider, RHFTextField } from "@/components/form"
 import type { ReviewForm } from "@/components/listings/ReviewRenderer"
 import ReviewRenderer, { schema } from "@/components/listings/ReviewRenderer"
 import type { pagination } from "@/types/pagination"
-import { paths } from "@/router"
 
 export default function Detail() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [product, setProduct] = useState<detailedProduct>()
   const [reviews, setReviews] = useState<reviewValue[]>([])
   const [rating, setRating] = useState<number>(0)
@@ -98,13 +98,13 @@ export default function Detail() {
 
   return (
     <div className="w-full flex flex-col gap-8 px-14 py-8">
-      <NavLink
-        to={paths.listings}
+      <button
+        onClick={() => navigate(-1)}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
       >
         <ArrowLeft size={15} />
         Back
-      </NavLink>
+      </button>
 
       <div className="w-full flex gap-8">
         <Card className="flex-3 h-150">

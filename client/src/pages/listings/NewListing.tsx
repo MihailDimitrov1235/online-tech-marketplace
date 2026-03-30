@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { FormProvider, RHFTextField } from "@/components/form"
 import { RHFDropdown } from "@/components/form/RHFDropdown"
-import { Euro } from "lucide-react"
+import { Euro, ArrowLeft } from "lucide-react"
 import { RHFFileUpload } from "@/components/form/RHFFileUpload"
 import { type UploadedFile } from "@/components/common/FileUpload"
 import type { detailedProduct, SpecValue } from "@/types/product"
@@ -150,11 +150,11 @@ export default function NewListing({ productId }: { productId?: string }) {
 
     const request = productId
       ? api.patch(`/products/${productId}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        headers: { "Content-Type": "multipart/form-data" },
+      })
       : api.post("/products", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        headers: { "Content-Type": "multipart/form-data" },
+      })
 
     request
       .then(async res => {
@@ -173,6 +173,14 @@ export default function NewListing({ productId }: { productId?: string }) {
       onSubmit={onSubmit}
       className="flex flex-col w-full gap-8 px-14 pt-8"
     >
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
+      >
+        <ArrowLeft size={15} />
+        Back
+      </button>
+
       <Card className="items-center">
         <h1 className="text-2xl font-semibold tracking-tight text-contrast">
           {productId ? "Change a listing" : "Add a listing"}

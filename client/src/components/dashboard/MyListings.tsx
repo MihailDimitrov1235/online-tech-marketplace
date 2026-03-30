@@ -43,7 +43,7 @@ export default function MyListings() {
     <div className="flex flex-col w-full gap-8">
       <Card className="justify-between items-center">
         <div className="text-xl font-semibold text-contrast">My listings</div>
-        <NavLink to={`${paths.listings}/new`}>
+        <NavLink to={paths.dashboard.myListings.new}>
           <Button className="gap-2 items-center">
             <div>Add new</div>
             <Plus className="mt-1" size={18} />
@@ -60,18 +60,18 @@ export default function MyListings() {
             className={`flex justify-between ${idx != products.length - 1 ? "border-b-2 border-neutral/30 pb-2" : ""} `}
           >
             <div className="flex gap-4">
-              <NavLink to={`${paths.listings}/${prod._id}`}>
+              <NavLink to={paths.dashboard.myListings.details(prod._id)}>
                 <img className="h-24 w-24 object-cover" src={prod.images[0]} />
               </NavLink>
               <NavLink
-                to={`${paths.listings}/${prod._id}`}
+                to={paths.dashboard.myListings.details(prod._id)}
                 className="hover:text-primary text-contrast cursor-pointer"
               >
                 {prod.name}
               </NavLink>
             </div>
             <div className="flex gap-2">
-              <NavLink to={`${paths.listings}/edit/${prod._id}`}>
+              <NavLink to={paths.dashboard.myListings.edit(prod._id)}>
                 <Button
                   variant="outline"
                   className="hover:text-info"
