@@ -32,7 +32,10 @@ export const FileUpload = ({
           return { id, file }
         }),
       ]
-      setFiles(p => [...p, ...newFiles]) // TODO: fix ability to upload more than limit number of files
+      setFiles(p => {
+        const remaining = maxFiles - p.length
+        return [...p, ...newFiles.slice(0, remaining)]
+      })
     },
     [setFiles],
   )
