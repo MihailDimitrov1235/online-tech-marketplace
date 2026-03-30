@@ -2,7 +2,7 @@ import api from "@/api/axiosInstance"
 import { Button } from "@/components/common"
 import { useAppSelector } from "@/store/hooks"
 import type { User } from "@/types/auth"
-import { Trash } from "lucide-react"
+import { Minus, Plus, Trash } from "lucide-react"
 import { useEffect, useState } from "react"
 
 type cartItem = {
@@ -61,6 +61,35 @@ export default function Cart() {
         console.log(err)
       })
   }
+
+  const handleChangeItemQuantity = ({
+    productId,
+    quantity,
+  }: {
+    productId: string
+    quantity: number
+  }) => {
+    api
+      .patch(`/cart/${productId}`, { quantity })
+      .then(res => {
+        console.log(res)
+        setCartData(p =>
+          p
+            ? {
+                ...p,
+                items: p.items
+                  .map(i =>
+                    i.product._id === productId ? { ...i, quantity } : i,
+                  )
+                  .filter(i => i.quantity > 0),
+              }
+            : undefined,
+        )
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }
   return (
     <div className="flex flex-col items-center text-contrast p-16">
       <span className="text-2xl font-bold mb-6">Your cart</span>
@@ -88,7 +117,41 @@ export default function Cart() {
                 </div>
               </td>
               <td className="py-4 text-center">{i.product.price}€</td>
-              <td className="py-4 text-center">{i.quantity}</td>
+              <td className="py-4 text-center">
+                <div className="flex gap-4 w-fit mx-auto">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="hover:text-info"
+                    onClick={() => {
+                      if (i.quantity > 0) {
+                        handleChangeItemQuantity({
+                          productId: i.product._id,
+                          quantity: i.quantity - 1,
+                        })
+                      }
+                    }}
+                  >
+                    <Minus size={12} />
+                  </Button>
+                  <span>{i.quantity}</span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="hover:text-info"
+                    onClick={() => {
+                      if (i.quantity < i.product.stock) {
+                        handleChangeItemQuantity({
+                          productId: i.product._id,
+                          quantity: i.quantity + 1,
+                        })
+                      }
+                    }}
+                  >
+                    <Plus size={12} />
+                  </Button>
+                </div>
+              </td>
               <td className="py-4 text-right">
                 {i.product.price * i.quantity}€
               </td>
