@@ -1,8 +1,13 @@
 import api from "@/api/axiosInstance"
 import { Button, Card } from "@/components/common"
 import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router"
-import { ArrowBigLeft, ArrowBigRight, ArrowRight, ArrowLeft } from "lucide-react"
+import { useParams, NavLink } from "react-router"
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react"
 import { SpecRenderer } from "@/components/listings/SpecRenderer"
 import type { detailedProduct, reviewValue } from "@/types/product"
 import RatingVisualizer from "@/components/listings/RatingVisualizer"
@@ -16,7 +21,6 @@ import { paths } from "@/router"
 
 export default function Detail() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const [product, setProduct] = useState<detailedProduct>()
   const [reviews, setReviews] = useState<reviewValue[]>([])
   const [rating, setRating] = useState<number>(0)
@@ -81,15 +85,26 @@ export default function Detail() {
     // TODO: update rating and pagination (probably make a new request)
   })
 
+  const handleAddToCart = () => {
+    api
+      .post("/cart", { productId: id })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }
+
   return (
     <div className="w-full flex flex-col gap-8 px-14 py-8">
-      <button
-        onClick={() => navigate(paths.listings)}
+      <NavLink
+        to={paths.listings}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
       >
         <ArrowLeft size={15} />
         Back
-      </button>
+      </NavLink>
 
       <div className="w-full flex gap-8">
         <Card className="flex-3 h-150">
@@ -157,7 +172,9 @@ export default function Detail() {
                 className="text-primary cursor-pointer w-fit"
               >{`See all ${pagination.total.toString()} reviews`}</button>
             </div>
-            <Button className="text-xl">Add to cart</Button>
+            <Button onClick={handleAddToCart} className="text-xl">
+              Add to cart
+            </Button>
           </Card>
           <Card className="flex flex-col gap-4 text-contrast">
             <h2>Seller</h2>
@@ -227,6 +244,7 @@ export default function Detail() {
           <div className="flex flex-col gap-8">
             {reviews.map(r => (
               <ReviewRenderer
+                key={r._id}
                 review={r}
                 setReviews={setReviews}
                 productId={id ?? ""}

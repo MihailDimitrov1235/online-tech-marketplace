@@ -1,44 +1,46 @@
+import api from "@/api/axiosInstance"
 import { Button } from "@/components/common"
+import { useAppSelector } from "@/store/hooks"
+import type { User } from "@/types/auth"
 import { useEffect, useState } from "react"
 
-const mockData = [
-  {
-    _id: "1234",
-    name: "Bazinga",
-    images: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5iGkP6Y7unsB1-7VgmKBb-ZPffJIOGp4DXg&s",
-    ],
-    price: 2.42,
-    quantity: 4,
-  },
-  {
-    _id: "1234",
-    name: "Bazinga",
-    images: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5iGkP6Y7unsB1-7VgmKBb-ZPffJIOGp4DXg&s",
-    ],
-    price: 2.42,
-    quantity: 4,
-  },
-  {
-    _id: "1234",
-    name: "Bazinga",
-    images: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5iGkP6Y7unsB1-7VgmKBb-ZPffJIOGp4DXg&s",
-    ],
-    price: 2.42,
-    quantity: 4,
-  },
-]
+type cartItem = {
+  product: {
+    _id: string
+    name: string
+    images: string[]
+    price: number
+    stock: number
+  }
+  quantity: number
+}
+type cartItems = {
+  user: User
+  items: cartItem[]
+}
 
 export default function Cart() {
+  const { user } = useAppSelector(state => state.auth)
   const salesTax = 0.1
+  const [cartData, setCartData] = useState<cartItems>()
   const [subtotal, setSubtotal] = useState(0)
   useEffect(() => {
-    setSubtotal(
-      mockData.reduce((acc, item) => acc + item.price * item.quantity, 0),
-    )
-  }, [])
+    api
+      .get<{ cart: cartItems }>("/cart")
+      .then(res => {
+        console.log(res.data)
+        setCartData(res.data.cart)
+        setSubtotal(
+          res.data.cart.items.reduce(
+            (acc, item) => acc + item.product.price * item.quantity,
+            0,
+          ),
+        )
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }, [user?._id])
   return (
     <div className="flex flex-col items-center text-contrast p-16">
       <span className="text-2xl font-bold mb-6">Your cart</span>
@@ -53,20 +55,22 @@ export default function Cart() {
         </thead>
 
         <tbody>
-          {mockData.map(p => (
-            <tr className="border-b border-border ">
+          {cartData?.items.map(i => (
+            <tr key={i.product._id} className="border-b border-border ">
               <td className="py-4 flex gap-2">
                 <img
                   className="w-16 h-16 rounded-md object-cover"
-                  src={p.images[0]}
+                  src={i.product.images[0]}
                 />
                 <div className="flex flex-col">
-                  <span>{p.name}</span>
+                  <span>{i.product.name}</span>
                 </div>
               </td>
-              <td className="py-4 text-center">{p.price}€</td>
-              <td className="py-4 text-center">{p.quantity}</td>
-              <td className="py-4 text-right">{p.price * p.quantity}€</td>
+              <td className="py-4 text-center">{i.product.price}€</td>
+              <td className="py-4 text-center">{i.quantity}</td>
+              <td className="py-4 text-right">
+                {i.product.price * i.quantity}€
+              </td>
             </tr>
           ))}
         </tbody>
@@ -74,7 +78,7 @@ export default function Cart() {
       <div className="ml-auto w-80 mt-8 flex flex-col gap-2">
         <div className="flex justify-between text-sm py-2 border-b border-border">
           <span className="text-contrast/60">Subtotal</span>
-          <span>{subtotal}€</span>
+          <span>{subtotal.toFixed(2)}€</span>
         </div>
         <div className="flex justify-between text-sm py-2 border-b border-border">
           <span className="text-contrast/60">

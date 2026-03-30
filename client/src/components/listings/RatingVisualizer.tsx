@@ -11,7 +11,7 @@ export default function RatingVisualizer({
     <div className="flex">
       <div className="text-contrast  py-2.5 px-1 rounded-md flex flex-col justify-center items-center">
         <span className="text-lg uppercase font-semibold leading-4">
-          {rating}
+          {rating.toFixed(1)}
         </span>
         {text && <span className="text-[8px] uppercase">rating</span>}
       </div>

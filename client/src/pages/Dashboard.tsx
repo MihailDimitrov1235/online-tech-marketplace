@@ -16,6 +16,7 @@ export default function Dashboard() {
       <div className="mx-auto h-fit shadow-md rounded-xl overflow-hidden">
         {tabs.map((t, idx) => (
           <Button
+            key={idx}
             variant={tab == t ? "primary" : "ghost"}
             onClick={() => {
               setTab(t)

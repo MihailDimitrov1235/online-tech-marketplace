@@ -17,9 +17,9 @@ function ListingSkeleton() {
 }
 
 export default function Listings() {
-  const [products, setProducts] = useState<ListingParams[]>([]);
+  const [products, setProducts] = useState<ListingParams[]>([])
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     api
@@ -32,7 +32,9 @@ export default function Listings() {
       .catch((err: unknown) => {
         console.log(err)
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
   return (
@@ -45,9 +47,15 @@ export default function Listings() {
 
         <div className="relative flex items-center justify-between">
           <div>
-            <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">Marketplace</p>
-            <h1 className="text-3xl font-semibold tracking-tight text-contrast">Browse listings</h1>
-            <p className="text-sm text-muted mt-1">{products.length} products available</p>
+            <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">
+              Marketplace
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight text-contrast">
+              Browse listings
+            </h1>
+            <p className="text-sm text-muted mt-1">
+              {products.length} products available
+            </p>
           </div>
         </div>
       </div>
@@ -60,9 +68,10 @@ export default function Listings() {
 
         <div className="flex-1 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-6">
           {loading
-            ? Array.from({ length: 8 }).map((_, i) => <ListingSkeleton key={i} />)
-            : products.map(el => <Listing key={el._id} {...el} />)
-          }
+            ? Array.from({ length: 8 }).map((_, i) => (
+                <ListingSkeleton key={i} />
+              ))
+            : products.map(el => <Listing key={el._id} {...el} />)}
         </div>
       </div>
     </div>
