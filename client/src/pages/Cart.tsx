@@ -2,6 +2,7 @@ import api from "@/api/axiosInstance"
 import { Button } from "@/components/common"
 import { useAppSelector } from "@/store/hooks"
 import type { User } from "@/types/auth"
+import { Trash } from "lucide-react"
 import { useEffect, useState } from "react"
 
 type cartItem = {
@@ -41,6 +42,25 @@ export default function Cart() {
         console.log(err)
       })
   }, [user?._id])
+
+  const handleDeleteItem = (productId: string) => {
+    api
+      .delete(`/cart/${productId}`)
+      .then(res => {
+        console.log(res)
+        setCartData(p =>
+          p
+            ? {
+                ...p,
+                items: p.items.filter(i => i.product._id !== productId),
+              }
+            : undefined,
+        )
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }
   return (
     <div className="flex flex-col items-center text-contrast p-16">
       <span className="text-2xl font-bold mb-6">Your cart</span>
@@ -51,6 +71,7 @@ export default function Cart() {
             <th className="text-center pb-3">Price</th>
             <th className="text-center pb-3">Quantity</th>
             <th className="text-right pb-3">Total</th>
+            <th className="text-right pb-3"></th>
           </tr>
         </thead>
 
@@ -70,6 +91,18 @@ export default function Cart() {
               <td className="py-4 text-center">{i.quantity}</td>
               <td className="py-4 text-right">
                 {i.product.price * i.quantity}€
+              </td>
+              <td className="py-4 w-16">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="hover:text-error ml-8"
+                  onClick={() => {
+                    handleDeleteItem(i.product._id)
+                  }}
+                >
+                  <Trash size={16} />
+                </Button>
               </td>
             </tr>
           ))}

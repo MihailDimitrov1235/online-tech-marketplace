@@ -60,10 +60,11 @@ export default function Listings() {
     })
   }, [products, searchText, conditions, minPrice, maxPrice])
 
-  const toggleCondition = (c: string) =>
+  const toggleCondition = (c: string) => {
     setConditions(prev =>
       prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c],
     )
+  }
 
   const hasFilters = conditions.length > 0 || minPrice || maxPrice
 
@@ -85,7 +86,7 @@ export default function Listings() {
             <p className="text-sm text-muted mt-1">
               {loading
                 ? "Loading..."
-                : `${filtered.length} of ${products.length} products`}
+                : `${filtered.length.toString()} of ${products.length.toString()} products`}
             </p>
           </div>
         </div>
@@ -120,7 +121,9 @@ export default function Listings() {
                   className="flex items-center gap-2.5 cursor-pointer group"
                 >
                   <div
-                    onClick={() => toggleCondition(c)}
+                    onClick={() => {
+                      toggleCondition(c)
+                    }}
                     className={`w-4 h-4 rounded-sm border flex items-center justify-center shrink-0 transition-colors ${
                       conditions.includes(c)
                         ? "bg-primary border-primary"
@@ -158,7 +161,9 @@ export default function Listings() {
                 type="number"
                 placeholder="Min"
                 value={minPrice}
-                onChange={e => setMinPrice(e.target.value)}
+                onChange={e => {
+                  setMinPrice(e.target.value)
+                }}
                 className="w-full rounded-lg border border-border bg-transparent px-2.5 py-1.5 text-sm text-contrast placeholder:text-muted focus:outline-none focus:border-primary-ring"
               />
               <span className="text-muted text-xs shrink-0">—</span>
@@ -166,7 +171,9 @@ export default function Listings() {
                 type="number"
                 placeholder="Max"
                 value={maxPrice}
-                onChange={e => setMaxPrice(e.target.value)}
+                onChange={e => {
+                  setMaxPrice(e.target.value)
+                }}
                 className="w-full rounded-lg border border-border bg-transparent px-2.5 py-1.5 text-sm text-contrast placeholder:text-muted focus:outline-none focus:border-primary-ring"
               />
             </div>
@@ -178,7 +185,9 @@ export default function Listings() {
             placeholder="Search..."
             className="mb-6"
             value={searchText}
-            onChange={e => setSearchText(e.target.value)}
+            onChange={e => {
+              setSearchText(e.target.value)
+            }}
             fullWidth
           />
 

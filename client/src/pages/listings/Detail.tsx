@@ -99,6 +99,7 @@ export default function Detail() {
   return (
     <div className="w-full flex flex-col gap-8 px-14 py-8">
       <button
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onClick={() => navigate(-1)}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
       >
