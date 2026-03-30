@@ -1,8 +1,8 @@
 import api from "@/api/axiosInstance"
 import { Button, Card } from "@/components/common"
 import { useState, useEffect } from "react"
-import { useParams } from "react-router"
-import { ArrowBigLeft, ArrowBigRight, ArrowRight } from "lucide-react"
+import { useParams, useNavigate } from "react-router"
+import { ArrowBigLeft, ArrowBigRight, ArrowRight, ArrowLeft } from "lucide-react"
 import { SpecRenderer } from "@/components/listings/SpecRenderer"
 import type { detailedProduct, reviewValue } from "@/types/product"
 import RatingVisualizer from "@/components/listings/RatingVisualizer"
@@ -12,9 +12,11 @@ import { FormProvider, RHFTextField } from "@/components/form"
 import type { ReviewForm } from "@/components/listings/ReviewRenderer"
 import ReviewRenderer, { schema } from "@/components/listings/ReviewRenderer"
 import type { pagination } from "@/types/pagination"
+import { paths } from "@/router"
 
 export default function Detail() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [product, setProduct] = useState<detailedProduct>()
   const [reviews, setReviews] = useState<reviewValue[]>([])
   const [rating, setRating] = useState<number>(0)
@@ -80,7 +82,15 @@ export default function Detail() {
   })
 
   return (
-    <div className="w-full flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-8 px-14 py-8">
+      <button
+        onClick={() => navigate(paths.listings)}
+        className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
+      >
+        <ArrowLeft size={15} />
+        Back
+      </button>
+
       <div className="w-full flex gap-8">
         <Card className="flex-3 h-150">
           <div className="flex h-full w-full items-center justify-between gap-8">

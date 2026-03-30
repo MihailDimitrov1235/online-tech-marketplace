@@ -1,5 +1,6 @@
 import { NavLink } from "react-router"
 import { ShoppingCart } from "lucide-react"
+import { useState } from "react"
 import { paths } from "@/router"
 import { Button } from "../common"
 
@@ -20,14 +21,23 @@ export default function listing({
 }: ListingParams) {
   const url = `${paths.listings}/${_id}`
 
+  const [imgLoaded, setImgLoaded] = useState(false)
+
   const handleQualityClick = () => {
     console.log("TODO: add quality filter on click")
   }
 
   return (
     <div className="rounded-2xl flex flex-col bg-white/60 dark:bg-zinc-900/50 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-lg shadow-zinc-200/50 dark:shadow-surface hover:shadow-xl hover:shadow-primary/20 hover:scale-[1.02] overflow-hidden">
-      <NavLink to={url} className="aspect-square bg-zinc-50/80 dark:bg-zinc-800/50 block overflow-hidden">
-        <img className="object-contain h-full w-full" src={images[0]} />
+      <NavLink to={url} className="aspect-square bg-zinc-50/80 dark:bg-zinc-800/50 block overflow-hidden relative">
+        {!imgLoaded && (
+          <div className="absolute inset-0 bg-zinc-200/80 dark:bg-zinc-700/50 animate-pulse" />
+        )}
+        <img
+          className={`object-contain h-full w-full transition-opacity duration-300 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+          src={images[0]}
+          onLoad={() => setImgLoaded(true)}
+        />
       </NavLink>
 
       <div className="flex flex-col gap-2 p-4">
