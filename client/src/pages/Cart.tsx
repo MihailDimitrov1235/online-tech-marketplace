@@ -31,17 +31,22 @@ export default function Cart() {
       .then(res => {
         console.log(res.data)
         setCartData(res.data.cart)
-        setSubtotal(
-          res.data.cart.items.reduce(
-            (acc, item) => acc + item.product.price * item.quantity,
-            0,
-          ),
-        )
       })
       .catch((err: unknown) => {
         console.log(err)
       })
   }, [user?._id])
+
+  useEffect(() => {
+    if (cartData) {
+      setSubtotal(
+        cartData.items.reduce(
+          (acc, item) => acc + item.product.price * item.quantity,
+          0,
+        ),
+      )
+    }
+  }, [cartData])
 
   const handleDeleteItem = (productId: string) => {
     api
