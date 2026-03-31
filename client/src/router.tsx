@@ -18,6 +18,8 @@ import MyListings from "./pages/dashboard/MyListings"
 import Orders from "./pages/dashboard/Orders"
 import Deliveries from "./pages/dashboard/Deliveries"
 import Cart from "./pages/Cart"
+import MyOrders from "./pages/orders/MyOrders"
+import Order from "./pages/orders/Order"
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +48,13 @@ export const router = createBrowserRouter([
         children: [
           { path: "settings", element: <Settings /> },
           { path: "cart", element: <Cart /> },
+          {
+            path: "orders",
+            children: [
+              { index: true, element: <MyOrders /> },
+              { path: ":id", element: <Order /> },
+            ],
+          },
         ],
       },
     ],
@@ -67,7 +76,7 @@ export const router = createBrowserRouter([
           { path: "new", element: <NewListing /> },
           { path: "edit/:id", element: <EditListing /> },
           { path: ":id", element: <Detail /> },
-        ]
+        ],
       },
       { path: "orders", element: <Orders /> },
       { path: "deliveries", element: <Deliveries /> },
@@ -99,6 +108,7 @@ export const paths = {
   },
   settings: "/settings",
   listings: "/listings",
+  orders: "/orders",
   cart: "/cart",
   dashboard: {
     root: "/dashboard",
@@ -106,7 +116,7 @@ export const paths = {
       root: "/dashboard/my-listings",
       new: "/dashboard/my-listings/new",
       details: (id: string) => `/dashboard/my-listings/${id}`,
-      edit: (id: string) => `/dashboard/my-listings/edit/${id}`
+      edit: (id: string) => `/dashboard/my-listings/edit/${id}`,
     },
     orders: {
       root: "/dashboard/orders",
