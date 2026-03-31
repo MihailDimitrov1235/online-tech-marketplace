@@ -31,7 +31,7 @@ export const TopBar = () => {
           <NavLink to={paths.listings} className={navLinkClass}>
             Listings
           </NavLink>
-          <NavLink to={paths.orders} className={navLinkClass}>
+          <NavLink to={paths.orders.root} className={navLinkClass}>
             My Orders
           </NavLink>
           <NavLink to={paths.dashboard.root} className={navLinkClass}>

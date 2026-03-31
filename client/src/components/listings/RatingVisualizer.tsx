@@ -17,7 +17,7 @@ export default function RatingVisualizer({
       </div>
       <div className=" flex h-fit my-auto py-1.5 pr-0.5 rounded-r-md">
         {Array.from({ length: 5 }, (_, idx) => (
-          <div className="relative flex justify-center items-center">
+          <div key={idx} className="relative flex justify-center items-center">
             {rating >= idx + 1 ? (
               <Star
                 size={20}

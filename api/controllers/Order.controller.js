@@ -1,6 +1,7 @@
 import OrderModel from "../models/Order.model.js";
 import ProductModel from "../models/Product.model.js";
 import CartModel from "../models/Cart.model.js";
+import { signProducts } from "../s3.js";
 
 export async function getOrders(req, res) {
   try {
@@ -10,10 +11,7 @@ export async function getOrders(req, res) {
     const filter = { buyer: req.user._id };
 
     const [orders, total] = await Promise.all([
-      OrderModel.find(filter)
-        .skip(skip)
-        .limit(Number(limit))
-        .populate("items.product", "name images"),
+      OrderModel.find(filter).skip(skip).limit(Number(limit)),
       OrderModel.countDocuments(filter),
     ]);
 
@@ -32,10 +30,7 @@ export async function getOrders(req, res) {
 
 export async function getOrder(req, res) {
   try {
-    const order = await OrderModel.findById(req.params.id).populate(
-      "items.product",
-      "name images",
-    );
+    const order = await OrderModel.findById(req.params.id);
 
     if (!order) return res.status(404).json({ error: "Order not found" });
     if (order.buyer._id.toString() !== req.user._id.toString()) {
@@ -61,8 +56,11 @@ export async function createOrder(req, res) {
       cart.items.map(({ product }) => ProductModel.findById(product)),
     );
 
+    const signedProducts = await signProducts(products);
+    console.log(signedProducts[0]);
+
     const orderItems = cart.items.map(({ product, quantity }, i) => {
-      const doc = products[i];
+      const doc = signedProducts[i];
       if (!doc) {
         throw new Error(`Product ${product} not found`);
       }

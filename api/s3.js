@@ -34,11 +34,14 @@ export const signFiles = async (keys) => {
   );
 };
 
-export const signProduct = async (product) => ({
-  ...product,
-  imageKeys: product.images,
-  images: await signFiles(product.images),
-});
+export const signProduct = async (product) => {
+  const plain = product.toObject ? product.toObject() : product;
+  return {
+    ...plain,
+    imageKeys: plain.images,
+    images: await signFiles(plain.images),
+  };
+};
 
 export const signProducts = async (products) => {
   return Promise.all(products.map(signProduct));

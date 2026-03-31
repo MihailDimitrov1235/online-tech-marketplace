@@ -48,7 +48,7 @@ export default function Checkout() {
       .post("/orders", data)
       .then(async res => {
         console.log(res.data)
-        await navigate(paths.orders)
+        await navigate(paths.orders.root)
       })
       .catch((err: unknown) => {
         console.log(err)

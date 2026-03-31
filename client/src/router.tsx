@@ -115,7 +115,10 @@ export const paths = {
   },
   settings: "/settings",
   listings: "/listings",
-  orders: "/orders",
+  orders: {
+    root: "/orders",
+    details: (id: string) => `/orders/${id}`,
+  },
   cart: {
     root: "/cart",
     checkout: "/cart/checkout",
