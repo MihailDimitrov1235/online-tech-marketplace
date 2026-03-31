@@ -50,36 +50,54 @@ export async function getOrder(req, res) {
 
 export async function createOrder(req, res) {
   try {
-    const { shippingAddress } = req.body;
+    const { address } = req.body;
 
-    const { items } = await CartModel.find({ user: req.user._id });
+    const cart = await CartModel.findOne({ user: req.user._id });
+    if (!cart || !cart.items.length) {
+      return res.status(400).json({ error: "Cart is empty" });
+    }
 
-    const orderItems = items.map(({ product, quantity }, i) => {
-      const doc = ProductModel.findById(product);
+    const products = await Promise.all(
+      cart.items.map(({ product }) => ProductModel.findById(product)),
+    );
+
+    const orderItems = cart.items.map(({ product, quantity }, i) => {
+      const doc = products[i];
       if (!doc) {
         throw new Error(`Product ${product} not found`);
       }
       if (doc.stock < quantity) {
         throw new Error(`Insufficient stock for ${doc.name}`);
       }
-      return { product, quantity, price: doc.price };
+      return {
+        quantity,
+        product: {
+          _id: doc._id,
+          name: doc.name,
+          images: doc.images,
+          price: doc.price,
+        },
+      };
     });
 
     const total = orderItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+      (sum, item) => sum + item.product.price * item.quantity,
       0,
     );
 
-    await Promise.all(
-      orderItems.map(({ product, quantity }) =>
-        ProductModel.findByIdAndUpdate(product, { $inc: { stock: -quantity } }),
+    await Promise.all([
+      ...orderItems.map(({ product, quantity }) =>
+        ProductModel.findByIdAndUpdate(product._id, {
+          $inc: { stock: -quantity },
+        }),
       ),
-    );
+      cart.deleteOne(),
+    ]);
 
     const order = await OrderModel.create({
       buyer: req.user._id,
       items: orderItems,
-      shippingAddress,
+      shippingAddress: address,
       total,
     });
 

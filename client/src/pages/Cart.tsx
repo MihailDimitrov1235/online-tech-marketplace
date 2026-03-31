@@ -1,9 +1,11 @@
 import api from "@/api/axiosInstance"
 import { Button } from "@/components/common"
+import { paths } from "@/router"
 import { useAppSelector } from "@/store/hooks"
 import type { User } from "@/types/auth"
 import { Minus, Plus, Trash } from "lucide-react"
 import { useEffect, useState } from "react"
+import { NavLink } from "react-router"
 
 type cartItem = {
   product: {
@@ -192,7 +194,9 @@ export default function Cart() {
           <span>{(subtotal * (1 + salesTax)).toFixed(2)}€</span>
         </div>
       </div>
-      <Button className="ml-auto mt-4">Checkout</Button>
+      <NavLink to={paths.cart.checkout} className="ml-auto mt-4">
+        <Button>Checkout</Button>
+      </NavLink>
     </div>
   )
 }

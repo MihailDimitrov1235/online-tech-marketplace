@@ -8,6 +8,7 @@ import authRoutes from "./routes/Auth.routes.js";
 import productRoutes from "./routes/Product.routes.js";
 import reviewRoutes from "./routes/Review.routes.js";
 import cartRoutes from "./routes/Cart.routes.js";
+import orderRoutes from "./routes/Orders.routes.js";
 
 const PORT = process.env.PORT || 8000;
 const URI = process.env.DB_URI;
@@ -31,6 +32,8 @@ app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);
 
 app.use("/cart", cartRoutes);
+
+app.use("/orders", orderRoutes);
 
 async function startServer() {
   try {

@@ -20,6 +20,7 @@ import Deliveries from "./pages/dashboard/Deliveries"
 import Cart from "./pages/Cart"
 import MyOrders from "./pages/orders/MyOrders"
 import Order from "./pages/orders/Order"
+import Checkout from "./pages/Checkout"
 
 export const router = createBrowserRouter([
   {
@@ -47,7 +48,13 @@ export const router = createBrowserRouter([
         ),
         children: [
           { path: "settings", element: <Settings /> },
-          { path: "cart", element: <Cart /> },
+          {
+            path: "cart",
+            children: [
+              { index: true, element: <Cart /> },
+              { path: "checkout", element: <Checkout /> },
+            ],
+          },
           {
             path: "orders",
             children: [
@@ -109,7 +116,10 @@ export const paths = {
   settings: "/settings",
   listings: "/listings",
   orders: "/orders",
-  cart: "/cart",
+  cart: {
+    root: "/cart",
+    checkout: "/cart/checkout",
+  },
   dashboard: {
     root: "/dashboard",
     myListings: {

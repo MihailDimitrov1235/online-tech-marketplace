@@ -42,7 +42,7 @@ export const TopBar = () => {
         <div className="flex items-center gap-2">
           <ThemeToggle />
 
-          <NavLink to={paths.cart}>
+          <NavLink to={paths.cart.root}>
             <Button size="icon" variant="outline">
               <ShoppingCart size={16} />
             </Button>
