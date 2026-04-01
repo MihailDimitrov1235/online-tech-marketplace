@@ -3,7 +3,7 @@ import { Button } from "@/components/common"
 import { paths } from "@/router"
 import { useAppSelector } from "@/store/hooks"
 import type { User } from "@/types/auth"
-import { Divide, Minus, MoveRight, Plus, Trash } from "lucide-react"
+import { Minus, MoveRight, Plus, Trash } from "lucide-react"
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router"
 
@@ -100,7 +100,7 @@ export default function Cart() {
   return (
     <div className="flex flex-col items-center text-contrast p-16">
       <span className="text-2xl font-bold mb-6">Your cart</span>
-      {cartData && cartData?.items.length > 0 ? (
+      {cartData && cartData.items.length > 0 ? (
         <>
           {" "}
           <table className="w-full mt-4">
@@ -115,7 +115,7 @@ export default function Cart() {
             </thead>
 
             <tbody>
-              {cartData?.items.map(i => (
+              {cartData.items.map(i => (
                 <tr key={i.product._id} className="border-b border-border ">
                   <td className="py-4 flex gap-2">
                     <img
