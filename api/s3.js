@@ -103,3 +103,22 @@ export const deleteFiles = async (keys) => {
     }),
   );
 };
+
+export const signOrder = async (order) => {
+  const plain = order.toObject ? order.toObject() : order;
+  return {
+    ...plain,
+    items: await Promise.all(
+      plain.items.map(async (item) => ({
+        ...item,
+        product: {
+          ...item.product,
+          imageKeys: item.product.images,
+          images: await signFiles(item.product.images),
+        },
+      })),
+    ),
+  };
+};
+
+export const signOrders = async (orders) => Promise.all(orders.map(signOrder));

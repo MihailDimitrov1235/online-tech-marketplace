@@ -150,16 +150,16 @@ export default function NewListing({ productId }: { productId?: string }) {
 
     const request = productId
       ? api.patch(`/products/${productId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
+          headers: { "Content-Type": "multipart/form-data" },
+        })
       : api.post("/products", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
+          headers: { "Content-Type": "multipart/form-data" },
+        })
 
     request
       .then(async res => {
         console.log(res)
-        await navigate(paths.listings)
+        await navigate(paths.listings.root)
       })
       .catch((err: unknown) => {
         console.log(err)
@@ -174,7 +174,9 @@ export default function NewListing({ productId }: { productId?: string }) {
       className="flex flex-col w-full gap-8 px-14 pt-8"
     >
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          navigate(-1)
+        }}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
       >
         <ArrowLeft size={15} />

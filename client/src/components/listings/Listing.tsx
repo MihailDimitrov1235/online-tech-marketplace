@@ -20,7 +20,7 @@ export default function Listing({
   condition,
   price,
 }: ListingParams) {
-  const url = `${paths.listings}/${_id}`
+  const url = paths.listings.details(_id)
 
   const [imgLoaded, setImgLoaded] = useState(false)
 

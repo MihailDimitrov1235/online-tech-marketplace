@@ -204,7 +204,7 @@ export default function Cart() {
       ) : (
         <div className="flex flex-col items-center gap-12 mt-32">
           <span className="text-3xl font-bold">No items found</span>
-          <NavLink to={paths.listings}>
+          <NavLink to={paths.listings.root}>
             <Button>
               <span>See listings</span>
               <MoveRight className="mt-1 ml-1" size={16} />

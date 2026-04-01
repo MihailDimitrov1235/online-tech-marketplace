@@ -1,7 +1,7 @@
 import OrderModel from "../models/Order.model.js";
 import ProductModel from "../models/Product.model.js";
 import CartModel from "../models/Cart.model.js";
-import { signProducts } from "../s3.js";
+import { signOrders, signOrder } from "../s3.js";
 
 export async function getOrders(req, res) {
   try {
@@ -16,7 +16,7 @@ export async function getOrders(req, res) {
     ]);
 
     res.status(200).json({
-      orders,
+      orders: await signOrders(orders),
       pagination: {
         total,
         page: Number(page),
@@ -37,7 +37,7 @@ export async function getOrder(req, res) {
       return res.status(403).json({ error: "Not authorized" });
     }
 
-    res.status(200).json({ order });
+    res.status(200).json({ order: await signOrder(order) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -56,11 +56,8 @@ export async function createOrder(req, res) {
       cart.items.map(({ product }) => ProductModel.findById(product)),
     );
 
-    const signedProducts = await signProducts(products);
-    console.log(signedProducts[0]);
-
     const orderItems = cart.items.map(({ product, quantity }, i) => {
-      const doc = signedProducts[i];
+      const doc = products[i];
       if (!doc) {
         throw new Error(`Product ${product} not found`);
       }

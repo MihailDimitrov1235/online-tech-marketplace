@@ -114,7 +114,10 @@ export const paths = {
     register: "/auth/register",
   },
   settings: "/settings",
-  listings: "/listings",
+  listings: {
+    root: "/listings",
+    details: (id: string) => `/listings/${id}`,
+  },
   orders: {
     root: "/orders",
     details: (id: string) => `/orders/${id}`,
