@@ -11,7 +11,10 @@ export async function getOrders(req, res) {
     const filter = { buyer: req.user._id };
 
     const [orders, total] = await Promise.all([
-      OrderModel.find(filter).skip(skip).limit(Number(limit)),
+      OrderModel.find(filter)
+        .skip(skip)
+        .limit(Number(limit))
+        .populate("items.product.seller", "username firstName lastName"),
       OrderModel.countDocuments(filter),
     ]);
 
@@ -30,7 +33,10 @@ export async function getOrders(req, res) {
 
 export async function getOrder(req, res) {
   try {
-    const order = await OrderModel.findById(req.params.id);
+    const order = await OrderModel.findById(req.params.id).populate(
+      "items.product.seller",
+      "username firstName lastName",
+    );
 
     if (!order) return res.status(404).json({ error: "Order not found" });
     if (order.buyer._id.toString() !== req.user._id.toString()) {
@@ -71,6 +77,7 @@ export async function createOrder(req, res) {
           name: doc.name,
           images: doc.images,
           price: doc.price,
+          seller: doc.seller,
         },
       };
     });
@@ -80,6 +87,13 @@ export async function createOrder(req, res) {
       0,
     );
 
+    const order = await OrderModel.create({
+      buyer: req.user._id,
+      items: orderItems,
+      shippingAddress: address,
+      total,
+    });
+
     await Promise.all([
       ...orderItems.map(({ product, quantity }) =>
         ProductModel.findByIdAndUpdate(product._id, {
@@ -88,13 +102,6 @@ export async function createOrder(req, res) {
       ),
       cart.deleteOne(),
     ]);
-
-    const order = await OrderModel.create({
-      buyer: req.user._id,
-      items: orderItems,
-      shippingAddress: address,
-      total,
-    });
 
     res.status(201).json({ order });
   } catch (err) {

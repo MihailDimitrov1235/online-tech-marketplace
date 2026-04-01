@@ -42,7 +42,6 @@ export default function MyOrders() {
 
   return (
     <div className="px-16 pt-10 pb-16 min-h-screen text-contrast">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">My Orders</h1>
         <span className="text-sm text-contrast">
@@ -64,7 +63,6 @@ export default function MyOrders() {
         <div className="flex flex-col gap-4">
           {orders.map(o => (
             <Card key={o._id} className="flex-col gap-0 overflow-hidden p-0">
-              {/* Order Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface">
                 <div className="flex items-center gap-4">
                   <NavLink
@@ -79,7 +77,7 @@ export default function MyOrders() {
                     {o.status}
                   </span>
                 </div>
-                <div className="flex items-center gap-6 text-sm text-contrast/50">
+                <div className="flex items-center gap-6 text-sm text-contrast/60">
                   <span>
                     {new Date(o.createdAt).toLocaleDateString("en-UK", {
                       year: "numeric",
@@ -103,7 +101,6 @@ export default function MyOrders() {
                 </div>
               </div>
 
-              {/* Order Items */}
               <div className="px-6 py-4 flex flex-col divide-y divide-border">
                 {o.items.map(i => (
                   <div
@@ -128,7 +125,7 @@ export default function MyOrders() {
                         >
                           {i.product.name}
                         </NavLink>
-                        <p className="text-xs text-contrast/50 mt-0.5">
+                        <p className="text-xs text-contrast/60 mt-0.5">
                           Qty: {i.quantity}
                         </p>
                       </div>
@@ -140,7 +137,6 @@ export default function MyOrders() {
                 ))}
               </div>
 
-              {/* Order Footer */}
               <div className="px-6 py-3 border-t bg-surface border-border flex justify-end">
                 <NavLink to={paths.orders.details(o._id)}>
                   <Button

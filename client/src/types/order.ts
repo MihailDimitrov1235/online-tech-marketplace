@@ -13,6 +13,7 @@ export type orderItem = {
     name: string
     images: string[]
     price: number
+    seller: User
   }
   quantity: number
 }
