@@ -64,22 +64,28 @@ export default function MyOrders() {
                 </Button>
               </div>
             </div>
-            <div className="pl-2 flex flex-col gap-4 mt-4 w-full">
-              {o.items.map(i => (
-                <div key={i.product._id} className="flex justify-between">
-                  <div className="flex gap-4">
-                    <img
-                      className="w-16 h-16 object-contain rounded-lg"
-                      src={i.product.images[0]}
-                    />
-                    <span>{i.product.name}</span>
+            <div className="flex w-full">
+              <div className="self-stretch w-px rounded-lg bg-border" />
+              <div className="pl-8 flex flex-col gap-4 mt-4 w-full">
+                {o.items.map(i => (
+                  <div
+                    key={i.product._id}
+                    className="flex justify-between not-last:border-b border-border pb-4"
+                  >
+                    <div className="flex gap-4">
+                      <img
+                        className="w-16 h-16 object-contain rounded-lg"
+                        src={i.product.images[0]}
+                      />
+                      <span>{i.product.name}</span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <span>Price: {i.product.price}€</span>
+                      <span>Quantity: {i.quantity}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <span>Price: {i.product.price}€</span>
-                    <span>Quantity: {i.quantity}</span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
             <NavLink to={paths.orders.details(o._id)}>
               <Button variant="ghost" size="sm" className="w-fit">
