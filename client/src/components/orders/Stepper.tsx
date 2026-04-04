@@ -50,7 +50,7 @@ export default function Stepper({ status = "pending" }: { status?: status }) {
             <div className="flex flex-col items-center gap-1.5">
               <span
                 className={`flex items-center justify-center w-10 h-10 rounded-full 
-                    ${isCompleted ? "bg-primary text-primary-contrast shadow-md shadow-primary/30" : "border-2 border-border"} `}
+                    ${isCompleted ? "bg-primary text-primary-contrast shadow-md shadow-primary/30" : "border-2 border-border text-contrast"} `}
               >
                 {isCompleted ? <Check /> : icon}
               </span>

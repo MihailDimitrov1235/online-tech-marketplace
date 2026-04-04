@@ -9,6 +9,7 @@ import productRoutes from "./routes/Product.routes.js";
 import reviewRoutes from "./routes/Review.routes.js";
 import cartRoutes from "./routes/Cart.routes.js";
 import orderRoutes from "./routes/Orders.routes.js";
+import dashboardRoutes from "./routes/Dashboard.routes.js";
 
 const PORT = process.env.PORT || 8000;
 const URI = process.env.DB_URI;
@@ -34,6 +35,8 @@ app.use("/reviews", reviewRoutes);
 app.use("/cart", cartRoutes);
 
 app.use("/orders", orderRoutes);
+
+app.use("/dashboard", dashboardRoutes);
 
 async function startServer() {
   try {

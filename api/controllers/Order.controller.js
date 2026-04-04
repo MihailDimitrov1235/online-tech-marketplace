@@ -1,6 +1,7 @@
 import OrderModel from "../models/Order.model.js";
 import ProductModel from "../models/Product.model.js";
 import CartModel from "../models/Cart.model.js";
+import mongoose from "mongoose";
 import { signOrders, signOrder } from "../s3.js";
 
 export async function getOrders(req, res) {
@@ -15,6 +16,33 @@ export async function getOrders(req, res) {
         .skip(skip)
         .limit(Number(limit))
         .populate("items.product.seller", "username firstName lastName"),
+      OrderModel.countDocuments(filter),
+    ]);
+
+    res.status(200).json({
+      orders: await signOrders(orders),
+      pagination: {
+        total,
+        page: Number(page),
+        pages: Math.ceil(total / Number(limit)),
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getDashboardOrders(req, res) {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const filter = {
+      "items.product.seller": new mongoose.Types.ObjectId(req.user._id),
+    };
+
+    const [orders, total] = await Promise.all([
+      OrderModel.find(filter).skip(skip).limit(Number(limit)),
       OrderModel.countDocuments(filter),
     ]);
 

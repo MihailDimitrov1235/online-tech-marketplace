@@ -33,7 +33,7 @@ export default function Order() {
 
   return (
     <div className="min-h-screen pt-10">
-      <div className="max-w-3xl mx-auto">
+      <div className="w-4xl mx-auto">
         <div className="flex items-center justify-between mb-10">
           <div>
             <NavLink
@@ -41,7 +41,7 @@ export default function Order() {
               className="inline-flex items-center gap-1.5 text-xs font-medium tracking-widest text-contrast/50 hover:text-contrast transition-colors mb-3"
             >
               <ArrowLeft size={13} strokeWidth={2.5} />
-              Back to orders
+              Back
             </NavLink>
             <h1 className="text-[1.6rem] font-bold tracking-tight text-contrast leading-none">
               Order{" "}
