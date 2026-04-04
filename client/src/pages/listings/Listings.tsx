@@ -1,8 +1,8 @@
 import api from "@/api/axiosInstance"
-import { TextField } from "@/components/common"
+import { Pagination, TextField } from "@/components/common"
 import type { ListingParams } from "@/components/listings/Listing"
 import Listing from "@/components/listings/Listing"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useRef } from "react"
 
 const CONDITIONS = ["used", "refurbished", "new"]
 
@@ -19,48 +19,48 @@ function ListingSkeleton() {
   )
 }
 
+type Pagination = { total: number; page: number; pages: number }
+
 export default function Listings() {
   const [products, setProducts] = useState<ListingParams[]>([])
-
+  const [pagination, setPagination] = useState<Pagination>({ total: 0, page: 1, pages: 1 })
   const [loading, setLoading] = useState(true)
 
+  const [page, setPage] = useState(1)
   const [searchText, setSearchText] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
   const [conditions, setConditions] = useState<string[]>([])
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const handleSearchChange = (value: string) => {
+    setSearchText(value)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => setDebouncedSearch(value), 400)
+  }
+
   useEffect(() => {
+    setLoading(true)
+    const params = new URLSearchParams()
+    params.set("page", String(page))
+    if (debouncedSearch) params.set("search", debouncedSearch)
+    if (conditions.length > 0) params.set("condition", conditions.join(","))
+    if (minPrice) params.set("minPrice", minPrice)
+    if (maxPrice) params.set("maxPrice", maxPrice)
+
     api
-      .get<{
-        products: ListingParams[]
-      }>("/products")
+      .get<{ products: ListingParams[]; pagination: Pagination }>(`/products?${params}`)
       .then(res => {
         setProducts(res.data.products)
+        setPagination(res.data.pagination)
       })
-      .catch((err: unknown) => {
-        console.log(err)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
-
-  const filtered = useMemo(() => {
-    return products.filter(p => {
-      if (
-        searchText &&
-        !p.name.toLowerCase().includes(searchText.toLowerCase())
-      )
-        return false
-      if (conditions.length > 0 && !conditions.includes(p.condition))
-        return false
-      if (minPrice && p.price < Number(minPrice)) return false
-      if (maxPrice && p.price > Number(maxPrice)) return false
-      return true
-    })
-  }, [products, searchText, conditions, minPrice, maxPrice])
+      .catch((err: unknown) => console.log(err))
+      .finally(() => setLoading(false))
+  }, [page, debouncedSearch, conditions, minPrice, maxPrice])
 
   const toggleCondition = (c: string) => {
+    setPage(1)
     setConditions(prev =>
       prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c],
     )
@@ -86,7 +86,7 @@ export default function Listings() {
             <p className="text-sm text-muted mt-1">
               {loading
                 ? "Loading..."
-                : `${filtered.length.toString()} of ${products.length.toString()} products`}
+                : `${pagination.total} products`}
             </p>
           </div>
         </div>
@@ -99,6 +99,7 @@ export default function Listings() {
             {hasFilters && (
               <button
                 onClick={() => {
+                  setPage(1)
                   setConditions([])
                   setMinPrice("")
                   setMaxPrice("")
@@ -162,6 +163,7 @@ export default function Listings() {
                 placeholder="Min"
                 value={minPrice}
                 onChange={e => {
+                  setPage(1)
                   setMinPrice(e.target.value)
                 }}
                 className="w-full rounded-lg border border-border bg-transparent px-2.5 py-1.5 text-sm text-contrast placeholder:text-muted focus:outline-none focus:border-primary-ring"
@@ -172,6 +174,7 @@ export default function Listings() {
                 placeholder="Max"
                 value={maxPrice}
                 onChange={e => {
+                  setPage(1)
                   setMaxPrice(e.target.value)
                 }}
                 className="w-full rounded-lg border border-border bg-transparent px-2.5 py-1.5 text-sm text-contrast placeholder:text-muted focus:outline-none focus:border-primary-ring"
@@ -186,7 +189,8 @@ export default function Listings() {
             className="mb-6"
             value={searchText}
             onChange={e => {
-              setSearchText(e.target.value)
+              setPage(1)
+              handleSearchChange(e.target.value)
             }}
             fullWidth
           />
@@ -196,8 +200,10 @@ export default function Listings() {
               ? Array.from({ length: 8 }).map((_, i) => (
                   <ListingSkeleton key={i} />
                 ))
-              : filtered.map(el => <Listing key={el._id} {...el} />)}
+              : products.map(el => <Listing key={el._id} {...el} activeConditions={conditions} toggleCondition={toggleCondition} />)}
           </div>
+
+          <Pagination page={pagination.page} pages={pagination.pages} onChange={setPage} />
         </div>
       </div>
     </div>

@@ -4,6 +4,8 @@ import { useState } from "react"
 import { paths } from "@/router"
 import { Button } from "../common"
 import api from "@/api/axiosInstance"
+import { useAppDispatch } from "@/store/hooks"
+import { setItems, openCart } from "@/store/cartSlice"
 
 export type ListingParams = {
   _id: string
@@ -11,6 +13,8 @@ export type ListingParams = {
   name: string
   condition: string
   price: number
+  activeConditions?: string[]
+  toggleCondition?: (c: string) => void
 }
 
 export default function Listing({
@@ -19,24 +23,28 @@ export default function Listing({
   name,
   condition,
   price,
+  activeConditions = [],
+  toggleCondition,
 }: ListingParams) {
   const url = paths.listings.details(_id)
 
+  const dispatch = useAppDispatch()
   const [imgLoaded, setImgLoaded] = useState(false)
 
+  const isConditionActive = activeConditions.includes(condition)
+
   const handleQualityClick = () => {
-    console.log("TODO: add quality filter on click")
+    toggleCondition?.(condition)
   }
 
   const handleAddToCart = () => {
     api
-      .post("/cart", { productId: _id })
+      .post<{ cart: { items: { product: { _id: string; name: string; images: string[]; price: number; stock: number }; quantity: number }[] } }>("/cart", { productId: _id })
       .then(res => {
-        console.log(res.data)
+        dispatch(setItems(res.data.cart.items))
+        dispatch(openCart())
       })
-      .catch((err: unknown) => {
-        console.log(err)
-      })
+      .catch((err: unknown) => console.log(err))
   }
 
   return (
@@ -67,7 +75,11 @@ export default function Listing({
 
         <div className="flex items-center justify-between mt-1">
           <span
-            className="text-xs px-2 py-0.5 rounded-full bg-primary-tint text-primary-on font-medium cursor-pointer"
+            className={`text-xs px-2 py-0.5 rounded-full font-medium cursor-pointer transition-colors ${
+              isConditionActive
+                ? "bg-primary text-primary-contrast"
+                : "bg-primary-tint text-primary-on hover:bg-primary-tint-hover"
+            }`}
             onClick={handleQualityClick}
           >
             {condition}

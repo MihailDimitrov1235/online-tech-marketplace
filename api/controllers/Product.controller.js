@@ -22,13 +22,13 @@ export async function getProducts(req, res) {
 
     if (type) filter.type = type;
     if (brand) filter.brand = new RegExp(brand, "i");
-    if (condition) filter.condition = condition;
+    if (condition) filter.condition = { $in: condition.split(",") };
     if (minPrice || maxPrice) {
       filter["price"] = {};
       if (minPrice) filter["price"].$gte = Number(minPrice);
       if (maxPrice) filter["price"].$lte = Number(maxPrice);
     }
-    if (search) filter.$text = { $search: search };
+    if (search) filter.name = new RegExp(search, "i");
     if (seller) filter.seller = seller;
 
     const skip = (Number(page) - 1) * Number(limit);
