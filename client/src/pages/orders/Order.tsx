@@ -1,239 +1,178 @@
 import api from "@/api/axiosInstance"
 import { Button, Card } from "@/components/common"
+import Stepper from "@/components/orders/Stepper"
 import { paths } from "@/router"
 import type { order } from "@/types/order"
 import {
-  Check,
-  Package,
-  PackageCheck,
-  Truck,
-  File,
-  MoveLeft,
+  ArrowLeft,
   Store,
   FileText,
   ShieldCheck,
   MapPin,
+  Package,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useParams, NavLink } from "react-router"
-import { twMerge } from "tailwind-merge"
-
-const steps = [
-  {
-    step: "pending",
-    label: "Confirmed",
-    text: "Order placed and confirmed",
-    icon: <File />,
-  },
-  {
-    step: "confirmed",
-    label: "Processing",
-    text: "Preparing your items",
-    icon: <Package />,
-  },
-  {
-    step: "shipped",
-    label: "Shipped",
-    text: "Order on the way",
-    icon: <Truck />,
-  },
-  {
-    step: "delivered",
-    label: "Delivered",
-    text: "Order received",
-    icon: <PackageCheck />,
-  },
-]
 
 export default function Order() {
   const { id } = useParams<{ id: string }>()
   const [data, setData] = useState<order>()
-  const stepOrder = ["pending", "confirmed", "shipped", "delivered"]
-  const currentStepIndex = stepOrder.indexOf(data ? data.status : "pending")
+
   useEffect(() => {
     if (id) {
       api
         .get<{ order: order }>(`/orders/${id}`)
         .then(res => {
           setData(res.data.order)
-          console.log(res.data.order)
         })
         .catch((err: unknown) => {
           console.log(err)
         })
     }
   }, [id])
+
   return (
-    <div className="px-16 pt-10 pb-16 min-h-screen text-contrast">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">
-          Order #{id ? id.slice(-8).toUpperCase() : ""}
-        </h1>
-        <NavLink to={-1 as unknown as string}>
-          <Button variant={"ghost"} size="sm">
-            <MoveLeft className="mt-0.5 mr-1" size={16} />
-            Back
-          </Button>
-        </NavLink>
-      </div>
-      <Card className="flex-col gap-4">
-        <div className="flex w-full justify-between">
-          <h1 className="font-bold text-xl">Info</h1>
+    <div className="min-h-screen pt-10">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <NavLink
+              to={-1 as unknown as string}
+              className="inline-flex items-center gap-1.5 text-xs font-medium tracking-widest text-contrast/50 hover:text-contrast transition-colors mb-3"
+            >
+              <ArrowLeft size={13} strokeWidth={2.5} />
+              Back to orders
+            </NavLink>
+            <h1 className="text-[1.6rem] font-bold tracking-tight text-contrast leading-none">
+              Order{" "}
+              <span className=" text-contrast/50 text-xl">
+                #{id ? id.slice(-8).toUpperCase() : ""}
+              </span>
+            </h1>
+          </div>
+
           {data && (
-            <div className="flex items-center gap-6 text-sm text-contrast/60">
-              <span>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-contrast">
+                €{data.total.toFixed(2)}
+              </p>
+              <p className="text-xs text-contrast/50 mt-0.5">
                 {new Date(data.createdAt).toLocaleDateString("en-UK", {
                   year: "numeric",
-                  month: "short",
+                  month: "long",
                   day: "numeric",
                 })}
-              </span>
-              <span className="font-semibold text-contrast">
-                €{data.total.toFixed(2)}
-              </span>
+              </p>
             </div>
           )}
         </div>
-        <ol className="flex items-center w-full mb-4">
-          {steps.map(({ step, label, text, icon }, i) => {
-            const isCompleted = i <= currentStepIndex
-            const isLast = i === steps.length - 1
 
-            return (
-              <li
-                key={step}
-                className={twMerge(
-                  "flex items-center",
-                  !isLast &&
-                    "flex-1 after:block after:h-0.5 after:bg-border after:flex-1 after:mx-2",
-                )}
-              >
-                <div className="flex flex-col items-center gap-1.5">
-                  <span
-                    className={`flex items-center justify-center w-10 h-10 rounded-full 
-                    ${isCompleted ? "bg-primary text-primary-contrast shadow-md shadow-primary/30" : "border-2 border-border"} `}
-                  >
-                    {isCompleted ? <Check /> : icon}
-                  </span>
-                  <span className="flex flex-col items-center text-center">
-                    <h3
-                      className={twMerge(
-                        "text-sm font-semibold leading-tight",
-                        isCompleted ? "text-primary" : "text-contrast",
-                      )}
-                    >
-                      {label}
-                    </h3>
-                    <p
-                      className={twMerge(
-                        "text-xs mt-0.5",
-                        isCompleted ? "text-contrast/90" : "text-contrast/60",
-                      )}
-                    >
-                      {text}
-                    </p>
-                  </span>
-                </div>
-              </li>
-            )
-          })}
-        </ol>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bold text-xl">Shipping Address</h2>
-          <div className="flex flex-col items-start gap-3 p-4 rounded-xl border border-border bg-neutral w-fit text-sm">
-            <div className="flex  gap-2">
-              <MapPin size={16} className="text-contrast mt-0.5 shrink-0" />
-              <span className="font-semibold">
-                {data?.shippingAddress.street},
-              </span>
-              <span className="text-contrast/60">
-                {data?.shippingAddress.city},
-              </span>
-              <span className="text-contrast/60">
-                {data?.shippingAddress.country}
-              </span>
+        <Card>
+          <div className="flex items-start gap-4">
+            <div className="w-9 h-9 rounded-xl bg-neutral flex items-center justify-center">
+              <MapPin size={16} className="text-contrast/50" />
             </div>
-            <span className="text-contrast/60">
-              Zip code: {data?.shippingAddress.zip}
-            </span>
+            <div>
+              <p className="text-xs font-semibold tracking-wide uppercase text-contrast/50 mb-1">
+                Shipping to
+              </p>
+              <p className="text-sm font-semibold text-contrast">
+                {data?.shippingAddress.street}
+              </p>
+              <p className="text-sm text-contrast/50 mt-0.5">
+                {data?.shippingAddress.city}, {data?.shippingAddress.country}{" "}
+                <span className="text-contrast/50">
+                  · {data?.shippingAddress.zip}
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-        <div>
-          <div className="flex flex-col gap-4">
-            <h1 className="font-bold text-xl">Items</h1>
-            <div className="flex flex-col divide-y divide-border">
-              {data?.items.map(item => (
-                <div
-                  key={item.product._id}
-                  className="flex gap-4 py-4 first:pt-0 last:pb-0"
-                >
+        </Card>
+
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-5">
+            <Package size={15} className="text-contrast/50" />
+            <h2 className="text-xs font-semibold tracking-wide uppercase text-contrast/50">
+              {data?.items.length ?? 0}{" "}
+              {data?.items.length === 1 ? "item" : "items"}
+            </h2>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {data?.items.map(item => (
+              <Card key={item.product._id} className="flex-col">
+                <div className="border-b border-border px-5 py-3">
+                  <Stepper status={item.status} />
+                </div>
+
+                <div className="flex gap-4 p-5">
                   <NavLink
                     to={paths.listings.details(item.product._id)}
-                    className="w-20 h-20 rounded-xl bg-neutral border border-border hover:border-primary transition-colors overflow-hidden"
+                    className="w-18 h-18 rounded-xl border border-border bg-neutral overflow-hidden hover:border-primary"
                   >
                     <img
                       className="w-full h-full object-contain"
                       src={item.product.images[0]}
+                      alt={item.product.name}
                     />
                   </NavLink>
 
-                  <div className="flex flex-col flex-1 gap-1 min-w-0">
-                    <NavLink
-                      to={paths.listings.details(item.product._id)}
-                      className="text-sm font-semibold hover:text-primary transition-colors truncate"
-                    >
-                      {item.product.name}
-                    </NavLink>
-
-                    <div className="flex items-center gap-1.5 text-xs text-contrast/60 mt-1">
-                      <Store size={12} />
-                      <span>
-                        <span className="mr-1">Sold by</span>
+                  <div className="flex flex-1 gap-4 min-w-0">
+                    <div className="flex flex-col flex-1 gap-1">
+                      <NavLink
+                        to={paths.listings.details(item.product._id)}
+                        className="text-sm font-semibold text-contrast hover:text-primary"
+                      >
+                        {item.product.name}
+                      </NavLink>
+                      <div className="flex items-center gap-1.5 text-xs text-contrast/50 mt-0.5">
+                        <Store size={11} />
+                        <span>Sold by</span>
                         <NavLink
                           to={paths.home}
-                          // TODO: send to seller profile or listings by seller
-                          className="font-medium text-contrast hover:text-primary transition-colors"
+                          className="font-medium text-contrast hover:text-primary"
                         >
                           {item.product.seller.username}
                         </NavLink>
-                      </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="text-sm font-bold">
-                      {(item.product.price * item.quantity).toFixed(2)}€
-                    </span>
-                    <span className="text-xs text-contrast/60">
-                      Qnt: {item.quantity}
-                    </span>
+                    <div className="flex flex-col">
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-contrast">
+                          €{(item.product.price * item.quantity).toFixed(2)}
+                        </p>
+                        <p className="text-xs text-contrast/50 mt-0.5">
+                          Qty: {item.quantity}
+                        </p>
+                      </div>
 
-                    {/* TODO: add product invoice and warranty functionality */}
-                    <div className="flex gap-1.5 mt-2">
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        className="flex items-center"
-                      >
-                        <span>Invoice</span>
-                        <FileText className="mt-1 ml-1" size={11} />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        className="flex items-center"
-                      >
-                        <span>Warranty</span>
-                        <ShieldCheck className="mt-1 ml-1" size={11} />
-                      </Button>
+                      <div className="flex gap-1.5 mt-3">
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          className="gap-1 px-2.5 py-1.5 text-[12px] shadow-sm"
+                        >
+                          Invoice
+                          <FileText className="ml-1 mt-0.1" size={10} />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          className="gap-1 px-2.5 py-1.5 text-[12px] shadow-sm"
+                        >
+                          Warranty
+                          <ShieldCheck className="ml-1 mt-0.1" size={10} />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </Card>
+            ))}
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

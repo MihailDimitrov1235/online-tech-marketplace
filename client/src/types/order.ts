@@ -16,6 +16,7 @@ export type orderItem = {
     seller: User
   }
   quantity: number
+  status: status
 }
 
 export type order = {
