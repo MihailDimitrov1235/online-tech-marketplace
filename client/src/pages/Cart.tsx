@@ -112,7 +112,7 @@ export default function Cart() {
           <div className="absolute bottom-[-40%] left-[10%] w-48 h-48 rounded-full bg-pink-300/15 dark:bg-pink-600/10 blur-3xl" />
         </div>
         <div className="relative">
-          <p className="text-xs font-medium text-muted uppercase tracking-widest mb-1">Checkout</p>
+          <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">Checkout</p>
           <h1 className="text-3xl font-semibold tracking-tight text-contrast">Your cart</h1>
           {!isEmpty && (
             <p className="text-sm text-muted mt-1">{cartData.items.length} item{cartData.items.length !== 1 ? "s" : ""}</p>
