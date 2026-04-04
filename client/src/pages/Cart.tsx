@@ -22,9 +22,42 @@ type cartItems = {
   items: cartItem[]
 }
 
+function CartSkeleton() {
+  return (
+    <div className="flex gap-8 items-start">
+      <div className="flex-1 flex flex-col gap-3">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="flex gap-4 items-center rounded-2xl bg-white/60 dark:bg-zinc-900/50 border border-white/80 dark:border-white/10 shadow-sm p-4 animate-pulse">
+            <div className="w-20 h-20 shrink-0 rounded-xl bg-zinc-200/80 dark:bg-zinc-700/50" />
+            <div className="flex-1 flex flex-col gap-2">
+              <div className="h-3.5 w-2/3 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+              <div className="h-3 w-1/4 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+            </div>
+            <div className="w-24 h-8 rounded-xl bg-zinc-200/80 dark:bg-zinc-700/50" />
+            <div className="w-16 h-3.5 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-200/80 dark:bg-zinc-700/50" />
+          </div>
+        ))}
+      </div>
+
+      <div className="w-80 shrink-0 rounded-2xl bg-white/60 dark:bg-zinc-900/50 border border-white/80 dark:border-white/10 shadow-lg p-6 flex flex-col gap-4 animate-pulse">
+        <div className="h-4 w-1/2 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+        <div className="flex flex-col gap-3">
+          <div className="h-3 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+          <div className="h-3 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+          <div className="h-px bg-border" />
+          <div className="h-4 rounded-full bg-zinc-200/80 dark:bg-zinc-700/50" />
+        </div>
+        <div className="h-9 rounded-xl bg-zinc-200/80 dark:bg-zinc-700/50" />
+      </div>
+    </div>
+  )
+}
+
 export default function Cart() {
   const { user } = useAppSelector(state => state.auth)
   const salesTax = 0.1
+  const [loading, setLoading] = useState(true);
   const [cartData, setCartData] = useState<cartItems>()
   const [subtotal, setSubtotal] = useState(0)
 
@@ -33,6 +66,7 @@ export default function Cart() {
       .get<{ cart: cartItems }>("/cart")
       .then(res => setCartData(res.data.cart))
       .catch((err: unknown) => console.log(err))
+      .finally(() => setLoading(false))
   }, [user?._id])
 
   useEffect(() => {
@@ -87,7 +121,9 @@ export default function Cart() {
       </div>
 
       <div className="px-14 py-8">
-        {isEmpty ? (
+        {loading ? (
+          <CartSkeleton />
+        ) : isEmpty ? (
           <div className="flex flex-col items-center gap-6 py-32">
             <div className="w-20 h-20 rounded-full bg-primary-tint flex items-center justify-center">
               <ShoppingBag size={32} className="text-primary-on" />

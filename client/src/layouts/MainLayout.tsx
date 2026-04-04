@@ -1,5 +1,6 @@
 import { Outlet } from "react-router"
 import { TopBar } from "@/components/layout/TopBar"
+import { CartDrawer } from "@/components/cart/CartDrawer"
 
 export default function Layout() {
   return (
@@ -8,6 +9,7 @@ export default function Layout() {
       <div className="flex-1 flex flex-col">
         <Outlet />
       </div>
+      <CartDrawer />
     </div>
   )
 }

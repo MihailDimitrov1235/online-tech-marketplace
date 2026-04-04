@@ -4,6 +4,8 @@ import { useState } from "react"
 import { paths } from "@/router"
 import { Button } from "../common"
 import api from "@/api/axiosInstance"
+import { useAppDispatch } from "@/store/hooks"
+import { setItems, openCart } from "@/store/cartSlice"
 
 export type ListingParams = {
   _id: string
@@ -22,6 +24,7 @@ export default function Listing({
 }: ListingParams) {
   const url = paths.listings.details(_id)
 
+  const dispatch = useAppDispatch()
   const [imgLoaded, setImgLoaded] = useState(false)
 
   const handleQualityClick = () => {
@@ -30,13 +33,12 @@ export default function Listing({
 
   const handleAddToCart = () => {
     api
-      .post("/cart", { productId: _id })
+      .post<{ cart: { items: { product: { _id: string; name: string; images: string[]; price: number; stock: number }; quantity: number }[] } }>("/cart", { productId: _id })
       .then(res => {
-        console.log(res.data)
+        dispatch(setItems(res.data.cart.items))
+        dispatch(openCart())
       })
-      .catch((err: unknown) => {
-        console.log(err)
-      })
+      .catch((err: unknown) => console.log(err))
   }
 
   return (

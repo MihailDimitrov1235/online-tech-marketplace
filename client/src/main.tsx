@@ -7,6 +7,7 @@ import { router } from "./router"
 import { store } from "./store"
 import { setupInterceptors } from './api/interceptors';
 import { fetchMe } from './store/authSlice';
+import { fetchCart } from './store/cartSlice';
 import "./index.css"
 
 const container = document.getElementById("root")
@@ -14,7 +15,10 @@ const container = document.getElementById("root")
 if (container) {
   const root = createRoot(container)
   setupInterceptors()
+
   store.dispatch(fetchMe());
+  store.dispatch(fetchCart());
+
   root.render(
     <StrictMode>
       <ThemeProvider>

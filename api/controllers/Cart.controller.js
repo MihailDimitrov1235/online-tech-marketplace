@@ -41,6 +41,9 @@ export async function addToCart(req, res) {
 
     await cart.save();
     await cart.populate("items.product", "name images price stock");
+    const products = cart.items.map((item) => item.product.toObject());
+    const signedProducts = await signProducts(products);
+    cart.items.forEach((item, i) => (item.product = signedProducts[i]));
     res.status(200).json({ cart });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -74,7 +77,7 @@ export async function removeFromCart(req, res) {
     const cart = await CartModel.findOne({ user: req.user._id });
     if (!cart) return res.status(404).json({ error: "Cart not found" });
     cart.items = cart.items.filter(
-      (i) => i.product.toString() !== req.params.productId,
+      (i) => i.product.toString() !== req.params.id,
     );
     await cart.save();
     res.status(200).json({ cart });
