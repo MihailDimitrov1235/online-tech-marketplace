@@ -196,7 +196,7 @@ export default function Listings() {
               ? Array.from({ length: 8 }).map((_, i) => (
                   <ListingSkeleton key={i} />
                 ))
-              : filtered.map(el => <Listing key={el._id} {...el} />)}
+              : filtered.map(el => <Listing key={el._id} {...el} activeConditions={conditions} toggleCondition={toggleCondition} />)}
           </div>
         </div>
       </div>
