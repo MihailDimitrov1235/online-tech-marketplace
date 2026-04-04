@@ -144,7 +144,7 @@ export default function MyOrders() {
                     size="sm"
                     className="text-xs gap-1.5 hover:text-primary"
                   >
-                    View details <MoveRight size={12} />
+                    View details <MoveRight className="ml-1 mt-0.5" size={12} />
                   </Button>
                 </NavLink>
               </div>

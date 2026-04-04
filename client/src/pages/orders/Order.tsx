@@ -12,6 +12,7 @@ import {
   Store,
   FileText,
   ShieldCheck,
+  MapPin,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useParams, NavLink } from "react-router"
@@ -137,6 +138,26 @@ export default function Order() {
             )
           })}
         </ol>
+        <div className="flex flex-col gap-2">
+          <h2 className="font-bold text-xl">Shipping Address</h2>
+          <div className="flex flex-col items-start gap-3 p-4 rounded-xl border border-border bg-neutral w-fit text-sm">
+            <div className="flex  gap-2">
+              <MapPin size={16} className="text-contrast mt-0.5 shrink-0" />
+              <span className="font-semibold">
+                {data?.shippingAddress.street},
+              </span>
+              <span className="text-contrast/60">
+                {data?.shippingAddress.city},
+              </span>
+              <span className="text-contrast/60">
+                {data?.shippingAddress.country}
+              </span>
+            </div>
+            <span className="text-contrast/60">
+              Zip code: {data?.shippingAddress.zip}
+            </span>
+          </div>
+        </div>
         <div>
           <div className="flex flex-col gap-4">
             <h1 className="font-bold text-xl">Items</h1>
