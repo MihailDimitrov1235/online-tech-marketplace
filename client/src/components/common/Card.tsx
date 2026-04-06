@@ -12,9 +12,8 @@ type CardProps = {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: "bg-white dark:bg-zinc-900 dark:border-zinc-800 shadow-md",
-  outlined:
-    "bg-white dark:bg-zinc-900 dark:border-zinc-800 border border-neutral hover:border-gray-400 transition-colors duration-300",
+  default: "bg-white/60 dark:bg-zinc-900/50 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-lg shadow-zinc-200/50 dark:shadow-black/20",
+  outlined: "bg-white/60 dark:bg-zinc-900/50 backdrop-blur-xl border border-white/80 dark:border-white/10 hover:border-primary-ring transition-colors duration-300",
 }
 
 const sizeStyles: Record<CardSize, string> = {
