@@ -93,6 +93,10 @@ export default function Checkout() {
               </div>
             </div>
           </div>
+          <div className="w-full">
+            <span className="text-lg font-semibold">Delivery</span>
+            <RHFTextField fullWidth name="delivery" label="Delivery person" />
+          </div>
           <Button className="ml-auto" type="submit">
             Order
           </Button>

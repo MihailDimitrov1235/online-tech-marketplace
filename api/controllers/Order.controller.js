@@ -42,7 +42,10 @@ export async function getDashboardOrders(req, res) {
     };
 
     const [orders, total] = await Promise.all([
-      OrderModel.find(filter).skip(skip).limit(Number(limit)),
+      OrderModel.find(filter)
+        .skip(skip)
+        .limit(Number(limit))
+        .populate("items.product.seller", "_id username firstName lastName"),
       OrderModel.countDocuments(filter),
     ]);
 
