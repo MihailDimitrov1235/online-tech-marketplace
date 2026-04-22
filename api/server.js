@@ -21,7 +21,7 @@ app.use(express.json());
 
 // Global error handling
 app.use((err, _req, res, next) => {
-  res.status(500).send("Uh oh! An unexpected error occured.");
+  res.status(500).send(err);
 });
 
 app.use("/users", usersRouter);
