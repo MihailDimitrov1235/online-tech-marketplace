@@ -1,5 +1,16 @@
 import UserModel, { USER_ROLES } from "../models/User.model.js";
 
+export async function getDelivery(req, res) {
+  try {
+    const users = await UserModel.find({ roles: "delivery" }).select(
+      "-password",
+    );
+    res.status(200).json({ users });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 export async function getUsers(req, res) {
   try {
     const users = await UserModel.find();

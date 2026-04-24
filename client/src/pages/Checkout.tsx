@@ -6,6 +6,9 @@ import { useForm } from "react-hook-form"
 import * as yup from "yup"
 import { useNavigate } from "react-router"
 import { paths } from "@/router"
+import { RHFDropdown } from "@/components/form/RHFDropdown"
+import { useEffect, useState } from "react"
+import type { User } from "@/types/auth"
 
 type CheckoutForm = {
   address: {
@@ -14,6 +17,7 @@ type CheckoutForm = {
     street: string
     zip: number
   }
+  delivery: string
 }
 
 const schema = yup.object({
@@ -23,9 +27,21 @@ const schema = yup.object({
     street: yup.string().required("Street is required"),
     zip: yup.number().positive().required("Zip code is required"),
   }),
+  delivery: yup.string().required("Delivery is required"),
 })
 
 export default function Checkout() {
+  const [deliveryOptions, setDeliveryOptions] = useState<User[]>([])
+  useEffect(() => {
+    api
+      .get<{ users: User[] }>(`/users/delivery`)
+      .then(res => {
+        setDeliveryOptions(res.data.users)
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }, [])
   const navigate = useNavigate()
   const defaultValues = {
     address: {
@@ -34,6 +50,7 @@ export default function Checkout() {
       street: "",
       zip: undefined,
     },
+    delivery: "",
   }
 
   const methods = useForm<CheckoutForm>({
@@ -44,6 +61,7 @@ export default function Checkout() {
   const { handleSubmit } = methods
 
   const onSubmit = handleSubmit(data => {
+    console.log(data)
     api
       .post("/orders", data)
       .then(async res => {
@@ -95,7 +113,15 @@ export default function Checkout() {
           </div>
           <div className="w-full">
             <span className="text-lg font-semibold">Delivery</span>
-            <RHFTextField fullWidth name="delivery" label="Delivery person" />
+            <RHFDropdown
+              fullWidth
+              name="delivery"
+              label="Delivery service"
+              options={deliveryOptions.map(u => ({
+                value: u._id,
+                label: u.username,
+              }))}
+            />
           </div>
           <Button className="ml-auto" type="submit">
             Order

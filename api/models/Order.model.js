@@ -40,6 +40,11 @@ const orderSchema = new mongoose.Schema(
       country: { type: String, required: true },
       zip: { type: String, required: true },
     },
+    delivery: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true },
 );

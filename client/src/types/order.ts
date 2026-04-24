@@ -31,5 +31,6 @@ export type order = {
     country: string
     zip: number
   }
+  delivery: User
   createdAt: string
 }

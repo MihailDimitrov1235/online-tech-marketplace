@@ -15,7 +15,8 @@ export async function getOrders(req, res) {
       OrderModel.find(filter)
         .skip(skip)
         .limit(Number(limit))
-        .populate("items.product.seller", "username firstName lastName"),
+        .populate("items.product.seller", "username firstName lastName")
+        .populate("delivery", "username firstName lastName"),
       OrderModel.countDocuments(filter),
     ]);
 
@@ -45,7 +46,39 @@ export async function getDashboardOrders(req, res) {
       OrderModel.find(filter)
         .skip(skip)
         .limit(Number(limit))
-        .populate("items.product.seller", "_id username firstName lastName"),
+        .populate("items.product.seller", "_id username firstName lastName")
+        .populate("delivery", "username firstName lastName"),
+      OrderModel.countDocuments(filter),
+    ]);
+
+    res.status(200).json({
+      orders: await signOrders(orders),
+      pagination: {
+        total,
+        page: Number(page),
+        pages: Math.ceil(total / Number(limit)),
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getDashboardDeliveryOrders(req, res) {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+    const filter = {
+      delivery: new mongoose.Types.ObjectId(req.user._id),
+    };
+
+    const [orders, total] = await Promise.all([
+      OrderModel.find(filter)
+        .skip(skip)
+        .limit(Number(limit))
+        .populate("items.product.seller", "_id username firstName lastName")
+        .populate("delivery", "username firstName lastName")
+        .populate("buyer", "username firstName lastName"),
       OrderModel.countDocuments(filter),
     ]);
 
@@ -64,10 +97,9 @@ export async function getDashboardOrders(req, res) {
 
 export async function getOrder(req, res) {
   try {
-    const order = await OrderModel.findById(req.params.id).populate(
-      "items.product.seller",
-      "username firstName lastName",
-    );
+    const order = await OrderModel.findById(req.params.id)
+      .populate("items.product.seller", "username firstName lastName")
+      .populate("delivery", "username firstName lastName");
 
     if (!order) return res.status(404).json({ error: "Order not found" });
     if (order.buyer._id.toString() !== req.user._id.toString()) {
@@ -82,7 +114,7 @@ export async function getOrder(req, res) {
 
 export async function createOrder(req, res) {
   try {
-    const { address } = req.body;
+    const { address, delivery } = req.body;
 
     const cart = await CartModel.findOne({ user: req.user._id });
     if (!cart || !cart.items.length) {
@@ -122,6 +154,7 @@ export async function createOrder(req, res) {
       buyer: req.user._id,
       items: orderItems,
       shippingAddress: address,
+      delivery,
       total,
     });
 
@@ -142,24 +175,98 @@ export async function createOrder(req, res) {
 
 export async function updateOrderStatus(req, res) {
   try {
-    const order = await OrderModel.findById(req.params.id);
-    if (!order) return res.status(404).json({ error: "Order not found" });
-    // if (order.buyer.toString() !== req.user._id.toString()) {
-    //   return res.status(403).json({ error: "Not authorized" });
-    // }
-    // TODO: edit who can change order status
+    const { status } = req.body;
+    if (!["confirmed", "cancelled"].includes(status)) {
+      return res
+        .status(400)
+        .json({ error: "Status must be confirmed or cancelled" });
+    }
 
-    if (order.status !== "cancelled") {
+    const order = await OrderModel.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    let sellerItemsUpdated = false;
+    order.items.forEach((item) => {
+      if (item.product.seller.toString() === req.user._id.toString()) {
+        item.status = status;
+        sellerItemsUpdated = true;
+      }
+    });
+
+    if (!sellerItemsUpdated) {
+      return res
+        .status(403)
+        .json({ error: "No items in this order belong to you" });
+    }
+
+    if (status === "cancelled") {
       await Promise.all(
-        order.items.map(({ product, quantity }) =>
-          ProductModel.findByIdAndUpdate(product, {
-            $inc: { stock: quantity },
-          }),
-        ),
+        order.items
+          .filter(
+            (item) =>
+              item.product.seller.toString() === req.user._id.toString(),
+          )
+          .map(({ product, quantity }) =>
+            ProductModel.findByIdAndUpdate(product._id, {
+              $inc: { stock: quantity },
+            }),
+          ),
       );
     }
 
-    order.status = req.body.status;
+    const allSameStatus = order.items.every((i) => i.status === status);
+    if (allSameStatus) {
+      order.status = status;
+    }
+
+    await order.save();
+    res.status(200).json({ order });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+export async function updateOrderItemStatus(req, res) {
+  try {
+    const { status } = req.body;
+    const validTransitions = {
+      confirmed: "shipped",
+      shipped: "delivered",
+    };
+
+    const order = await OrderModel.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: "Order not found" });
+
+    if (order.delivery?.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    const item = order.items.find(
+      (i) => i.product._id.toString() === req.params.itemId,
+    );
+    if (!item) return res.status(404).json({ error: "Item not found" });
+
+    if (item.status === "pending" || item.status === "cancelled") {
+      return res
+        .status(400)
+        .json({ error: "Cannot update a pending or cancelled item" });
+    }
+
+    if (validTransitions[item.status] !== status) {
+      return res
+        .status(400)
+        .json({ error: `Cannot transition from ${item.status} to ${status}` });
+    }
+
+    item.status = status;
+
+    const allDelivered = order.items.every((i) => i.status === "delivered");
+    if (allDelivered) {
+      order.status = "delivered";
+    }
+
     await order.save();
     res.status(200).json({ order });
   } catch (err) {
@@ -171,11 +278,11 @@ export async function deleteOrder(req, res) {
   try {
     const order = await OrderModel.findById(req.params.id);
     if (!order) return res.status(404).json({ error: "Order not found" });
-    if (order.buyer.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ error: "Not authorized to delete this order" });
-    }
+    // if (order.buyer.toString() !== req.user._id.toString()) {
+    //   return res
+    //     .status(403)
+    //     .json({ error: "Not authorized to delete this order" });
+    // }
     await order.deleteOne();
     res.status(200).json({ message: "Order deleted successfully" });
   } catch (err) {

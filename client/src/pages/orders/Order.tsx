@@ -68,7 +68,7 @@ export default function Order() {
         </div>
 
         <Card>
-          <div className="flex items-start gap-4">
+          <div className="flex w-full items-start gap-4">
             <div className="w-9 h-9 rounded-xl bg-neutral flex items-center justify-center">
               <MapPin size={16} className="text-contrast/50" />
             </div>
@@ -84,6 +84,14 @@ export default function Order() {
                 <span className="text-contrast/50">
                   · {data?.shippingAddress.zip}
                 </span>
+              </p>
+            </div>
+            <div className="ml-auto">
+              <p className="text-xs font-semibold tracking-wide uppercase text-contrast/50 mb-1 text-end">
+                Delivered by
+              </p>
+              <p className="text-sm font-semibold text-contrast text-end">
+                {data?.delivery.username}
               </p>
             </div>
           </div>
