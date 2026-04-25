@@ -13,8 +13,34 @@ export async function getDelivery(req, res) {
 
 export async function getUsers(req, res) {
   try {
-    const users = await UserModel.find();
-    res.status(200).json(users);
+    const { page = 1, limit = 10, search, role } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const filter = {};
+    if (search)
+      filter.$or = [
+        { username: new RegExp(search, "i") },
+        { firstName: new RegExp(search, "i") },
+        { lastName: new RegExp(search, "i") },
+      ];
+    if (role) filter.roles = role;
+
+    const [users, total] = await Promise.all([
+      UserModel.find(filter)
+        .skip(skip)
+        .limit(Number(limit))
+        .select("-password"),
+      UserModel.countDocuments(filter),
+    ]);
+
+    res.status(200).json({
+      users,
+      pagination: {
+        total,
+        page: Number(page),
+        pages: Math.ceil(total / Number(limit)),
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

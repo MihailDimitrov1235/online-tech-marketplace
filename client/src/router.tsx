@@ -21,6 +21,10 @@ import Cart from "./pages/Cart"
 import MyOrders from "./pages/orders/MyOrders"
 import Order from "./pages/orders/Order"
 import Checkout from "./pages/Checkout"
+import Data from "./pages/dashboard/Data"
+import Verification from "./pages/dashboard/Verification"
+import UsersData from "./pages/dashboard/Data/UsersData"
+import ListingsData from "./pages/dashboard/Data/ListingsData"
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +91,15 @@ export const router = createBrowserRouter([
       },
       { path: "orders", element: <Orders /> },
       { path: "deliveries", element: <Deliveries /> },
+      {
+        path: "data",
+        element: <Data />,
+        children: [
+          { path: "users", element: <UsersData /> },
+          { path: "listings", element: <ListingsData /> },
+        ],
+      },
+      { path: "verifications", element: <Verification /> },
     ],
   },
   {
@@ -139,6 +152,13 @@ export const paths = {
     },
     deliveries: {
       root: "/dashboard/deliveries",
+    },
+    data: {
+      root: "/dashboard/data",
+      dataType: (dataType: string) => `/dashboard/data/${dataType}`,
+    },
+    verifications: {
+      root: "/dashboard/verifications",
     },
   },
 }

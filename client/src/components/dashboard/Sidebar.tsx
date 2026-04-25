@@ -6,6 +6,8 @@ import {
   Home,
   Package,
   ClipboardList,
+  ShieldQuestionMark,
+  Database,
 } from "lucide-react"
 import { Logo } from "../common"
 import { paths } from "@/router"
@@ -31,6 +33,16 @@ export default function Sidebar() {
       path: paths.dashboard.deliveries.root,
       label: "Deliveries",
       icon: <Truck size={18} />,
+    },
+    {
+      path: paths.dashboard.data.root,
+      label: "Data",
+      icon: <Database size={18} />,
+    },
+    {
+      path: paths.dashboard.verifications.root,
+      label: "Verification requests",
+      icon: <ShieldQuestionMark size={18} />,
     },
   ]
 

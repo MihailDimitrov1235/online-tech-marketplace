@@ -40,9 +40,9 @@ export default function MyListings() {
       })
   }
   return (
-    <div className="flex flex-col w-full gap-8">
+    <div className="flex flex-col w-full gap-8 text-contrast">
       <Card className="justify-between items-center">
-        <div className="text-xl font-semibold text-contrast">My listings</div>
+        <div className="text-xl font-semibold ">My listings</div>
         <NavLink to={paths.dashboard.myListings.new}>
           <Button className="gap-2 items-center">
             <div>Add new</div>

@@ -23,7 +23,11 @@ type Pagination = { total: number; page: number; pages: number }
 
 export default function Listings() {
   const [products, setProducts] = useState<ListingParams[]>([])
-  const [pagination, setPagination] = useState<Pagination>({ total: 0, page: 1, pages: 1 })
+  const [pagination, setPagination] = useState<Pagination>({
+    total: 0,
+    page: 1,
+    pages: 1,
+  })
   const [loading, setLoading] = useState(true)
 
   const [page, setPage] = useState(1)
@@ -37,7 +41,9 @@ export default function Listings() {
   const handleSearchChange = (value: string) => {
     setSearchText(value)
     if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => setDebouncedSearch(value), 400)
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(value)
+    }, 400)
   }
 
   useEffect(() => {
@@ -50,13 +56,19 @@ export default function Listings() {
     if (maxPrice) params.set("maxPrice", maxPrice)
 
     api
-      .get<{ products: ListingParams[]; pagination: Pagination }>(`/products?${params}`)
+      .get<{ products: ListingParams[]; pagination: Pagination }>(
+        `/products?${params}`,
+      )
       .then(res => {
         setProducts(res.data.products)
         setPagination(res.data.pagination)
       })
-      .catch((err: unknown) => console.log(err))
-      .finally(() => setLoading(false))
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [page, debouncedSearch, conditions, minPrice, maxPrice])
 
   const toggleCondition = (c: string) => {
@@ -84,9 +96,7 @@ export default function Listings() {
               Browse listings
             </h1>
             <p className="text-sm text-muted mt-1">
-              {loading
-                ? "Loading..."
-                : `${pagination.total} products`}
+              {loading ? "Loading..." : `${String(pagination.total)} products`}
             </p>
           </div>
         </div>
@@ -200,10 +210,21 @@ export default function Listings() {
               ? Array.from({ length: 8 }).map((_, i) => (
                   <ListingSkeleton key={i} />
                 ))
-              : products.map(el => <Listing key={el._id} {...el} activeConditions={conditions} toggleCondition={toggleCondition} />)}
+              : products.map(el => (
+                  <Listing
+                    key={el._id}
+                    {...el}
+                    activeConditions={conditions}
+                    toggleCondition={toggleCondition}
+                  />
+                ))}
           </div>
 
-          <Pagination page={pagination.page} pages={pagination.pages} onChange={setPage} />
+          <Pagination
+            page={pagination.page}
+            pages={pagination.pages}
+            onChange={setPage}
+          />
         </div>
       </div>
     </div>
