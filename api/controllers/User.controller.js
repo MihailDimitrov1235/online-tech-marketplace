@@ -11,6 +11,17 @@ export async function getDelivery(req, res) {
   }
 }
 
+export async function getUser(req, res) {
+  try {
+    const user = await UserModel.findById(req.params.id).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 export async function getUsers(req, res) {
   try {
     const { page = 1, limit = 10, search, role } = req.query;

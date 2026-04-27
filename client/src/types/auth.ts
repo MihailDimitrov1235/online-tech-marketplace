@@ -10,7 +10,8 @@ export type LoginPayload = {
   password: string
 }
 
-export type Role = "buyer" | "seller" | "delivery" | "admin"
+export const UserRoles = ["buyer", "seller", "admin", "delivery"] as const
+export type Role = (typeof UserRoles)[number]
 
 export type User = {
   _id: string

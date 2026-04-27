@@ -4,6 +4,7 @@ import { Table, type Column } from "@/components/common/Table"
 import type { User } from "@/types/auth"
 import api from "@/api/axiosInstance"
 import type { pagination } from "@/types/pagination"
+import { useNavigate } from "react-router"
 
 const columns: Column<User>[] = [
   {
@@ -44,6 +45,7 @@ const columns: Column<User>[] = [
 ]
 
 export default function UsersData() {
+  const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -80,6 +82,9 @@ export default function UsersData() {
       emptyMessage="No users found"
       pagination={{ page, pages }}
       onPageChange={setPage}
+      onRowClick={row => {
+        void navigate(row._id)
+      }}
     />
   )
 }

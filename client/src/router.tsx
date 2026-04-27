@@ -23,8 +23,9 @@ import Order from "./pages/orders/Order"
 import Checkout from "./pages/Checkout"
 import Data from "./pages/dashboard/Data"
 import Verification from "./pages/dashboard/Verification"
-import UsersData from "./pages/dashboard/Data/UsersData"
+import UsersData from "./pages/dashboard/Data/UserData"
 import ListingsData from "./pages/dashboard/Data/ListingsData"
+import UserDataDetail from "./pages/dashboard/Data/UserData/UserDataDetail"
 
 export const router = createBrowserRouter([
   {
@@ -95,8 +96,20 @@ export const router = createBrowserRouter([
         path: "data",
         element: <Data />,
         children: [
-          { path: "users", element: <UsersData /> },
-          { path: "listings", element: <ListingsData /> },
+          {
+            path: "users",
+            children: [
+              { index: true, element: <UsersData /> },
+              { path: ":id", element: <UserDataDetail /> },
+            ],
+          },
+          {
+            path: "listings",
+            children: [
+              { index: true, element: <ListingsData /> },
+              { path: ":id", element: <ListingsData /> },
+            ],
+          },
         ],
       },
       { path: "verifications", element: <Verification /> },
@@ -156,6 +169,14 @@ export const paths = {
     data: {
       root: "/dashboard/data",
       dataType: (dataType: string) => `/dashboard/data/${dataType}`,
+      users: {
+        root: "/dashboard/data/users",
+        details: (id: string) => `/dashboard/data/users/${id}`,
+      },
+      listings: {
+        root: "/dashboard/data/listings",
+        details: (id: string) => `/dashboard/data/listings/${id}`,
+      },
     },
     verifications: {
       root: "/dashboard/verifications",
