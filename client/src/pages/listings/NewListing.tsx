@@ -12,13 +12,17 @@ import { useEffect, type ComponentProps } from "react"
 import {
   smartphoneFields,
   smartphoneSchema,
-} from "@/components/listings/Smartphone"
+} from "@/components/listings/types/Smartphone"
+import {
+  processorFields,
+  processorSchema,
+} from "@/components/listings/types/Processor"
 import { SpecFormRenderer } from "@/components/listings/SpecFormRenderer"
 import api from "@/api/axiosInstance"
 import { useNavigate } from "react-router"
 import { paths } from "@/router"
 
-const types = ["smartphone", "server"]
+const types = ["smartphone", "processor"]
 const conditions = ["used", "refurbished", "new"]
 
 type TextfieldProps = ComponentProps<typeof RHFTextField>
@@ -34,18 +38,12 @@ const specsByType: Record<
   yup.ObjectSchema<Record<string, SpecValue>>
 > = {
   smartphone: smartphoneSchema,
-  server: yup.object({
-    screenSize: yup.string().required("Screen size is required"),
-    battery: yup.string().required("Battery is required"),
-  }),
+  processor: processorSchema,
 }
 
 const specFieldsByType: Record<string, SpecField[]> = {
   smartphone: smartphoneFields,
-  server: [
-    { name: "screenSize", label: "Screen Size" },
-    { name: "battery", label: "Battery" },
-  ],
+  processor: processorFields,
 }
 
 const schema = yup.object({
@@ -175,7 +173,7 @@ export default function NewListing({ productId }: { productId?: string }) {
     >
       <button
         onClick={() => {
-          navigate(-1)
+          void navigate(-1)
         }}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit"
       >

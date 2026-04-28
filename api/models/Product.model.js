@@ -1,15 +1,13 @@
 import mongoose from "mongoose";
 import smartphoneSpecsSchema from "./product_types/Smartphone.model.js";
-import laptopSpecsSchema from "./product_types/Laptop.model.js";
-import serverSpecsSchema from "./product_types/Server.model.js";
+import processorSpecsSchema from "./product_types/Processor.model.js";
 
 const specsSchemas = {
   smartphone: smartphoneSpecsSchema,
-  laptop: laptopSpecsSchema,
-  server: serverSpecsSchema,
+  processor: processorSpecsSchema,
 };
 
-const PRODUCT_TYPES = ["smartphone", "laptop", "server", "other"];
+const PRODUCT_TYPES = ["smartphone", "processor"];
 const CONDITIONS = ["new", "refurbished", "used"];
 
 const productSchema = new mongoose.Schema(
