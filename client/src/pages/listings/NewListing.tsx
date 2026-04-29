@@ -9,6 +9,10 @@ import { RHFFileUpload } from "@/components/form/RHFFileUpload"
 import { type UploadedFile } from "@/components/common/FileUpload"
 import type { detailedProduct, SpecValue } from "@/types/product"
 import { useEffect, type ComponentProps } from "react"
+import { SpecFormRenderer } from "@/components/listings/SpecFormRenderer"
+import api from "@/api/axiosInstance"
+import { useNavigate } from "react-router"
+import { paths } from "@/router"
 import {
   smartphoneFields,
   smartphoneSchema,
@@ -17,12 +21,33 @@ import {
   processorFields,
   processorSchema,
 } from "@/components/listings/types/Processor"
-import { SpecFormRenderer } from "@/components/listings/SpecFormRenderer"
-import api from "@/api/axiosInstance"
-import { useNavigate } from "react-router"
-import { paths } from "@/router"
+import {
+  motherboardFields,
+  motherboardSchema,
+} from "@/components/listings/types/Motherboard"
+import { ramFields, ramSchema } from "@/components/listings/types/Ram"
+import {
+  storageFields,
+  storageSchema,
+} from "@/components/listings/types/Storage"
+import { psuFields, psuSchema } from "@/components/listings/types/Psu"
+import { gpuFields, gpuSchema } from "@/components/listings/types/Gpu"
+import {
+  coolingFields,
+  coolingSchema,
+} from "@/components/listings/types/Cooling"
 
-const types = ["smartphone", "processor"]
+const types = [
+  { value: "smartphone", label: "Smartphone" },
+  { value: "processor", label: "Processor" },
+  { value: "motherboard", label: "Motherboard" },
+  { value: "ram", label: "RAM" },
+  { value: "storage", label: "Storage" },
+  { value: "psu", label: "Power supply" },
+  { value: "gpu", label: "GPU" },
+  { value: "cooling", label: "Cooling system" },
+]
+
 const conditions = ["used", "refurbished", "new"]
 
 type TextfieldProps = ComponentProps<typeof RHFTextField>
@@ -35,21 +60,36 @@ export type SpecField = Omit<TextfieldProps, "children" | "name" | "label"> & {
 
 const specsByType: Record<
   string,
-  yup.ObjectSchema<Record<string, SpecValue>>
+  yup.ObjectSchema<Record<string, SpecValue | undefined>>
 > = {
   smartphone: smartphoneSchema,
   processor: processorSchema,
+  motherboard: motherboardSchema,
+  ram: ramSchema,
+  storage: storageSchema,
+  psu: psuSchema,
+  gpu: gpuSchema,
+  cooling: coolingSchema,
 }
 
 const specFieldsByType: Record<string, SpecField[]> = {
   smartphone: smartphoneFields,
   processor: processorFields,
+  motherboard: motherboardFields,
+  ram: ramFields,
+  storage: storageFields,
+  psu: psuFields,
+  gpu: gpuFields,
+  cooling: coolingFields,
 }
 
 const schema = yup.object({
   type: yup
     .string()
-    .oneOf(types, "Select a valid type")
+    .oneOf(
+      types.map(t => t.value),
+      "Select a valid type",
+    )
     .required("Type is required"),
   name: yup.string().required("Name is required"),
   price: yup.number().positive().required("Price is required"),

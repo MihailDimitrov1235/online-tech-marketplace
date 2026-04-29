@@ -1,7 +1,5 @@
+import { architectures, memoryTypes, pciVersions, sockets } from "@/types/specs"
 import * as yup from "yup"
-
-const sockets = ["LGA1700", "LGA1200", "AM5", "AM4", "AM3+", "LGA2066"]
-const architectures = ["x86", "x86-64", "ARM"]
 
 export const processorSchema = yup.object({
   cores: yup.object({
@@ -27,7 +25,10 @@ export const processorSchema = yup.object({
     .required("Socket is required"),
   tdp: yup.number().positive().integer().required("TDP is required"),
   memory: yup.object({
-    type: yup.string().required("Memory type is required"),
+    type: yup
+      .string()
+      .oneOf(memoryTypes, "Select a valid memory type")
+      .required("Memory type is required"),
     maxSpeed: yup
       .number()
       .positive()
@@ -54,7 +55,10 @@ export const processorSchema = yup.object({
     .required("Architecture is required"),
   integratedGraphics: yup.string().optional().default(""),
   pcie: yup.object({
-    version: yup.string().required("PCIe version is required"),
+    version: yup
+      .string()
+      .oneOf(pciVersions)
+      .required("PCIe version is required"),
     lanes: yup
       .number()
       .positive()
@@ -119,7 +123,7 @@ export const processorFields = [
     name: "memory",
     label: "Memory Support",
     children: [
-      { name: "type", label: "Memory Type" },
+      { name: "type", label: "Memory Type", values: memoryTypes },
       {
         name: "maxSpeed",
         label: "Max Speed",
@@ -169,6 +173,7 @@ export const processorFields = [
   {
     name: "pcie",
     label: "PCIe",
+    values: pciVersions,
     children: [
       { name: "version", label: "PCIe Version" },
       { name: "lanes", label: "Lanes", numeric: true, decimalPlaces: 0 },
