@@ -129,7 +129,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       />
 
       {open && (
-        <ul className="absolute z-50 mt-1 w-full bg-neutral/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
+        <ul className="absolute z-50 mt-1 w-full max-h-30 overflow-scroll bg-neutral/90 backdrop-blur-lg rounded-xl shadow-xl">
           {filtered.map(opt => {
             const isSelected = selectedValues.includes(opt.value)
             return (
