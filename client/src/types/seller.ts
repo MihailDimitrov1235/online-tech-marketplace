@@ -1,3 +1,7 @@
+import type { User } from "./auth"
+
+export type Seller = SellerData & { _id: string; user: User; createdAt: Date }
+
 export type SellerData = {
   address: {
     country: string

@@ -10,9 +10,9 @@ import {
 
 const router = express.Router();
 
-router.get("/:id", getUser);
 router.get("/", protect, restrictTo("admin"), getUsers);
 router.get("/delivery", protect, getDelivery);
+router.get("/:id", getUser);
 router.patch("/:id/roles", protect, restrictTo("admin"), updateUserRoles);
 
 export default router;

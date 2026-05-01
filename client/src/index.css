@@ -20,6 +20,7 @@
   --color-muted: #71717a; /* zinc-500 */
 
   /* Status */
+  --color-success: #399c00; /* custom */
   --color-neutral: #dbdbdb; /* zinc-300 */
   --color-info: #109be6; /* custom */
   --color-warning: #f7bf3b; /* custom */
