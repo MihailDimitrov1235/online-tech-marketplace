@@ -2,8 +2,9 @@ import { Button, Card } from "@/components/common"
 import { useState } from "react"
 import ChangeInfo from "@/components/settings/ChangeInfo"
 import ChangePassword from "@/components/settings/ChangePassword"
+import SellerInfo from "@/components/settings/SellerInfo"
 
-const tabs = ["Change info", "Change Password"]
+const tabs = ["Change info", "Change Password", "Seller info"]
 
 export default function Settings() {
   const [tab, setTab] = useState(tabs[0])
@@ -27,6 +28,7 @@ export default function Settings() {
       <Card className="flex-1 h-fit">
         {tab == tabs[0] && <ChangeInfo />}
         {tab == tabs[1] && <ChangePassword />}
+        {tab == tabs[2] && <SellerInfo />}
       </Card>
     </div>
   )
