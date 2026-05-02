@@ -28,7 +28,13 @@ export const RHFRadioGroup = <T extends FieldValues>({
 
   return (
     <div className="flex flex-col gap-2">
-      {label && <p className="text-sm font-medium text-contrast">{label}</p>}
+      {label && (
+        <p
+          className={`text-sm font-medium  ${errorMessage ? "text-error" : "text-contrast"}`}
+        >
+          {label}
+        </p>
+      )}
       <div className="flex gap-6">{children}</div>
       {errorMessage && <p className="text-xs text-error">{errorMessage}</p>}
     </div>

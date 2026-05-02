@@ -105,7 +105,7 @@ export default function SellerInfo() {
     >
       <h1 className="text-2xl font-bold text-contrast">Seller Setup</h1>
 
-      <div className="flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-contrast/50 mb-4">
           Contact Information
         </h2>
@@ -122,33 +122,30 @@ export default function SellerInfo() {
         <RHFTextField name="address.country" label="Country" fullWidth />
       </div>
 
-      <div className="flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-contrast/50 mb-4">
           Warranty Information
         </h2>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-contrast">Duration</p>
+        <RHFRadioGroup name="warranty.durationMonths" label="Duration">
           <div className="flex gap-6">
-            <RHFRadioGroup name="warranty.durationMonths" label="Duration">
-              <RHFRadio
-                name="warranty.durationMonths"
-                value="24"
-                label="24 months"
-              />
-              <RHFRadio
-                name="warranty.durationMonths"
-                value="36"
-                label="36 months"
-              />
-              <RHFRadio
-                name="warranty.durationMonths"
-                value="60"
-                label="60 months"
-              />
-            </RHFRadioGroup>
+            <RHFRadio
+              name="warranty.durationMonths"
+              value="24"
+              label="24 months"
+            />
+            <RHFRadio
+              name="warranty.durationMonths"
+              value="36"
+              label="36 months"
+            />
+            <RHFRadio
+              name="warranty.durationMonths"
+              value="60"
+              label="60 months"
+            />
           </div>
-        </div>
+        </RHFRadioGroup>
 
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium text-contrast">Coverage</p>
@@ -161,8 +158,7 @@ export default function SellerInfo() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-contrast">Resolution Type</p>
+        <RHFRadioGroup name="warranty.resolution" label="Resolution Type">
           <div className="flex gap-6">
             <RHFRadio
               name="warranty.resolution"
@@ -180,12 +176,9 @@ export default function SellerInfo() {
               label="Full (incl. refund)"
             />
           </div>
-        </div>
+        </RHFRadioGroup>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-contrast">
-            Shipping Covered By
-          </p>
+        <RHFRadioGroup name="warranty.shipping" label="Shipping Covered By">
           <div className="flex gap-6">
             <RHFRadio name="warranty.shipping" value="buyer" label="Buyer" />
             <RHFRadio
@@ -194,7 +187,7 @@ export default function SellerInfo() {
               label="Seller (Me)"
             />
           </div>
-        </div>
+        </RHFRadioGroup>
 
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium text-contrast">Exclusions</p>
