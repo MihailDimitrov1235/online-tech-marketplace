@@ -43,7 +43,13 @@ export default function MyListings() {
     <div className="flex flex-col w-full gap-8 text-contrast">
       <Card className="justify-between items-center">
         <div className="text-xl font-semibold ">My listings</div>
-        <NavLink to={paths.dashboard.myListings.new}>
+        <NavLink
+          to={
+            user?.roles.includes("seller")
+              ? paths.dashboard.myListings.new
+              : `${paths.settings}?tab=seller`
+          }
+        >
           <Button className="gap-2 items-center">
             <div>Add new</div>
             <Plus className="mt-1" size={18} />

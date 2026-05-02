@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Clock,
   Mail,
+  Ban,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { Seller } from "@/types/seller"
@@ -48,6 +49,16 @@ export default function Verification() {
   const handleVerify = (id: string) => {
     api
       .patch(`/sellers/${id}/verify`)
+      .then(() => {
+        setSellers(prev => prev.filter(s => s._id !== id))
+      })
+      .catch((err: unknown) => {
+        console.log(err)
+      })
+  }
+  const handleReject = (id: string) => {
+    api
+      .delete(`/sellers/${id}/reject`)
       .then(() => {
         setSellers(prev => prev.filter(s => s._id !== id))
       })
@@ -124,16 +135,29 @@ export default function Verification() {
                       day: "numeric",
                     })}
                   </div>
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    onClick={() => {
-                      handleVerify(seller._id)
-                    }}
-                  >
-                    <BadgeCheck size={14} className="mr-1.5" />
-                    Verify
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      className="hover:text-error"
+                      onClick={() => {
+                        handleReject(seller._id)
+                      }}
+                    >
+                      <Ban size={14} className="mr-1.5" />
+                      Reject
+                    </Button>
+                    <Button
+                      size="xs"
+                      variant="primary"
+                      onClick={() => {
+                        handleVerify(seller._id)
+                      }}
+                    >
+                      <BadgeCheck size={14} className="mr-1.5" />
+                      Verify
+                    </Button>
+                  </div>
                 </div>
               </div>
 

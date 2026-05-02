@@ -2,6 +2,7 @@ import { NavLink } from "react-router"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "../common/Button"
 import { paths } from "@/router"
+import { useAppSelector } from "@/store/hooks"
 
 const stats = [
   { label: "Products listed", value: "12,000+" },
@@ -10,6 +11,7 @@ const stats = [
 ]
 
 export default function MainHero() {
+  const { user } = useAppSelector(state => state.auth)
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-56px)] overflow-hidden px-6 bg-background">
       {/* Background blobs */}
@@ -50,7 +52,9 @@ export default function MainHero() {
               <ArrowRight size={15} className="ml-2" />
             </Button>
           </NavLink>
-          <NavLink to={paths.auth.register}>
+          <NavLink
+            to={user ? paths.dashboard.myListings.root : paths.auth.register}
+          >
             <Button size="lg" variant="secondary">
               Start selling
             </Button>

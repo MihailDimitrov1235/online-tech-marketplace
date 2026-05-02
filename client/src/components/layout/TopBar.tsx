@@ -34,12 +34,16 @@ export const TopBar = () => {
           <NavLink to={paths.configurations.root} className={navLinkClass}>
             Configurations
           </NavLink>
-          <NavLink to={paths.orders.root} className={navLinkClass}>
-            My Orders
-          </NavLink>
-          <NavLink to={paths.dashboard.root} className={navLinkClass}>
-            Dashboard
-          </NavLink>
+          {user && (
+            <>
+              <NavLink to={paths.orders.root} className={navLinkClass}>
+                My Orders
+              </NavLink>
+              <NavLink to={paths.dashboard.root} className={navLinkClass}>
+                Dashboard
+              </NavLink>
+            </>
+          )}
         </nav>
 
         <div className="flex items-center gap-2">

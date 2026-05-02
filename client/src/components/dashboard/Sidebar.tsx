@@ -6,14 +6,23 @@ import {
   Home,
   Package,
   ClipboardList,
-  ShieldQuestionMark,
+  ShieldQuestion,
   Database,
 } from "lucide-react"
 import { Logo } from "../common"
 import { paths } from "@/router"
+import { useAppSelector } from "@/store/hooks"
+import type { Role } from "@/types/auth"
+
+type NavItemProps = {
+  path: string
+  label: string
+  icon: React.ReactNode
+  role?: Role
+}
 
 export default function Sidebar() {
-  const dashboardRoutes = [
+  const dashboardRoutes: NavItemProps[] = [
     {
       path: paths.dashboard.root,
       label: "Dashboard",
@@ -28,37 +37,41 @@ export default function Sidebar() {
       path: paths.dashboard.orders.root,
       label: "Orders",
       icon: <ClipboardList size={18} />,
+      role: "seller",
     },
     {
       path: paths.dashboard.deliveries.root,
       label: "Deliveries",
       icon: <Truck size={18} />,
+      role: "delivery",
     },
     {
       path: paths.dashboard.data.root,
       label: "Data",
       icon: <Database size={18} />,
+      role: "admin",
     },
     {
       path: paths.dashboard.verifications.root,
-      label: "Verification requests",
-      icon: <ShieldQuestionMark size={18} />,
+      label: "Verification Requests",
+      icon: <ShieldQuestion size={18} />,
+      role: "admin",
     },
   ]
+  const { user } = useAppSelector(state => state.auth)
 
   return (
-    <div className=" min-w-75 px-4 py-6 border-r border-border flex flex-col gap-6">
+    <div className="min-w-75 px-4 py-6 border-r border-border flex flex-col gap-6">
       <div className="px-4">
         <Logo navigateTo={paths.dashboard.root} />
       </div>
-
       <nav className="flex flex-col gap-1">
-        {dashboardRoutes.map(({ path, label, icon }) => (
-          <NavItem key={path} path={path} label={label} icon={icon} />
-        ))}
-
+        {dashboardRoutes
+          .filter(r => !r.role || user?.roles.includes(r.role))
+          .map(props => (
+            <NavItem key={props.path} {...props} />
+          ))}
         <span className="border-t border-border border-dashed h-1 my-4" />
-
         <NavItem
           path={paths.home}
           label="Back to Home"
@@ -69,12 +82,9 @@ export default function Sidebar() {
   )
 }
 
-type NavItemProps = { path: string; label: string; icon: React.ReactNode }
-
 function NavItem({ path, label, icon }: NavItemProps) {
   return (
     <NavLink
-      key={path}
       to={path}
       end
       className={({ isActive }) =>
