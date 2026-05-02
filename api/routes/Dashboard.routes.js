@@ -3,11 +3,13 @@ import {
   getDashboardOrders,
   getDashboardDeliveryOrders,
 } from "../controllers/Order.controller.js";
+import { getStats } from "../controllers/Stats.controller.js";
 import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/orders", protect, getDashboardOrders);
 router.get("/deliveries", protect, getDashboardDeliveryOrders);
+router.get("/stats", protect, getStats);
 
 export default router;
