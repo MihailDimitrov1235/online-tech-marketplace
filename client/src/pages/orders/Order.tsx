@@ -3,6 +3,8 @@ import { Button, Card } from "@/components/common"
 import Stepper from "@/components/orders/Stepper"
 import { paths } from "@/router"
 import type { order } from "@/types/order"
+import { generateInvoicePdf } from "@/utils/generateInvoicePdf"
+import { generateWarrantyPdf } from "@/utils/generateWarrantyPdf"
 import {
   ArrowLeft,
   Store,
@@ -157,6 +159,9 @@ export default function Order() {
 
                       <div className="flex gap-1.5 mt-3">
                         <Button
+                          onClick={() => {
+                            generateInvoicePdf(data)
+                          }}
                           variant="outline"
                           size="xs"
                           className="gap-1 px-2.5 py-1.5 text-[12px] shadow-sm"
@@ -165,6 +170,9 @@ export default function Order() {
                           <FileText className="ml-1 mt-0.1" size={10} />
                         </Button>
                         <Button
+                          onClick={() => {
+                            generateWarrantyPdf(item, data)
+                          }}
                           variant="outline"
                           size="xs"
                           className="gap-1 px-2.5 py-1.5 text-[12px] shadow-sm"

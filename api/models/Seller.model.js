@@ -11,7 +11,7 @@ const exclusionsSchema = new mongoose.Schema(
   { _id: false },
 );
 
-const warrantySchema = new mongoose.Schema(
+export const warrantySchema = new mongoose.Schema(
   {
     durationMonths: { type: Number, enum: [24, 36, 60], required: true },
     accidentalDamage: { type: Boolean, default: false },

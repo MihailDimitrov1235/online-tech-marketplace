@@ -1,6 +1,7 @@
 import OrderModel from "../models/Order.model.js";
 import ProductModel from "../models/Product.model.js";
 import CartModel from "../models/Cart.model.js";
+import SellerModel from "../models/Seller.model.js";
 import mongoose from "mongoose";
 import { signOrders, signOrder } from "../s3.js";
 
@@ -99,9 +100,12 @@ export async function getOrder(req, res) {
   try {
     const order = await OrderModel.findById(req.params.id)
       .populate("items.product.seller", "username firstName lastName")
-      .populate("delivery", "username firstName lastName");
+      .populate("delivery", "username firstName lastName")
+      .populate("buyer", "username firstName lastName");
 
-    if (!order) return res.status(404).json({ error: "Order not found" });
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
     if (order.buyer._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: "Not authorized" });
     }
@@ -125,6 +129,16 @@ export async function createOrder(req, res) {
       cart.items.map(({ product }) => ProductModel.findById(product)),
     );
 
+    const sellerIds = [
+      ...new Set(products.map((p) => p.seller._id.toString())),
+    ];
+    const sellers = await Promise.all(
+      sellerIds.map((id) => SellerModel.findOne({ user: id })),
+    );
+    const sellerMap = Object.fromEntries(
+      sellers.map((s) => [s.user.toString(), s]),
+    );
+
     const orderItems = cart.items.map(({ product, quantity }, i) => {
       const doc = products[i];
       if (!doc) {
@@ -133,6 +147,9 @@ export async function createOrder(req, res) {
       if (doc.stock < quantity) {
         throw new Error(`Insufficient stock for ${doc.name}`);
       }
+
+      const sellerInfo = sellerMap[doc.seller._id.toString()];
+
       return {
         quantity,
         product: {
@@ -140,8 +157,9 @@ export async function createOrder(req, res) {
           name: doc.name,
           images: doc.images,
           price: doc.price,
-          seller: doc.seller,
+          seller: doc.seller._id,
         },
+        warranty: sellerInfo?.warranty ?? null,
       };
     });
 
