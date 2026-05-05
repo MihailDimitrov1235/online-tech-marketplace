@@ -34,6 +34,7 @@ export const SpecFormRenderer = ({
             name={fieldName}
             label={label}
             options={values}
+            {...rest}
             fullWidth
           />
         )

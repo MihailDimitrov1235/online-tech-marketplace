@@ -2,13 +2,20 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { ArrowBigLeft, ArrowBigRight, ArrowLeft, ArrowRight, ShoppingCart } from "lucide-react"
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  ArrowLeft,
+  ArrowRight,
+  ShoppingCart,
+  Star,
+} from "lucide-react"
 
 import api from "@/api/axiosInstance"
 import { useAppDispatch } from "@/store/hooks"
 import { setItems, openCart } from "@/store/cartSlice"
 import type { CartItem } from "@/store/cartSlice"
-import { Button, Card, Pagination } from "@/components/common"
+import { Button, Card } from "@/components/common"
 import { FormProvider, RHFTextField } from "@/components/form"
 import { SpecRenderer } from "@/components/listings/SpecRenderer"
 import RatingVisualizer from "@/components/listings/RatingVisualizer"
@@ -25,33 +32,32 @@ export default function Detail() {
   const [product, setProduct] = useState<detailedProduct>()
   const [reviews, setReviews] = useState<reviewValue[]>([])
   const [rating, setRating] = useState(0)
-  const [pagination, setPagination] = useState<pagination>({ total: 0, page: 0, pages: 0 })
+  const [pagination, setPagination] = useState<pagination>({
+    total: 0,
+    page: 0,
+    pages: 0,
+  })
   const [imageIdx, setImageIdx] = useState(0)
-  const [reviewPage, setReviewPage] = useState(1)
 
   useEffect(() => {
     if (!id) return
     api
-      .get<{ product: detailedProduct; reviews: reviewValue[]; pagination: pagination; rating: number }>(`/products/${id}`)
+      .get<{
+        product: detailedProduct
+        reviews: reviewValue[]
+        pagination: pagination
+        rating: number
+      }>(`/products/${id}`)
       .then(res => {
         setProduct(res.data.product)
         setReviews(res.data.reviews)
         setRating(res.data.rating)
         setPagination(res.data.pagination)
       })
-      .catch((err: unknown) => console.log(err))
-  }, [id])
-
-  useEffect(() => {
-    if (!id || reviewPage === 1) return
-    api
-      .get<{ reviews: reviewValue[]; pagination: pagination }>(`/products/${id}?page=${reviewPage}`)
-      .then(res => {
-        setReviews(res.data.reviews)
-        setPagination(res.data.pagination)
+      .catch((err: unknown) => {
+        console.log(err)
       })
-      .catch((err: unknown) => console.log(err))
-  }, [id, reviewPage])
+  }, [id])
 
   const methods = useForm<ReviewForm>({
     defaultValues: { rating: undefined, comment: "" },
@@ -69,7 +75,9 @@ export default function Detail() {
         setReviews(p => [res.data.review, ...p])
         reset()
       })
-      .catch((err: unknown) => console.log(err))
+      .catch((err: unknown) => {
+        console.log(err)
+      })
   })
 
   const handleAddToCart = () => {
@@ -79,7 +87,9 @@ export default function Detail() {
         dispatch(setItems(res.data.cart.items))
         dispatch(openCart())
       })
-      .catch((err: unknown) => console.log(err))
+      .catch((err: unknown) => {
+        console.log(err)
+      })
   }
 
   return (
@@ -90,128 +100,197 @@ export default function Detail() {
           <div className="absolute bottom-[-40%] left-[10%] w-48 h-48 rounded-full bg-pink-300/15 dark:bg-pink-600/10 blur-3xl" />
         </div>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            void navigate(-1)
+          }}
           className="relative flex items-center gap-1.5 text-sm text-muted hover:text-contrast cursor-pointer w-fit mb-4"
         >
           <ArrowLeft size={15} />
           Back
         </button>
         <div className="relative">
-          <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">Product</p>
-          <h1 className="text-3xl font-semibold tracking-tight text-contrast">{product?.name ?? "Loading..."}</h1>
+          <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">
+            Product
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight text-contrast">
+            {product?.name ?? "Loading..."}
+          </h1>
         </div>
       </div>
 
-      <div className="flex gap-8 px-14 py-8 items-start">
-        <Card className="flex-3 h-150 shrink-0">
-          <div className="flex h-full w-full items-center justify-between gap-8">
-            <Button disabled={imageIdx === 0} variant="outline" size="icon" className="h-10 text-primary-on shrink-0" onClick={() => setImageIdx(i => i - 1)}>
-              <ArrowBigLeft strokeWidth={1} />
-            </Button>
-            <div className="overflow-hidden h-full flex-1">
-              <img key={imageIdx} className="object-contain h-full w-full animate-fade" src={product?.images[imageIdx]} alt={product?.name} />
-            </div>
-            <Button disabled={Boolean(product?.images.length && imageIdx === product.images.length - 1)} variant="outline" size="icon" className="h-10 text-primary-on shrink-0" onClick={() => setImageIdx(i => i + 1)}>
-              <ArrowBigRight strokeWidth={1} />
-            </Button>
-          </div>
-        </Card>
+      <div className="flex flex-col gap-8 px-14 py-8">
+        <div className="w-full flex gap-8">
+          <Card className="flex-3 h-150">
+            <div className="flex h-full w-full items-center justify-between gap-8">
+              <Button
+                disabled={imageIdx === 0}
+                variant="outline"
+                size="icon"
+                className="h-10 text-primary-on"
+                onClick={() => {
+                  setImageIdx(i => i - 1)
+                }}
+              >
+                <ArrowBigLeft strokeWidth={1} />
+              </Button>
 
-        <div className="flex-2 flex flex-col gap-4 sticky top-20">
-          <Card className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
-              {product?.condition && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-primary-tint text-primary-on font-medium w-fit">
-                  {product.condition}
-                </span>
-              )}
-              <h2 className="text-2xl font-semibold tracking-tight text-contrast leading-snug">{product?.name}</h2>
-              <span className="text-3xl font-bold text-contrast tabular-nums mt-1">{product?.price}€</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <RatingVisualizer rating={rating} />
-              <span className="text-sm font-medium text-contrast tabular-nums">{rating.toFixed(1)}</span>
-              <button className="text-xs text-muted hover:text-primary cursor-pointer">{`${pagination.total} reviews`}</button>
-            </div>
-
-            <div className="border-t border-border" />
-
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted">Availability</span>
-              {product?.stock && product.stock > 0 ? (
-                <span className="text-green-600 dark:text-green-400 font-medium">{product.stock} in stock</span>
-              ) : (
-                <span className="text-red-500 dark:text-red-400 font-medium">Out of stock</span>
-              )}
-            </div>
-
-            <Button onClick={handleAddToCart} variant="primary" className="w-full gap-2 h-11 text-sm" disabled={product?.stock == 0}>
-              <ShoppingCart size={16} />
-              Add to cart
-            </Button>
-          </Card>
-
-          <Card className="flex flex-col gap-0 overflow-hidden p-0!">
-            <div className="h-16 bg-linear-to-r from-primary/20 via-violet-400/10 to-pink-400/10 dark:from-primary/30 dark:via-violet-600/10 dark:to-pink-600/10" />
-            <div className="px-5 pb-5">
-              <div className="flex items-end gap-3 -mt-7 mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-primary-tint text-primary-on border-2 border-white dark:border-zinc-900 text-xl font-bold uppercase flex items-center justify-center select-none shadow-md shrink-0">
-                  {product?.seller.firstName[0]}
-                  {product?.seller.lastName[0]}
-                </div>
-                <div className="pb-1">
-                  <p className="text-sm font-semibold text-contrast leading-tight">{product?.seller.firstName} {product?.seller.lastName}</p>
-                  <p className="text-xs text-muted">@{product?.seller.username}</p>
+              <div className="overflow-hidden h-full">
+                <div className="w-fit h-full rounded-lg overflow-hidden">
+                  <img
+                    key={imageIdx}
+                    className="object-contain h-full animate-fade"
+                    src={product?.images[imageIdx]}
+                    alt={product?.name}
+                  />
                 </div>
               </div>
-              <Button variant="outline" className="w-full gap-1.5 justify-center">
-                See profile
-                <ArrowRight size={13} />
+
+              <Button
+                disabled={Boolean(
+                  product?.images.length &&
+                  imageIdx === product.images.length - 1,
+                )}
+                variant="outline"
+                size="icon"
+                className="h-10 text-primary-on"
+                onClick={() => {
+                  setImageIdx(i => i + 1)
+                }}
+              >
+                <ArrowBigRight strokeWidth={1} />
               </Button>
             </div>
           </Card>
-        </div>
-      </div>
 
-      <div className="px-14 pb-8">
-        <Card className="flex-col gap-4">
-          <h2 className="text-lg font-semibold text-contrast">Specifications</h2>
-          {product && SpecRenderer(product.specs)}
-        </Card>
-      </div>
-
-      <div className="px-14 pb-12">
-        <Card className="flex-col gap-6">
-          <h2 className="text-lg font-semibold text-contrast">Reviews</h2>
-
-          <FormProvider methods={methods} onSubmit={onSubmit} className="flex flex-col gap-4">
-            <div className="flex gap-4">
-              <RHFTextField placeholder="Write a review..." fullWidth name="comment" className="h-full" />
-              <RHFTextField numeric placeholder="Leave a rating..." name="rating" trailingIcon={<span>/5</span>} />
-            </div>
-            {(newComment || newRating) && (
-              <div className="flex justify-end gap-4">
-                <Button onClick={() => reset()} variant="outline">Cancel</Button>
-                <Button type="submit">Publish</Button>
+          <div className="flex flex-2 flex-col gap-4">
+            <Card className="flex flex-col gap-4">
+              <div className="flex justify-between w-full">
+                <h2 className="text-2xl font-bold text-contrast">
+                  {product?.name}
+                </h2>
+                <div className="text-xl text-contrast">{product?.price}€</div>
               </div>
-            )}
-          </FormProvider>
 
-          <div className="flex flex-col gap-6">
-            {reviews.length === 0 ? (
-              <div className="flex flex-col items-center gap-2 py-10 text-center">
-                <p className="text-sm font-medium text-contrast">No reviews yet</p>
-                <p className="text-xs text-muted">Be the first to share your experience</p>
+              <div className="flex justify-between items-center">
+                <div className="bg-primary w-fit h-fit rounded-full text-primary-contrast px-3 py-0.5 uppercase text-xs">
+                  {product?.condition}
+                </div>
+                <div className="text-contrast">Stock: {product?.stock}</div>
               </div>
-            ) : (
-              reviews.map(r => (
-                <ReviewRenderer key={r._id} review={r} setReviews={setReviews} productId={id ?? ""} />
-              ))
-            )}
-            <Pagination page={reviewPage} pages={pagination.pages} onChange={setReviewPage} />
+
+              <div className="flex items-center gap-2">
+                <RatingVisualizer rating={rating} />
+                <span className="text-sm text-muted flex items-center gap-1">
+                  <Star size={12} className="text-amber-400 fill-amber-400" />
+                  {rating.toFixed(1)}
+                </span>
+                <button className="text-xs text-primary cursor-pointer hover:underline">
+                  {`(${String(pagination.total)} reviews)`}
+                </button>
+              </div>
+
+              <Button
+                onClick={handleAddToCart}
+                variant="primary"
+                className="w-full gap-2"
+              >
+                <ShoppingCart size={16} />
+                Add to cart
+              </Button>
+            </Card>
+
+            <Card className="flex flex-col gap-4 text-contrast">
+              <h2>Seller</h2>
+              <div className="flex gap-4">
+                <div className="w-16 h-16 rounded-full bg-primary-tint text-primary-on border-primary-tint-border hover:bg-primary-tint-hover text-2xl font-bold uppercase flex justify-center items-center select-none">
+                  {product?.seller.firstName[0]}
+                  {product?.seller.lastName[0]}
+                </div>
+                <div>
+                  <div className="text-lg font-semibold">
+                    {product?.seller.firstName} {product?.seller.lastName}
+                  </div>
+                  <div>Address</div>
+                </div>
+              </div>
+
+              <Button
+                className="flex gap-1 items-center justify-center w-fit mx-auto"
+                variant="ghost"
+              >
+                See profile
+                <ArrowRight className="mt-1" size={14} />
+              </Button>
+            </Card>
           </div>
-        </Card>
+        </div>
+
+        <div className="w-full flex gap-4">
+          <Card className="flex-col gap-4 flex-1">
+            <h1 className="text-2xl font-bold text-contrast">Specifications</h1>
+            {product && SpecRenderer(product.specs)}
+          </Card>
+
+          <Card className="flex-1 flex-col gap-6">
+            <h1 className="text-2xl font-bold text-contrast">Reviews</h1>
+
+            <FormProvider
+              methods={methods}
+              onSubmit={onSubmit}
+              className="flex flex-col gap-4"
+            >
+              <div className="flex gap-4">
+                <RHFTextField
+                  placeholder="Write a review..."
+                  fullWidth
+                  name="comment"
+                />
+                <RHFTextField
+                  numeric
+                  placeholder="Leave a rating..."
+                  name="rating"
+                  trailingIcon={<span>/5</span>}
+                />
+              </div>
+              {(newComment || newRating) && (
+                <div className="flex justify-end gap-4">
+                  <Button
+                    onClick={() => {
+                      reset()
+                    }}
+                    variant="outline"
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit">Publish</Button>
+                </div>
+              )}
+            </FormProvider>
+
+            <div className="flex flex-col gap-8">
+              {reviews.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-10 text-center">
+                  <p className="text-sm font-medium text-contrast">
+                    No reviews yet
+                  </p>
+                  <p className="text-xs text-muted">
+                    Be the first to share your experience
+                  </p>
+                </div>
+              ) : (
+                reviews.map(r => (
+                  <ReviewRenderer
+                    key={r._id}
+                    review={r}
+                    setReviews={setReviews}
+                    productId={id ?? ""}
+                  />
+                ))
+              )}
+              {/* TODO: add pagination */}
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   )

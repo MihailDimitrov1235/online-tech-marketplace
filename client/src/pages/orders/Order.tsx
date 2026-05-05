@@ -3,6 +3,8 @@ import { Button, Card } from "@/components/common"
 import Stepper from "@/components/orders/Stepper"
 import { paths } from "@/router"
 import type { order } from "@/types/order"
+import { generateInvoicePdf } from "@/utils/generateInvoicePdf"
+import { generateWarrantyPdf } from "@/utils/generateWarrantyPdf"
 import {
   ArrowLeft,
   Store,
@@ -68,7 +70,7 @@ export default function Order() {
         </div>
 
         <Card>
-          <div className="flex items-start gap-4">
+          <div className="flex w-full items-start gap-4">
             <div className="w-9 h-9 rounded-xl bg-neutral flex items-center justify-center">
               <MapPin size={16} className="text-contrast/50" />
             </div>
@@ -84,6 +86,14 @@ export default function Order() {
                 <span className="text-contrast/50">
                   · {data?.shippingAddress.zip}
                 </span>
+              </p>
+            </div>
+            <div className="ml-auto">
+              <p className="text-xs font-semibold tracking-wide uppercase text-contrast/50 mb-1 text-end">
+                Delivered by
+              </p>
+              <p className="text-sm font-semibold text-contrast text-end">
+                {data?.delivery.username}
               </p>
             </div>
           </div>
@@ -149,6 +159,9 @@ export default function Order() {
 
                       <div className="flex gap-1.5 mt-3">
                         <Button
+                          onClick={() => {
+                            generateInvoicePdf(data)
+                          }}
                           variant="outline"
                           size="xs"
                           className="gap-1 px-2.5 py-1.5 text-[12px] shadow-sm"
@@ -157,6 +170,9 @@ export default function Order() {
                           <FileText className="ml-1 mt-0.1" size={10} />
                         </Button>
                         <Button
+                          onClick={() => {
+                            generateWarrantyPdf(item, data)
+                          }}
                           variant="outline"
                           size="xs"
                           className="gap-1 px-2.5 py-1.5 text-[12px] shadow-sm"

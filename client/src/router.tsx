@@ -21,6 +21,14 @@ import Cart from "./pages/Cart"
 import MyOrders from "./pages/orders/MyOrders"
 import Order from "./pages/orders/Order"
 import Checkout from "./pages/Checkout"
+import Data from "./pages/dashboard/Data"
+import Verification from "./pages/dashboard/Verification"
+import UsersData from "./pages/dashboard/Data/UserData"
+import ListingsData from "./pages/dashboard/Data/ListingsData"
+import UserDataDetail from "./pages/dashboard/Data/UserData/UserDataDetail"
+import Configurations from "./pages/Configurations"
+import NewConfiguration from "./pages/Configurations/NewConfiguration"
+import ConfigurationDetail from "./pages/Configurations/ConfigurationDetail"
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +46,14 @@ export const router = createBrowserRouter([
           { path: "new", element: <NewListing /> },
           { path: "edit/:id", element: <EditListing /> },
           { path: ":id", element: <Detail /> },
+        ],
+      },
+      {
+        path: "configurations",
+        children: [
+          { index: true, element: <Configurations /> },
+          { path: "new", element: <NewConfiguration /> },
+          { path: ":id", element: <ConfigurationDetail /> },
         ],
       },
       {
@@ -87,6 +103,27 @@ export const router = createBrowserRouter([
       },
       { path: "orders", element: <Orders /> },
       { path: "deliveries", element: <Deliveries /> },
+      {
+        path: "data",
+        element: <Data />,
+        children: [
+          {
+            path: "users",
+            children: [
+              { index: true, element: <UsersData /> },
+              { path: ":id", element: <UserDataDetail /> },
+            ],
+          },
+          {
+            path: "listings",
+            children: [
+              { index: true, element: <ListingsData /> },
+              { path: ":id", element: <ListingsData /> },
+            ],
+          },
+        ],
+      },
+      { path: "verifications", element: <Verification /> },
     ],
   },
   {
@@ -126,6 +163,11 @@ export const paths = {
     root: "/cart",
     checkout: "/cart/checkout",
   },
+  configurations: {
+    root: "/configurations",
+    new: "/configurations/new",
+    details: (id: string) => `/configurations/${id}`,
+  },
   dashboard: {
     root: "/dashboard",
     myListings: {
@@ -139,6 +181,21 @@ export const paths = {
     },
     deliveries: {
       root: "/dashboard/deliveries",
+    },
+    data: {
+      root: "/dashboard/data",
+      dataType: (dataType: string) => `/dashboard/data/${dataType}`,
+      users: {
+        root: "/dashboard/data/users",
+        details: (id: string) => `/dashboard/data/users/${id}`,
+      },
+      listings: {
+        root: "/dashboard/data/listings",
+        details: (id: string) => `/dashboard/data/listings/${id}`,
+      },
+    },
+    verifications: {
+      root: "/dashboard/verifications",
     },
   },
 }

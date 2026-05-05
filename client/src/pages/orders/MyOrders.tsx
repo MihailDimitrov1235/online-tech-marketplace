@@ -44,7 +44,7 @@ export default function MyOrders() {
       ) : (
         <div className="flex flex-col gap-4">
           {orders.map(o => (
-            <OrderCard order={o} setOrders={setOrders} />
+            <OrderCard key={o._id} order={o} setOrders={setOrders} />
           ))}
         </div>
       )}

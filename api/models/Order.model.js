@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { warrantySchema } from "./Seller.model.js";
 
 const orderItemSchema = new mongoose.Schema({
   product: {
@@ -18,6 +19,7 @@ const orderItemSchema = new mongoose.Schema({
     enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
     default: "pending",
   },
+  warranty: { type: warrantySchema, default: null },
 });
 
 const orderSchema = new mongoose.Schema(
@@ -39,6 +41,11 @@ const orderSchema = new mongoose.Schema(
       city: { type: String, required: true },
       country: { type: String, required: true },
       zip: { type: String, required: true },
+    },
+    delivery: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true },

@@ -5,6 +5,7 @@ import cors from "cors";
 import "./loadEnvironments.js";
 import usersRouter from "./routes/User.routes.js";
 import authRoutes from "./routes/Auth.routes.js";
+import sellerRoutes from "./routes/Seller.routes.js";
 import productRoutes from "./routes/Product.routes.js";
 import reviewRoutes from "./routes/Review.routes.js";
 import cartRoutes from "./routes/Cart.routes.js";
@@ -21,21 +22,16 @@ app.use(express.json());
 
 // Global error handling
 app.use((err, _req, res, next) => {
-  res.status(500).send("Uh oh! An unexpected error occured.");
+  res.status(500).send(err);
 });
 
 app.use("/users", usersRouter);
-
 app.use("/auth", authRoutes);
-
+app.use("/sellers", sellerRoutes);
 app.use("/products", productRoutes);
-
 app.use("/reviews", reviewRoutes);
-
 app.use("/cart", cartRoutes);
-
 app.use("/orders", orderRoutes);
-
 app.use("/dashboard", dashboardRoutes);
 
 async function startServer() {

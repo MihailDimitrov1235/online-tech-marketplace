@@ -1,4 +1,5 @@
 import type { User } from "./auth"
+import type { Warranty } from "./seller"
 
 export type status =
   | "pending"
@@ -17,6 +18,7 @@ export type orderItem = {
   }
   quantity: number
   status: status
+  warranty?: Warranty
 }
 
 export type order = {
@@ -31,5 +33,6 @@ export type order = {
     country: string
     zip: number
   }
+  delivery: User
   createdAt: string
 }
