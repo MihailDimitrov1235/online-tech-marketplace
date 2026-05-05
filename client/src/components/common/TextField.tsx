@@ -216,7 +216,7 @@ export const TextField: React.FC<TextFieldProps> = ({
         {trailingIcon && (
           <span
             className={twMerge(
-              "text-contrast/80 shrink-0 bg-neutral/50 flex items-center",
+              "text-contrast/80 shrink-0 bg-neutral/50 flex items-center self-stretch",
               s.icons,
             )}
           >
