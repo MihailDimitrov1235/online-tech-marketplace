@@ -2,6 +2,24 @@ import CartModel from "../models/Cart.model.js";
 import ProductModel from "../models/Product.model.js";
 import { signProducts } from "../s3.js";
 
+// Increments an existing line's quantity or pushes a new one, clamped to
+// the product's current stock. Returns false (and leaves the cart
+// unchanged) if there's no existing line and stock is already 0.
+export function addItemToCart(cart, productId, quantity, product) {
+  const existing = cart.items.find(
+    (i) => i.product.toString() === productId.toString(),
+  );
+  if (existing) {
+    existing.quantity = Math.min(existing.quantity + quantity, product.stock);
+    return true;
+  }
+
+  const trueQuantity = Math.min(quantity, product.stock);
+  if (trueQuantity <= 0) return false;
+  cart.items.push({ product: productId, quantity: trueQuantity });
+  return true;
+}
+
 export async function getCart(req, res) {
   try {
     const cart = await CartModel.findOne({ user: req.user._id }).populate(
@@ -29,15 +47,8 @@ export async function addToCart(req, res) {
       cart = new CartModel({ user: req.user._id, items: [] });
     }
 
-    const existing = cart.items.find((i) => i.product.toString() === productId);
-    if (existing) {
-      existing.quantity = Math.min(existing.quantity + quantity, product.stock);
-    } else {
-      const trueQuantity = Math.min(quantity, product.stock);
-      if (trueQuantity <= 0)
-        return res.status(400).json({ error: "Item out of stock" });
-      cart.items.push({ product: productId, quantity: trueQuantity });
-    }
+    const added = addItemToCart(cart, productId, quantity, product);
+    if (!added) return res.status(400).json({ error: "Item out of stock" });
 
     await cart.save();
     await cart.populate("items.product", "name images price stock");
