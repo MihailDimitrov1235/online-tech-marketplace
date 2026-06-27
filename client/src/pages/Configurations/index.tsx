@@ -144,6 +144,8 @@ export default function Configurations() {
     const params = new URLSearchParams({
       page: String(page),
       ...(debouncedSearch && { search: debouncedSearch }),
+      ...(requireGpu && { hasGpu: "true" }),
+      ...(requireCase && { hasCase: "true" }),
     })
     api
       .get<{ configurations: Configuration[]; pagination: pagination }>(
@@ -159,13 +161,9 @@ export default function Configurations() {
       .finally(() => {
         setLoading(false)
       })
-  }, [page, debouncedSearch])
+  }, [page, debouncedSearch, requireGpu, requireCase])
 
   const hasFilters = requireGpu || requireCase
-  const filteredConfigurations = configurations.filter(
-    config =>
-      (!requireGpu || config.parts.gpu) && (!requireCase || config.parts.case),
-  )
 
   return (
     <div className="flex flex-col w-full">
@@ -218,6 +216,7 @@ export default function Configurations() {
               {hasFilters && (
                 <button
                   onClick={() => {
+                    setPage(1)
                     setRequireGpu(false)
                     setRequireCase(false)
                   }}
@@ -242,6 +241,7 @@ export default function Configurations() {
                   >
                     <div
                       onClick={() => {
+                        setPage(1)
                         set(v => !v)
                       }}
                       className={`w-4 h-4 rounded-sm border flex items-center justify-center shrink-0 transition-colors ${
@@ -274,9 +274,6 @@ export default function Configurations() {
                 )
               })}
             </div>
-            <p className="text-[11px] text-muted/70 mt-3">
-              Filters apply to the currently loaded page
-            </p>
           </div>
         </div>
 
@@ -287,7 +284,7 @@ export default function Configurations() {
                 <ConfigurationCardSkeleton key={i} />
               ))}
             </div>
-          ) : filteredConfigurations.length === 0 ? (
+          ) : configurations.length === 0 ? (
             <Card className="flex-col items-center justify-center py-24 gap-3 text-center">
               <p className="text-contrast/40 text-sm">
                 {hasFilters
@@ -303,7 +300,7 @@ export default function Configurations() {
             </Card>
           ) : (
             <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4">
-              {filteredConfigurations.map(config => (
+              {configurations.map(config => (
                 <ConfigurationCard key={config._id} config={config} />
               ))}
             </div>

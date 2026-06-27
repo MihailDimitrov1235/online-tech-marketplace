@@ -114,10 +114,12 @@ async function attachListTotals(configs) {
 
 export async function getConfigurations(req, res) {
   try {
-    const { search, page = 1, limit = 20 } = req.query;
+    const { search, hasGpu, hasCase, page = 1, limit = 20 } = req.query;
 
     const filter = {};
     if (search) filter.name = new RegExp(search, "i");
+    if (hasGpu === "true") filter["parts.gpu"] = { $ne: null };
+    if (hasCase === "true") filter["parts.case"] = { $ne: null };
 
     const skip = (Number(page) - 1) * Number(limit);
 
