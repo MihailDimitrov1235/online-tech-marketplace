@@ -6,13 +6,6 @@ import {
   Copy,
   Pencil,
   Trash2,
-  Cpu,
-  Server,
-  Monitor,
-  Database,
-  HardDrive,
-  Battery,
-  Layers,
   GitFork,
   Plus,
 } from "lucide-react"
@@ -23,27 +16,9 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { setItems, openCart } from "@/store/cartSlice"
 import type { CartItem } from "@/store/cartSlice"
 import { Button, Card } from "@/components/common"
+import { PART_ICON_COMPONENTS, type PartType } from "@/components/configurations/partIcons"
 import type { Configuration } from "@/types/configuraion"
 import type { detailedProduct } from "@/types/product"
-
-type PartType =
-  | "processor"
-  | "motherboard"
-  | "gpu"
-  | "ram"
-  | "storage"
-  | "psu"
-  | "case"
-
-const PART_ICONS: Record<PartType, React.ReactNode> = {
-  processor: <Cpu size={16} />,
-  motherboard: <Server size={16} />,
-  gpu: <Monitor size={16} />,
-  ram: <Database size={16} />,
-  storage: <HardDrive size={16} />,
-  psu: <Battery size={16} />,
-  case: <Layers size={16} />,
-}
 
 type PartEntry = { type: PartType; label: string; product: detailedProduct }
 
@@ -183,15 +158,18 @@ export default function ConfigurationDetail() {
             </h1>
             {configuration && (
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
-                {partEntries.map(entry => (
-                  <span
-                    key={`${entry.type}-${entry.product._id}-badge`}
-                    className="flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-primary-tint text-primary-on font-medium"
-                  >
-                    {PART_ICONS[entry.type]}
-                    {entry.label}
-                  </span>
-                ))}
+                {partEntries.map(entry => {
+                  const Icon = PART_ICON_COMPONENTS[entry.type]
+                  return (
+                    <span
+                      key={`${entry.type}-${entry.product._id}-badge`}
+                      className="flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-primary-tint text-primary-on font-medium"
+                    >
+                      <Icon size={14} />
+                      {entry.label}
+                    </span>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -242,14 +220,16 @@ export default function ConfigurationDetail() {
             </div>
 
             <div className="flex flex-col divide-y divide-border">
-              {partEntries.map(entry => (
+              {partEntries.map(entry => {
+                const Icon = PART_ICON_COMPONENTS[entry.type]
+                return (
                 <NavLink
                   key={`${entry.type}-${entry.product._id}`}
                   to={paths.listings.details(entry.product._id)}
                   className="flex items-center gap-4 py-3 group"
                 >
                   <span className="w-9 h-9 rounded-xl bg-primary-tint text-primary-on flex items-center justify-center shrink-0">
-                    {PART_ICONS[entry.type]}
+                    <Icon size={16} />
                   </span>
 
                   <div className="w-12 h-12 rounded-lg bg-neutral border border-border overflow-hidden shrink-0">
@@ -273,7 +253,8 @@ export default function ConfigurationDetail() {
                     {entry.product.price}€
                   </p>
                 </NavLink>
-              ))}
+                )
+              })}
             </div>
           </Card>
 

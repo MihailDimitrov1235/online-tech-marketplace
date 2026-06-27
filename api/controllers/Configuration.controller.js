@@ -86,11 +86,7 @@ async function populateAndSignConfiguration(id) {
 async function attachListTotals(configs) {
   const idSet = new Set();
   for (const config of configs) {
-    const { motherboard, psu, gpu, case: caseId, ram, storage } = config.parts;
-    if (motherboard) idSet.add(motherboard.toString());
-    if (psu) idSet.add(psu.toString());
-    if (gpu) idSet.add(gpu.toString());
-    if (caseId) idSet.add(caseId.toString());
+    const { ram, storage } = config.parts;
     ram.forEach((partId) => idSet.add(partId.toString()));
     storage.forEach((partId) => idSet.add(partId.toString()));
   }
@@ -99,13 +95,20 @@ async function attachListTotals(configs) {
   const priceById = new Map(products.map((p) => [p._id.toString(), p.price || 0]));
 
   return configs.map((config) => {
-    const { processor, motherboard, psu, gpu, case: caseId, ram, storage } = config.parts;
-    const otherIds = [motherboard, psu, gpu, caseId, ...ram, ...storage].filter(Boolean);
-    const totalPrice =
+    const { processor, motherboard, psu, gpu, case: caseProduct, ram, storage } =
+      config.parts;
+    const singlePartsPrice =
       (processor?.price || 0) +
-      otherIds.reduce((sum, partId) => sum + (priceById.get(partId.toString()) || 0), 0);
+      (motherboard?.price || 0) +
+      (psu?.price || 0) +
+      (gpu?.price || 0) +
+      (caseProduct?.price || 0);
+    const ramStoragePrice = [...ram, ...storage].reduce(
+      (sum, partId) => sum + (priceById.get(partId.toString()) || 0),
+      0,
+    );
 
-    return { ...config, totalPrice };
+    return { ...config, totalPrice: singlePartsPrice + ramStoragePrice };
   });
 }
 
@@ -122,22 +125,29 @@ export async function getConfigurations(req, res) {
       ConfigurationModel.find(filter)
         .skip(skip)
         .limit(Number(limit))
-        .populate("parts.processor", "name images price")
+        .populate("parts.processor parts.motherboard parts.gpu parts.psu parts.case", "name images price")
         .populate("author", "username")
         .lean(),
       ConfigurationModel.countDocuments(filter),
     ]);
 
+    const signSlot = async (product) => (product ? await signProduct(product) : null);
+
     const signedConfigs = await Promise.all(
-      configs.map(async (config) => ({
-        ...config,
-        parts: {
-          ...config.parts,
-          processor: config.parts.processor
-            ? await signProduct(config.parts.processor)
-            : null,
-        },
-      })),
+      configs.map(async (config) => {
+        const [processor, motherboard, gpu, psu, caseProduct] = await Promise.all([
+          signSlot(config.parts.processor),
+          signSlot(config.parts.motherboard),
+          signSlot(config.parts.gpu),
+          signSlot(config.parts.psu),
+          signSlot(config.parts.case),
+        ]);
+
+        return {
+          ...config,
+          parts: { ...config.parts, processor, motherboard, gpu, psu, case: caseProduct },
+        };
+      }),
     );
 
     const configurations = await attachListTotals(signedConfigs);
