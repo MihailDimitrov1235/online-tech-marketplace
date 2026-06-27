@@ -1,13 +1,22 @@
 import mongoose from "mongoose";
-import smartphoneSpecsSchema from "./product_types/Smartphone.model.js";
-import processorSpecsSchema from "./product_types/Processor.model.js";
+import {
+  CaseModel, CoolingModel, GpuModel, MotherboardModel, ProcessorModel,
+  PsuModel, RamModel, SmartphoneModel, StorageModel
+} from './product_types/index.js';
 
 const specsSchemas = {
-  smartphone: smartphoneSpecsSchema,
-  processor: processorSpecsSchema,
+  case: CaseModel,
+  cooling: CoolingModel,
+  gpu: GpuModel,
+  motherboard: MotherboardModel,
+  processor: ProcessorModel,
+  psu: PsuModel,
+  ram: RamModel,
+  smartphone: SmartphoneModel,
+  storage: StorageModel
 };
 
-const PRODUCT_TYPES = ["smartphone", "processor"];
+const PRODUCT_TYPES = Object.keys(specsSchemas);
 const CONDITIONS = ["new", "refurbished", "used"];
 
 const productSchema = new mongoose.Schema(

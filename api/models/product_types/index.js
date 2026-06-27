@@ -1,0 +1,9 @@
+export { default as CaseModel } from './Case.model.js';
+export { default as CoolingModel } from './Cooling.model.js';
+export { default as GpuModel } from './Gpu.model.js';
+export { default as MotherboardModel } from './Motherboard.model.js';
+export { default as ProcessorModel } from './Processor.model.js';
+export { default as PsuModel } from './Psu.model.js';
+export { default as RamModel } from './Ram.model.js';
+export { default as SmartphoneModel } from './Smartphone.model.js';
+export { default as StorageModel } from './Storage.model.js';
