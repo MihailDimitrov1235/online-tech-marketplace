@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, NavLink } from "react-router"
-import { ArrowLeft, ShoppingCart, Copy, Pencil, Trash2 } from "lucide-react"
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Copy,
+  Pencil,
+  Trash2,
+  Cpu,
+  Server,
+  Monitor,
+  Database,
+  HardDrive,
+  Battery,
+  Layers,
+  GitFork,
+  Plus,
+} from "lucide-react"
 
 import api from "@/api/axiosInstance"
 import { paths } from "@/router"
@@ -10,6 +25,27 @@ import type { CartItem } from "@/store/cartSlice"
 import { Button, Card } from "@/components/common"
 import type { Configuration } from "@/types/configuraion"
 import type { detailedProduct } from "@/types/product"
+
+type PartType =
+  | "processor"
+  | "motherboard"
+  | "gpu"
+  | "ram"
+  | "storage"
+  | "psu"
+  | "case"
+
+const PART_ICONS: Record<PartType, React.ReactNode> = {
+  processor: <Cpu size={16} />,
+  motherboard: <Server size={16} />,
+  gpu: <Monitor size={16} />,
+  ram: <Database size={16} />,
+  storage: <HardDrive size={16} />,
+  psu: <Battery size={16} />,
+  case: <Layers size={16} />,
+}
+
+type PartEntry = { type: PartType; label: string; product: detailedProduct }
 
 export default function ConfigurationDetail() {
   const { id } = useParams<{ id: string }>()
@@ -41,28 +77,42 @@ export default function ConfigurationDetail() {
     Boolean(currentUser) &&
     configuration?.author._id === currentUser?._id
 
-  const partEntries: { label: string; product: detailedProduct }[] = []
+  const partEntries: PartEntry[] = []
   if (configuration) {
     partEntries.push({
+      type: "processor",
       label: "Processor",
       product: configuration.parts.processor,
     })
     partEntries.push({
+      type: "motherboard",
       label: "Motherboard",
       product: configuration.parts.motherboard,
     })
     if (configuration.parts.gpu) {
-      partEntries.push({ label: "Graphics card", product: configuration.parts.gpu })
+      partEntries.push({
+        type: "gpu",
+        label: "Graphics card",
+        product: configuration.parts.gpu,
+      })
     }
     configuration.parts.ram.forEach((product, i) => {
-      partEntries.push({ label: `RAM ${String(i + 1)}`, product })
+      partEntries.push({ type: "ram", label: `RAM ${String(i + 1)}`, product })
     })
     configuration.parts.storage.forEach((product, i) => {
-      partEntries.push({ label: `Storage ${String(i + 1)}`, product })
+      partEntries.push({
+        type: "storage",
+        label: `Storage ${String(i + 1)}`,
+        product,
+      })
     })
-    partEntries.push({ label: "Power supply", product: configuration.parts.psu })
+    partEntries.push({
+      type: "psu",
+      label: "Power supply",
+      product: configuration.parts.psu,
+    })
     if (configuration.parts.case) {
-      partEntries.push({ label: "Case", product: configuration.parts.case })
+      partEntries.push({ type: "case", label: "Case", product: configuration.parts.case })
     }
   }
 
@@ -123,117 +173,189 @@ export default function ConfigurationDetail() {
           <ArrowLeft size={15} />
           Back
         </button>
-        <div className="relative">
-          <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">
-            Configuration
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-contrast">
-            {configuration?.name ?? (loading ? "Loading..." : "Not found")}
-          </h1>
+        <div className="relative flex items-start justify-between gap-6">
+          <div>
+            <p className="text-xs font-medium text-primary-on uppercase tracking-widest mb-1">
+              Configuration
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight text-contrast">
+              {configuration?.name ?? (loading ? "Loading..." : "Not found")}
+            </h1>
+            {configuration && (
+              <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                {partEntries.map(entry => (
+                  <span
+                    key={`${entry.type}-${entry.product._id}-badge`}
+                    className="flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-primary-tint text-primary-on font-medium"
+                  >
+                    {PART_ICONS[entry.type]}
+                    {entry.label}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          {configuration && (
+            <div className="text-right shrink-0">
+              <p className="text-xs text-muted uppercase tracking-widest mb-1">
+                Total price
+              </p>
+              <p className="text-3xl font-bold text-contrast">
+                {configuration.totalPrice.toFixed(2)}€
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      {configuration && (
+      {loading && (
         <div className="flex flex-col gap-8 px-14 py-8">
-          <div className="w-full flex gap-8">
-            <Card className="flex-2 flex-col gap-4">
-              {configuration.description && (
-                <p className="text-sm text-muted">{configuration.description}</p>
-              )}
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted">
-                  by {configuration.author.username}
-                </span>
-                {configuration.clonedFrom && (
-                  <NavLink
-                    to={paths.configurations.details(configuration.clonedFrom._id)}
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Forked from {configuration.clonedFrom.name}
-                  </NavLink>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between pt-3 border-t border-border">
-                <span className="text-sm text-muted">Total price</span>
-                <span className="text-2xl font-bold text-contrast">
-                  {configuration.totalPrice.toFixed(2)}€
-                </span>
-              </div>
-
-              <Button
-                onClick={handleAddAllToCart}
-                variant="primary"
-                className="w-full gap-2"
-              >
-                <ShoppingCart size={16} />
-                Add all to cart
-              </Button>
-
-              <Button
-                onClick={handleClone}
-                variant="outline"
-                className="w-full gap-2"
-              >
-                <Copy size={16} />
-                Clone & customize
-              </Button>
-
-              {isOwner && (
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => {
-                      void navigate(paths.configurations.edit(configuration._id))
-                    }}
-                    variant="outline"
-                    className="flex-1 gap-2"
-                  >
-                    <Pencil size={16} />
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={handleDelete}
-                    variant="outline"
-                    className="flex-1 gap-2 text-error"
-                  >
-                    <Trash2 size={16} />
-                    Delete
-                  </Button>
-                </div>
-              )}
-            </Card>
+          <div className="grid grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-20 rounded-xl bg-neutral animate-pulse" />
+            ))}
           </div>
+        </div>
+      )}
 
-          <Card className="flex-col gap-4">
-            <h2 className="text-2xl font-bold text-contrast">Parts</h2>
-            <div className="grid grid-cols-3 gap-4">
-              {partEntries.map(({ label, product }) => (
+      {!loading && !configuration && (
+        <div className="flex flex-col items-center gap-3 py-24 text-center">
+          <p className="text-contrast/40 text-sm">Configuration not found</p>
+          <NavLink to={paths.configurations.root}>
+            <Button variant="outline" size="sm">
+              Back to configurations
+            </Button>
+          </NavLink>
+        </div>
+      )}
+
+      {configuration && (
+        <div className="flex gap-8 px-14 py-8 items-start">
+          <Card className="flex-3 flex-col gap-4 min-w-0">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-contrast">
+                Parts breakdown
+              </h2>
+              <span className="text-xs text-muted">
+                {partEntries.length} component{partEntries.length === 1 ? "" : "s"}
+              </span>
+            </div>
+
+            <div className="flex flex-col divide-y divide-border">
+              {partEntries.map(entry => (
                 <NavLink
-                  key={`${label}-${product._id}`}
-                  to={paths.listings.details(product._id)}
-                  className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary-ring transition-colors"
+                  key={`${entry.type}-${entry.product._id}`}
+                  to={paths.listings.details(entry.product._id)}
+                  className="flex items-center gap-4 py-3 group"
                 >
+                  <span className="w-9 h-9 rounded-xl bg-primary-tint text-primary-on flex items-center justify-center shrink-0">
+                    {PART_ICONS[entry.type]}
+                  </span>
+
                   <div className="w-12 h-12 rounded-lg bg-neutral border border-border overflow-hidden shrink-0">
                     <img
-                      src={product.images[0]}
-                      alt={product.name}
+                      src={entry.product.images[0]}
+                      alt={entry.product.name}
                       className="w-full h-full object-contain p-0.5"
                     />
                   </div>
+
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-muted uppercase tracking-wide">
-                      {label}
+                      {entry.label}
                     </p>
-                    <p className="text-sm font-medium text-contrast truncate">
-                      {product.name}
+                    <p className="text-sm font-medium text-contrast truncate group-hover:text-primary transition-colors">
+                      {entry.product.name}
                     </p>
-                    <p className="text-xs text-muted">{product.price}€</p>
                   </div>
+
+                  <p className="text-sm font-semibold text-contrast shrink-0">
+                    {entry.product.price}€
+                  </p>
                 </NavLink>
               ))}
             </div>
           </Card>
+
+          <div className="flex-2 flex flex-col gap-4 sticky top-20">
+            <Card className="flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary-tint text-primary-on text-sm font-bold uppercase flex items-center justify-center shrink-0 select-none">
+                  {configuration.author.username[0]}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs text-muted">Built by</p>
+                  <p className="text-sm font-semibold text-contrast truncate">
+                    {configuration.author.username}
+                  </p>
+                </div>
+              </div>
+
+              {configuration.description && (
+                <p className="text-sm text-muted">{configuration.description}</p>
+              )}
+
+              {configuration.clonedFrom && (
+                <NavLink
+                  to={paths.configurations.details(configuration.clonedFrom._id)}
+                  className="flex items-center gap-1.5 text-xs text-primary hover:underline w-fit"
+                >
+                  <GitFork size={12} />
+                  Forked from {configuration.clonedFrom.name}
+                </NavLink>
+              )}
+
+              <div className="flex flex-col gap-2 pt-2 border-t border-border">
+                <Button
+                  onClick={handleAddAllToCart}
+                  variant="primary"
+                  className="w-full gap-2"
+                >
+                  <ShoppingCart size={16} />
+                  Add all to cart
+                </Button>
+
+                <Button
+                  onClick={handleClone}
+                  variant="outline"
+                  className="w-full gap-2"
+                >
+                  <Copy size={16} />
+                  Clone & customize
+                </Button>
+
+                {isOwner && (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        void navigate(paths.configurations.edit(configuration._id))
+                      }}
+                      variant="outline"
+                      className="flex-1 gap-2"
+                    >
+                      <Pencil size={16} />
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={handleDelete}
+                      variant="outline"
+                      className="flex-1 gap-2 text-error"
+                    >
+                      <Trash2 size={16} />
+                      Delete
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </Card>
+
+            <NavLink to={paths.configurations.root}>
+              <Button variant="ghost" size="sm" className="w-full gap-1.5">
+                <Plus size={14} />
+                Browse more configurations
+              </Button>
+            </NavLink>
+          </div>
         </div>
       )}
     </div>

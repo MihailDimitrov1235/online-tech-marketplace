@@ -10,11 +10,45 @@ import { paths } from "@/router"
 import { Button, Card } from "@/components/common"
 import { FormProvider, RHFTextField } from "@/components/form"
 import { PartPicker } from "@/components/configurations/PartPicker"
-import type { detailedProduct } from "@/types/product"
+import type { detailedProduct, SpecValue } from "@/types/product"
 import type {
   Configuration,
   ConfigurationPartsInput,
 } from "@/types/configuraion"
+
+function getSpecNumber(
+  specs: Record<string, SpecValue> | undefined,
+  ...path: string[]
+): number | undefined {
+  let current: SpecValue | undefined = specs
+  for (const key of path) {
+    if (current && typeof current === "object" && !Array.isArray(current)) {
+      current = current[key]
+    } else {
+      return undefined
+    }
+  }
+  return typeof current === "number" ? current : undefined
+}
+
+function getSpecString(
+  specs: Record<string, SpecValue> | undefined,
+  ...path: string[]
+): string | undefined {
+  let current: SpecValue | undefined = specs
+  for (const key of path) {
+    if (current && typeof current === "object" && !Array.isArray(current)) {
+      current = current[key]
+    } else {
+      return undefined
+    }
+  }
+  return typeof current === "string" ? current : undefined
+}
+
+function isM2Drive(product: detailedProduct): boolean {
+  return getSpecString(product.specs, "formFactor") === "M.2"
+}
 
 const schema = yup.object({
   name: yup.string().required("Name is required"),
@@ -41,6 +75,8 @@ export default function NewConfiguration({
   const [psu, setPsu] = useState<detailedProduct[]>([])
   const [casePart, setCasePart] = useState<detailedProduct[]>([])
   const [partsError, setPartsError] = useState<string>()
+  const [ramError, setRamError] = useState<string>()
+  const [storageError, setStorageError] = useState<string>()
 
   const methods = useForm<FormSchema>({
     defaultValues: { name: "", description: "" },
@@ -82,6 +118,61 @@ export default function NewConfiguration({
   ]
   const totalPrice = allSelected.reduce((sum, part) => sum + part.price, 0)
 
+  const maxRamSlots = motherboard[0]
+    ? getSpecNumber(motherboard[0].specs, "memory", "slots")
+    : undefined
+  const usedRamSlots = ram.reduce(
+    (sum, part) => sum + (getSpecNumber(part.specs, "sticks") ?? 1),
+    0,
+  )
+  const ramOverLimit = maxRamSlots !== undefined && usedRamSlots > maxRamSlots
+
+  const handleRamChange = (next: detailedProduct[]) => {
+    const nextUsedSlots = next.reduce(
+      (sum, part) => sum + (getSpecNumber(part.specs, "sticks") ?? 1),
+      0,
+    )
+    if (maxRamSlots !== undefined && nextUsedSlots > maxRamSlots) {
+      setRamError(
+        `Selected motherboard only has ${String(maxRamSlots)} RAM slot${maxRamSlots === 1 ? "" : "s"} (this would use ${String(nextUsedSlots)}).`,
+      )
+      return
+    }
+    setRamError(undefined)
+    setRam(next)
+  }
+
+  const maxM2Slots = motherboard[0]
+    ? getSpecNumber(motherboard[0].specs, "storage", "m2Slots")
+    : undefined
+  const maxSataPorts = motherboard[0]
+    ? getSpecNumber(motherboard[0].specs, "storage", "sataPorts")
+    : undefined
+  const usedM2Slots = storage.filter(isM2Drive).length
+  const usedSataPorts = storage.length - usedM2Slots
+  const storageOverLimit =
+    (maxM2Slots !== undefined && usedM2Slots > maxM2Slots) ||
+    (maxSataPorts !== undefined && usedSataPorts > maxSataPorts)
+
+  const handleStorageChange = (next: detailedProduct[]) => {
+    const nextM2 = next.filter(isM2Drive).length
+    const nextSata = next.length - nextM2
+    if (maxM2Slots !== undefined && nextM2 > maxM2Slots) {
+      setStorageError(
+        `Selected motherboard only has ${String(maxM2Slots)} M.2 slot${maxM2Slots === 1 ? "" : "s"} (this would use ${String(nextM2)}).`,
+      )
+      return
+    }
+    if (maxSataPorts !== undefined && nextSata > maxSataPorts) {
+      setStorageError(
+        `Selected motherboard only has ${String(maxSataPorts)} SATA port${maxSataPorts === 1 ? "" : "s"} (this would use ${String(nextSata)}).`,
+      )
+      return
+    }
+    setStorageError(undefined)
+    setStorage(next)
+  }
+
   const onSubmit = handleSubmit(data => {
     if (!processor[0] || !motherboard[0] || !psu[0]) {
       setPartsError(
@@ -95,6 +186,18 @@ export default function NewConfiguration({
     }
     if (storage.length === 0) {
       setPartsError("At least one storage drive is required.")
+      return
+    }
+    if (ramOverLimit) {
+      setPartsError(
+        `Selected RAM uses ${String(usedRamSlots)} slots, but the motherboard only supports ${String(maxRamSlots)}.`,
+      )
+      return
+    }
+    if (storageOverLimit) {
+      setPartsError(
+        "Selected storage drives exceed the motherboard's M.2 slots or SATA ports.",
+      )
       return
     }
     setPartsError(undefined)
@@ -212,15 +315,38 @@ export default function NewConfiguration({
             label="RAM"
             multiple
             selected={ram}
-            onChange={setRam}
+            onChange={handleRamChange}
           />
+          {maxRamSlots !== undefined && (
+            <p
+              className={`text-xs -mt-2 ${ramOverLimit ? "text-error" : "text-muted"}`}
+            >
+              Using {usedRamSlots} of {maxRamSlots} RAM slot
+              {maxRamSlots === 1 ? "" : "s"} supported by the motherboard
+            </p>
+          )}
+          {ramError && <p className="text-xs text-error -mt-2">{ramError}</p>}
           <PartPicker
             type="storage"
             label="Storage"
             multiple
             selected={storage}
-            onChange={setStorage}
+            onChange={handleStorageChange}
           />
+          {(maxM2Slots !== undefined || maxSataPorts !== undefined) && (
+            <p
+              className={`text-xs -mt-2 ${storageOverLimit ? "text-error" : "text-muted"}`}
+            >
+              {maxM2Slots !== undefined &&
+                `Using ${String(usedM2Slots)} of ${String(maxM2Slots)} M.2 slots`}
+              {maxM2Slots !== undefined && maxSataPorts !== undefined && " · "}
+              {maxSataPorts !== undefined &&
+                `Using ${String(usedSataPorts)} of ${String(maxSataPorts)} SATA ports`}
+            </p>
+          )}
+          {storageError && (
+            <p className="text-xs text-error -mt-2">{storageError}</p>
+          )}
           <PartPicker
             type="psu"
             label="Power supply"
