@@ -19,11 +19,22 @@ export type Parts = {
   case?: CaseProduct
 }
 
+export type ConfigurationPartsInput = {
+  processor: string
+  motherboard: string
+  gpu?: string
+  ram: string[]
+  storage: string[]
+  psu: string
+  case?: string
+}
+
 export type Configuration = {
   _id: string
   name: string
   description: string
-  author: { username: string }
+  author: { _id: string; username: string }
+  clonedFrom?: { _id: string; name: string } | null
   parts: Parts
   totalPrice: number
   createdAt: string

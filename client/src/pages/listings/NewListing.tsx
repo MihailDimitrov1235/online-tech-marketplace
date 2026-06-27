@@ -36,6 +36,7 @@ import {
   coolingFields,
   coolingSchema,
 } from "@/components/listings/types/Cooling"
+import { caseFields, caseSchema } from "@/components/listings/types/Case"
 
 const types = [
   { value: "smartphone", label: "Smartphone" },
@@ -46,6 +47,7 @@ const types = [
   { value: "psu", label: "Power supply" },
   { value: "gpu", label: "GPU" },
   { value: "cooling", label: "Cooling system" },
+  { value: "case", label: "Case" },
 ]
 
 const conditions = ["used", "refurbished", "new"]
@@ -70,6 +72,7 @@ const specsByType: Record<
   psu: psuSchema,
   gpu: gpuSchema,
   cooling: coolingSchema,
+  case: caseSchema,
 }
 
 const specFieldsByType: Record<string, SpecField[]> = {
@@ -81,6 +84,7 @@ const specFieldsByType: Record<string, SpecField[]> = {
   psu: psuFields,
   gpu: gpuFields,
   cooling: coolingFields,
+  case: caseFields,
 }
 
 const schema = yup.object({

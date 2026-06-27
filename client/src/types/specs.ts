@@ -34,3 +34,21 @@ export const psuModularTypes = ["Non-Modular", "Semi-Modular", "Fully Modular"]
 export const coolingTypes = ["Air", "AIO Liquid", "Custom Liquid"]
 export const radiatorSizes = ["120mm", "240mm", "280mm", "360mm", "420mm"]
 export const fanSizes = ["80mm", "92mm", "120mm", "140mm", "200mm"]
+
+export const caseFormFactors = [
+  "Full Tower",
+  "Mid Tower",
+  "Mini Tower",
+  "Small Form Factor",
+]
+export const caseFrontPorts = [
+  "USB-C",
+  "USB-A",
+  "USB 3.0",
+  "USB 2.0",
+  "Audio",
+  "Power Button",
+  "Reset Button",
+  "RGB Controller",
+]
+export const sidePanelTypes = ["Tempered Glass", "Mesh", "Solid", "Acrylic"]
