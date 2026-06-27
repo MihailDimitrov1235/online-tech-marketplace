@@ -28,6 +28,7 @@ import ListingsData from "./pages/dashboard/Data/ListingsData"
 import UserDataDetail from "./pages/dashboard/Data/UserData/UserDataDetail"
 import Configurations from "./pages/Configurations"
 import NewConfiguration from "./pages/Configurations/NewConfiguration"
+import EditConfiguration from "./pages/Configurations/EditConfiguration"
 import ConfigurationDetail from "./pages/Configurations/ConfigurationDetail"
 
 export const router = createBrowserRouter([
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Configurations /> },
           { path: "new", element: <NewConfiguration /> },
+          { path: "edit/:id", element: <EditConfiguration /> },
           { path: ":id", element: <ConfigurationDetail /> },
         ],
       },
@@ -166,6 +168,7 @@ export const paths = {
   configurations: {
     root: "/configurations",
     new: "/configurations/new",
+    edit: (id: string) => `/configurations/edit/${id}`,
     details: (id: string) => `/configurations/${id}`,
   },
   dashboard: {
