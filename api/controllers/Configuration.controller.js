@@ -251,7 +251,7 @@ export async function cloneConfiguration(req, res) {
       return res.status(404).json({ error: "Configuration not found" });
 
     const clone = await ConfigurationModel.create({
-      name: req.body.name ?? `${source.name} (copy)`,
+      name: req.body?.name ?? `${source.name} (copy)`,
       description: source.description,
       parts: source.parts,
       author: req.user._id,
