@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { NavLink } from "react-router"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -55,13 +56,13 @@ export default function Register() {
   const { handleSubmit } = methods
 
   const dispatch = useAppDispatch()
+  const [error, setError] = useState<string>()
   const onSubmit = handleSubmit(async data => {
     const result = await dispatch(registerUser(data))
     if (registerUser.fulfilled.match(result)) {
-      // console.log(result.payload.token)
       await navigate("/")
     } else {
-      console.log(result)
+      setError(result.payload ?? "Could not create account")
     }
   })
 
@@ -83,6 +84,12 @@ export default function Register() {
           <RHFTextField name="password" label="Password" fullWidth type="password" />
           <RHFTextField name="confirmPassword" label="Confirm password" fullWidth type="password" />
         </div>
+
+        {error && (
+          <p className="text-sm text-error -mt-2" role="alert">
+            {error}
+          </p>
+        )}
 
         <Button type="submit" variant="glass" className="w-full" size="lg">Create account</Button>
 

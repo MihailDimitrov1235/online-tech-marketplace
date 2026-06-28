@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -37,14 +38,15 @@ export default function Login() {
   } = methods;
 
   const dispatch = useAppDispatch();
+  const [error, setError] = useState<string>();
   const onSubmit = handleSubmit(async (data) => {
     const result = await dispatch(loginUser(data));
     if (loginUser.fulfilled.match(result)) {
       const returnTo = location.state?.returnTo;
 
       await navigate(returnTo || paths.home);
-    }else{
-      console.log(result)
+    } else {
+      setError(result.payload ?? "Could not sign in");
     }
   });
 
@@ -61,6 +63,12 @@ export default function Login() {
           <RHFTextField name="username" label="Username" fullWidth />
           <RHFTextField name="password" label="Password" fullWidth type="password" />
         </div>
+
+        {error && (
+          <p className="text-sm text-error -mt-2" role="alert">
+            {error}
+          </p>
+        )}
 
         <Button type="submit" variant="glass" className="w-full" size="lg">Sign in</Button>
 
