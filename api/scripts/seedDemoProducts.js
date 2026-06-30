@@ -4,6 +4,7 @@ import sharp from "sharp";
 import "../loadEnvironments.js";
 import UserModel from "../models/User.model.js";
 import ProductModel from "../models/Product.model.js";
+import SellerModel from "../models/Seller.model.js";
 import { uploadFiles } from "../s3.js";
 
 const TYPE_COLORS = {
@@ -1247,6 +1248,33 @@ async function getOrCreateDemoSeller() {
   } else {
     console.log("Reusing existing demo_seller user");
   }
+
+  const existingProfile = await SellerModel.findOne({ user: user._id });
+  if (!existingProfile) {
+    await SellerModel.create({
+      user: user._id,
+      phone: "+1 555 0100",
+      email: "demo_seller@example.com",
+      address: {
+        country: "USA",
+        city: "Springfield",
+        street: "123 Demo Street",
+        zip: "00000",
+      },
+      warranty: {
+        durationMonths: 24,
+        accidentalDamage: false,
+        wearAndTear: false,
+        resolution: "repair_replace",
+        shipping: "seller",
+      },
+      verified: true,
+    });
+    console.log("Created demo_seller Seller profile");
+  } else {
+    console.log("Reusing existing demo_seller Seller profile");
+  }
+
   return user;
 }
 
